@@ -3,17 +3,15 @@
 A JLPT **N4 / N3** quiz game for the web. Answer vocabulary, kanji, and grammar questions against
 the clock, then see where your score lands on the leaderboard.
 
-Group 5 · Japanese IT Pathway, class project #2.
-
 > **Status:** in development. Deadline 7 September 2026.
 
 ## Features
 
-- **Four question formats** — multiple choice, gap-fill, kana/romaji typing, and word ordering.
-- **Two levels** — N4 and N3, picked at the start of a run.
-- **Leaderboard** — nickname-based, no sign-up. One row per player, best score kept.
-- **Server-side grading** — correct answers never reach the browser, so scores are trustworthy.
-- **Admin editor** — the team authors questions in-app behind a shared password.
+- **Four question formats** ： multiple choice, gap-fill, kana/romaji typing, and word ordering.
+- **Two levels** : N4 and N3, picked at the start of a run.
+- **Leaderboard** : nickname-based, no sign-up. One row per player, best score kept.
+- **Server-side grading** : correct answers never reach the browser, so scores are trustworthy.
+- **Admin editor** : the team authors questions in-app behind a shared password.
 
 ## Stack
 
@@ -80,7 +78,7 @@ Actions secrets that a repo admin must set:
 
 ## Team
 
-See the in-app **Credits** page for who built which screen.
+(N/A)
 
 ## License
 
