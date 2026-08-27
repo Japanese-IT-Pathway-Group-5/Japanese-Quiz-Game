@@ -57,7 +57,7 @@ Types in use: `feat`, `fix`, `chore`, `docs`, `test`, `refactor`, `style`.
 
 ```bash
 pnpm run lint          # prettier --check + eslint
-pnpm run check         # wrangler types --check + svelte-check
+pnpm run check         # svelte-kit sync + svelte-check
 pnpm run test:unit:run
 ```
 
@@ -82,5 +82,6 @@ it via the `prepare` script, and CI regenerates it too. Do not add it to a commi
 This repository is **public**.
 
 - Secrets live in `.env` (local, gitignored), GitHub Actions secrets (CI), and Wrangler secrets (production). Nowhere else.
+- The deploy workflow needs two repo secrets: `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`. If either is missing, deploys will fail with an auth error.
 - Never commit `.env`, `.dev.vars`, or an API token. If you push one, tell the team and **rotate it** — deleting the commit is not enough, it stays in the history and in forks.
 - Correct answers must never reach the browser. Anything sent to the client goes through `toClientQuestion()`.

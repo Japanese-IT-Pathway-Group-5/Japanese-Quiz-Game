@@ -45,7 +45,7 @@ Full setup notes, branch rules, and the Windows `pnpm` gotcha are in [CONTRIBUTI
 | `pnpm run dev`              | Dev server                                        |
 | `pnpm run build`            | Production build                                  |
 | `pnpm run preview`          | Serve the built Worker locally via `wrangler dev` |
-| `pnpm run check`            | `wrangler types --check` + `svelte-check`         |
+| `pnpm run check`            | `svelte-kit sync` + `svelte-check`                |
 | `pnpm run lint` / `format`  | Prettier + ESLint                                 |
 | `pnpm run test:unit`        | Vitest, watch mode                                |
 | `pnpm run test:e2e`         | Playwright                                        |
@@ -69,8 +69,14 @@ e2e/                  Playwright specs
 
 ## Deployment
 
-Merging to `main` runs the `Deploy` workflow: build → apply D1 migrations to production → deploy the
+Merging to `main` runs the `Deploy` workflow: build, apply D1 migrations to production, deploy the
 Worker. Every pull request gets its own preview URL, posted as a comment on the PR.
+
+The workflow calls `pnpm exec wrangler` directly (not the wrangler-action) and reads two GitHub
+Actions secrets that a repo admin must set:
+
+- `CLOUDFLARE_API_TOKEN` - create one at [dash.cloudflare.com/profile/api-tokens](https://dash.cloudflare.com/profile/api-tokens) using the "Edit Cloudflare Workers" template
+- `CLOUDFLARE_ACCOUNT_ID` - visible in the URL bar on any Cloudflare dashboard page
 
 ## Team
 
