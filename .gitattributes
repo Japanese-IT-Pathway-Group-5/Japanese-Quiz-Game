@@ -1,0 +1,21 @@
+# Keep LF in the working tree on every OS. Without this, Git's autocrlf converts
+# files to CRLF on Windows checkouts and `prettier --check` then fails locally
+# while passing on the Linux CI runner.
+* text=auto eol=lf
+
+# Binary — never touch line endings
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.mp3 binary
+*.ogg binary
+*.m4a binary
+
+# Generated — collapse in diffs and exclude from language stats
+pnpm-lock.yaml linguist-generated=true -diff
+drizzle/** linguist-generated=true
