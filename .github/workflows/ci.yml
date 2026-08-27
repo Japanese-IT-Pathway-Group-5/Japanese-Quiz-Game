@@ -1,0 +1,91 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Lint, types, unit tests, build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # worker-configuration.d.ts is generated, not committed — see .gitignore.
+      - name: Generate Cloudflare types
+        run: pnpm run gen
+
+      # vitest runs component tests in a real chromium via @vitest/browser-playwright
+      - name: Install Playwright chromium
+        run: pnpm exec playwright install chromium --with-deps
+
+      - name: Prettier + ESLint
+        run: pnpm run lint
+
+      - name: Type check
+        run: pnpm run check
+
+      - name: Unit + component tests
+        run: pnpm run test:unit:run
+
+      - name: Build
+        run: pnpm run build
+
+  e2e:
+    name: End-to-end tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # worker-configuration.d.ts is generated, not committed — see .gitignore.
+      - name: Generate Cloudflare types
+        run: pnpm run gen
+
+      - name: Install Playwright chromium
+        run: pnpm exec playwright install chromium --with-deps
+
+      # Self-activates once the first Drizzle migration lands in drizzle/ (M2).
+      - name: Apply migrations to local D1
+        if: hashFiles('drizzle/**') != ''
+        run: pnpm run db:migrate:local
+
+      # playwright.config.ts webServer runs `pnpm run build && pnpm run preview`
+      # (wrangler dev), so e2e hits a real Worker with a local D1.
+      - name: Run Playwright
+        run: pnpm exec playwright test
+
+      - name: Upload report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

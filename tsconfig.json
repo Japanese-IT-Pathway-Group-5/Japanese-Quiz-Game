@@ -1,0 +1,33 @@
+{
+	"extends": "./.svelte-kit/tsconfig.json",
+	"compilerOptions": {
+		"rewriteRelativeImportExtensions": true,
+		"allowJs": true,
+		// Off deliberately. `wrangler types` adds a `mainModule` import of the adapter's
+		// bundled `_worker.js` whenever a build output exists, which drags that generated
+		// file into the program — `exclude` cannot filter a directly imported module.
+		// Our own source is TypeScript, so this only stops us type-checking generated JS.
+		"checkJs": false,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"resolveJsonModule": true,
+		"skipLibCheck": true,
+		"sourceMap": true,
+		"strict": true,
+		"moduleResolution": "bundler",
+		"types": ["./worker-configuration.d.ts"]
+	},
+	// Replaces the exclude list from .svelte-kit/tsconfig.json (an extending config
+	// overrides it rather than merging). The adapter's bundled output is generated
+	// code — checking it produces hundreds of meaningless errors after a build.
+	"exclude": [
+		"node_modules/**",
+		".svelte-kit/cloudflare/**",
+		"src/service-worker.js",
+		"src/service-worker/**/*.js",
+		"src/service-worker.ts",
+		"src/service-worker/**/*.ts",
+		"src/service-worker.d.ts",
+		"src/service-worker/**/*.d.ts"
+	]
+}
