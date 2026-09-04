@@ -21,6 +21,9 @@ const SIGNATURE_SEPARATOR = '.';
  * function does not escape it.
  */
 export async function signValue(value: string, secret: string): Promise<string> {
+	if (!secret) {
+		throw new Error('Signing secret must be non-empty');
+	}
 	const signature = await hmac(value, secret);
 	return `${value}${SIGNATURE_SEPARATOR}${toBase64Url(signature)}`;
 }
