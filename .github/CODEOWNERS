@@ -1,30 +1,27 @@
-# Code owners get auto-requested for review on PRs touching their lane.
-#
-# TODO: replace @LaySopanha with each lane's owner once the 6 GitHub usernames
-# are confirmed. Until then everything routes to the repo owner.
-
-# Default owner for anything not matched below
+# Default owner
 *                           @LaySopanha
 
-# Lane: engine — schema, migrations, attempts, grading, scoring
+# Lane: engine (schema, migrations, attempts, grading, scoring)
 /src/lib/server/            @LaySopanha
 /drizzle/                   @LaySopanha
 
-# Lane: typing — kana normalization is the most correctness-sensitive pure code
-/src/lib/quiz/kana.ts       @LaySopanha
+# Lane: typing (kana normalization)
+/src/lib/quiz/kana.ts       @Bemine5Cent
 
-# Lane: play
-/src/routes/play/           @LaySopanha
+# Lane: play & order (quiz runner)
+/src/routes/play/           @virakbottch
 
-# Lane: score
-/src/routes/leaderboard/    @LaySopanha
-/src/routes/result/         @LaySopanha
+# Lane: score (leaderboard, results)
+/src/routes/leaderboard/    @zinhour10
+/src/routes/result/         @zinhour10
 
-# Lane: admin
-/src/routes/admin/          @LaySopanha
-/src/lib/data/credits.ts    @LaySopanha
+# Lane: admin (admin pages, credits)
+/src/routes/admin/          @Thaikarona
+/src/routes/credits/        @Thaikarona
+/src/lib/data/credits.ts    @Thaikarona
 
-# Build, CI, and anything touching secrets — repo owner reviews these
+# Infra, CI, and config
 /.github/                   @LaySopanha
 /wrangler.jsonc             @LaySopanha
 /package.json               @LaySopanha
+
