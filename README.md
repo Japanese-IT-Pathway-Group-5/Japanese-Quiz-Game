@@ -3,7 +3,7 @@
 A JLPT **N4 / N3** quiz game for the web. Answer vocabulary, kanji, and grammar questions against
 the clock, then see where your score lands on the leaderboard.
 
-> **Status:** in development. Deadline 7 September 2026.
+> **Status:** in development. Deadline: Monday 14 September 2026.
 
 ## Features
 

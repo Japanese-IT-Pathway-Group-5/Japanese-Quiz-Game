@@ -38,6 +38,8 @@ body:
         - order
         - score
         - admin
+        - content
+        - shared
     validations:
       required: true
 
