@@ -9,5 +9,13 @@
 		"directory": ".svelte-kit/cloudflare"
 	},
 	"workers_dev": true,
-	"preview_urls": true
+	"preview_urls": true,
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "japanese-quiz",
+			"database_id": "741780ae-e188-435f-898c-6305e7e51480",
+			"migrations_dir": "drizzle"
+		}
+	]
 }
