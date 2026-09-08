@@ -10,6 +10,8 @@ pnpm install
 pnpm run gen             # generates worker-configuration.d.ts from wrangler.jsonc
 pnpm exec playwright install chromium
 cp .env.example .env     # then fill it in — never commit .env
+pnpm run db:migrate:local # apply database migrations locally
+pnpm run db:seed:local    # seed sample questions for local dev (optional)
 pnpm run dev
 ```
 
@@ -66,6 +68,13 @@ pnpm run test:unit:run
 If you changed `wrangler.jsonc` (new binding, new D1 database), re-run `pnpm run gen` so your local
 types match. `worker-configuration.d.ts` is **generated, not committed** — `pnpm install` regenerates
 it via the `prepare` script, and CI regenerates it too. Do not add it to a commit.
+
+## Database
+
+    - `pnpm run db:generate`: generates SQL migration files from `src/lib/server/db/schema.ts` into `drizzle/`.
+    - `pnpm run db:migrate:local`: applies pending migrations to your local D1 database.
+    - `pnpm run db:migrate:prod`: applies migrations to production Cloudflare D1.
+    - `pnpm run db:seed:local`: seeds sample N4/N3 questions across all 4 formats for local testing.
 
 ## Where code goes
 
