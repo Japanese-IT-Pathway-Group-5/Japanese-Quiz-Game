@@ -50,4 +50,23 @@ describe('QuestionCard.svelte', () => {
 		await expect.element(page.getByText('友達と映画を見に行きます。')).toBeVisible();
 		await expect.element(page.getByText('_____')).toBeVisible();
 	});
+
+	it('renders a typing input for typing questions and normalizes the answer', async () => {
+		const question = {
+			id: 'q3',
+			format: 'typing',
+			prompt: 'Type the Japanese word for “clear”.',
+			promptJa: '透明',
+			choices: []
+		} as const;
+
+		render(QuestionCard, { question });
+
+		const input = page.getByLabelText('Your answer');
+
+		await expect.element(input).toBeVisible();
+		await input.fill('toumei');
+
+		await expect.element(page.getByText('Normalized answer: とうめい')).toBeVisible();
+	});
 });
