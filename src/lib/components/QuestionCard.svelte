@@ -42,7 +42,7 @@
 
 	{#if question.format === 'gap_fill'}
 		<p class="prompt prompt-gap">
-			{#each renderGapFillSentence(getQuestionText()) as part}
+			{#each renderGapFillSentence(getQuestionText()) as part, index (part.type + '-' + index + '-' + part.value)}
 				{#if part.type === 'blank'}
 					<span class="gap-blank">{part.value}</span>
 				{:else}
@@ -56,7 +56,7 @@
 
 	{#if question.format === 'multiple_choice' && question.choices}
 		<ul class="options" role="radiogroup" aria-label="Answer choices">
-			{#each question.choices as choice}
+			{#each question.choices as choice (choice.id)}
 				<li>
 					<label class:selected={selectedChoiceId === choice.id} class="option">
 						<input
@@ -123,7 +123,10 @@
 		border-radius: 0.9rem;
 		background: #ffffff;
 		cursor: pointer;
-		transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+		transition:
+			border-color 0.15s ease,
+			background 0.15s ease,
+			transform 0.15s ease;
 	}
 
 	.option:hover {
