@@ -6,6 +6,7 @@ declare global {
 			env: Env & {
 				AUTH_SECRET: string;
 				ADMIN_PASSWORD: string;
+				DB: D1Database;
 			};
 			ctx: ExecutionContext;
 			caches: CacheStorage;
