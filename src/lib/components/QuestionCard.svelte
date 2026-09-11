@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { normalizeTypedAnswer } from '$lib/quiz/normalizeTypedAnswer';
+
 	type Choice = {
 		id: string;
 		text: string;
@@ -14,8 +16,10 @@
 
 	let { question }: { question: Question } = $props();
 	let selectedChoiceId: string | null = $state(null);
+	let typedAnswer = $state('');
 
 	const blankMarker = '_____' as const;
+	const normalizedAnswer = $derived(normalizeTypedAnswer(typedAnswer));
 
 	function renderGapFillSentence(text: string) {
 		if (!text.includes('___')) {
@@ -70,6 +74,23 @@
 				</li>
 			{/each}
 		</ul>
+	{/if}
+
+	{#if question.format === 'typing'}
+		<div class="typing-box">
+			<label class="typing-label" for={question.id + '-answer'}>Your answer</label>
+			<input
+				id={question.id + '-answer'}
+				class="typing-input"
+				type="text"
+				bind:value={typedAnswer}
+				aria-label="Your answer"
+			/>
+
+			{#if typedAnswer.trim()}
+				<p class="normalized-answer">Normalized answer: {normalizedAnswer}</p>
+			{/if}
+		</div>
 	{/if}
 </div>
 
@@ -156,6 +177,35 @@
 		font-size: clamp(1rem, 2vw, 1.25rem);
 		line-height: 1.5;
 		flex: 1;
+	}
+
+	.typing-box {
+		display: grid;
+		gap: 0.5rem;
+	}
+
+	.typing-label {
+		font-size: 0.95rem;
+		font-weight: 600;
+	}
+
+	.typing-input {
+		width: 100%;
+		padding: 0.85rem 1rem;
+		border: 2px solid #d1d5db;
+		border-radius: 0.75rem;
+		font-size: 1rem;
+	}
+
+	.typing-input:focus-visible {
+		outline: 3px solid #2563eb;
+		outline-offset: 2px;
+	}
+
+	.normalized-answer {
+		margin: 0;
+		color: #1d4ed8;
+		font-weight: 600;
 	}
 
 	@media (max-width: 480px) {
