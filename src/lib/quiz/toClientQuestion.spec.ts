@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { toClientQuestion, toClientQuestions } from './toClientQuestion';
-import type { StoredQuestion } from './types';
+import type { StoredChoice, StoredQuestion } from './types';
 
 describe('toClientQuestion', () => {
 	it('converts a multiple-choice question and strips isCorrect and explanation', () => {
