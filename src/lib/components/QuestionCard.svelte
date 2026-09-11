@@ -1,20 +1,8 @@
 <script lang="ts">
 	import { normalizeTypedAnswer } from '$lib/quiz/normalizeTypedAnswer';
+	import type { ClientQuestion } from '$lib/quiz/types';
 
-	type Choice = {
-		id: string;
-		text: string;
-	};
-
-	type Question = {
-		id: string;
-		format: 'multiple_choice' | 'gap_fill' | 'word_ordering' | 'typing';
-		prompt: string;
-		promptJa?: string | null;
-		choices?: readonly Choice[];
-	};
-
-	let { question }: { question: Question } = $props();
+	let { question }: { question: ClientQuestion } = $props();
 	let selectedChoiceId: string | null = $state(null);
 	let typedAnswer = $state('');
 
