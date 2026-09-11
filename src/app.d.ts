@@ -3,7 +3,10 @@
 declare global {
 	namespace App {
 		interface Platform {
-			env: Env;
+			env: Env & {
+				AUTH_SECRET: string;
+				ADMIN_PASSWORD: string;
+			};
 			ctx: ExecutionContext;
 			caches: CacheStorage;
 			cf?: IncomingRequestCfProperties;
