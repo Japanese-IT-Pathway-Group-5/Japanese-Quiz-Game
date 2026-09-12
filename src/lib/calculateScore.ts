@@ -3,6 +3,7 @@ export function calculateScore(
     total: number, 
     timeTaken: number
 ): number {
+    // Accuracy is the priority; speed provides only a capped bonus.
     if(total<=0){
         return 0;
     }
@@ -16,7 +17,8 @@ export function calculateScore(
 
     const speedBonus = 
         timeTaken<=0 ? 1 : Math.min(1, targetTime / timeTaken);
-    const score = accuracy*speedBonus * 100;
+    // const score = accuracy*speedBonus * 100;
+    const score = (accuracy*80)+(speedBonus*20)
 
     return Math.round(score);
 }
