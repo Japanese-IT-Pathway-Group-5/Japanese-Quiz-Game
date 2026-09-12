@@ -105,7 +105,11 @@ const getQuestionAnswer = (
 	throw error(400, 'Unsupported question format.');
 };
 
-export const load: PageServerLoad = async ({ params, locals, platform }) => {
+export const load: PageServerLoad = async ({ params, locals, platform, setHeaders }) => {
+	setHeaders({
+		'cache-control': 'no-store'
+	});
+
 	const db = getDb(platform!.env.DB);
 	const attempt = await getAttempt(db, params.attemptId);
 
