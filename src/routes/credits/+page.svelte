@@ -1,3 +1,7 @@
+<script lang="ts">
+	import { resolve } from '$app/paths';
+</script>
+
 <svelte:head>
 	<title>Credits</title>
 </svelte:head>
@@ -6,7 +10,7 @@
 	<div class="info-card">
 		<h1>Credits</h1>
 		<p>This page will list the team members and their contributions.</p>
-		<a href="/">Back to start</a>
+		<a href={resolve('/')}>Back to start</a>
 	</div>
 </main>
 

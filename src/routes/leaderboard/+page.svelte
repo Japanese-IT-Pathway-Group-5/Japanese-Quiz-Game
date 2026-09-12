@@ -1,3 +1,7 @@
+<script lang="ts">
+	import { resolve } from '$app/paths';
+</script>
+
 <svelte:head>
 	<title>Leaderboard</title>
 </svelte:head>
@@ -6,7 +10,7 @@
 	<div class="info-card">
 		<h1>Leaderboard</h1>
 		<p>Coming soon. This page will show the top scores for each player.</p>
-		<a href="/">Back to start</a>
+		<a href={resolve('/')}>Back to start</a>
 	</div>
 </main>
 

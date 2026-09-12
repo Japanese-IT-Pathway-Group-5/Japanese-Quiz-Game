@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import type { PageData, ActionData } from './$types';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
@@ -48,8 +49,8 @@
 		</form>
 
 		<nav class="quick-links" aria-label="Quick links">
-			<a href="/leaderboard">Leaderboard</a>
-			<a href="/credits">Credits</a>
+			<a href={resolve('/leaderboard')}>Leaderboard</a>
+			<a href={resolve('/credits')}>Credits</a>
 		</nav>
 	</div>
 </main>
