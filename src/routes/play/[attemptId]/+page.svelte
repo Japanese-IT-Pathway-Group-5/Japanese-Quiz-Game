@@ -117,27 +117,8 @@
 </main>
 
 <style>
-	:global(body) {
-		margin: 0;
-		font-family: Arial, sans-serif;
-		background: linear-gradient(180deg, #f8fafc 0%, #e0f2fe 100%);
-	}
-
-	.page-shell {
-		min-height: 100vh;
-		padding: 1.5rem;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-
 	.quiz-card {
-		width: min(100%, 760px);
-		background: rgba(255, 255, 255, 0.96);
-		border: 1px solid #dbeafe;
-		border-radius: 1rem;
-		box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08);
-		padding: 1.5rem;
+		max-width: 760px;
 	}
 
 	.top-bar {
@@ -148,7 +129,7 @@
 		gap: 1.5rem;
 		margin-bottom: 1.5rem;
 		padding-bottom: 1.25rem;
-		border-bottom: 1px solid #e2e8f0;
+		border-bottom: 1px solid var(--color-border);
 	}
 
 	.right-stats {
@@ -162,9 +143,9 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		background: #f8fafc;
-		border: 1px solid #cbd5e1;
-		border-radius: 0.75rem;
+		background: var(--color-surface-muted);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
 		padding: 0.35rem 0.85rem;
 	}
 
@@ -172,14 +153,14 @@
 		font-size: 0.75rem;
 		text-transform: uppercase;
 		font-weight: 700;
-		color: #64748b;
+		color: var(--color-text-muted);
 		letter-spacing: 0.05em;
 	}
 
 	.score-value {
 		font-size: 1.1rem;
 		font-weight: 700;
-		color: #0f172a;
+		color: var(--color-text);
 	}
 
 	.title {
@@ -196,7 +177,7 @@
 		margin: 0;
 		font-size: clamp(1.05rem, 2.2vw, 1.5rem);
 		line-height: 1.7;
-		word-break: break-word;
+		overflow-wrap: anywhere;
 	}
 
 	.prompt-gap {
@@ -207,7 +188,7 @@
 		display: inline-block;
 		min-width: 4.5rem;
 		padding: 0 0.3rem;
-		border-bottom: 3px solid #2563eb;
+		border-bottom: 3px solid var(--color-primary);
 		text-align: center;
 		font-weight: 700;
 	}
@@ -221,30 +202,32 @@
 		display: flex;
 		align-items: center;
 		gap: 0.75rem;
+		width: 100%;
 		padding: 0.9rem 1rem;
-		border: 2px solid #cbd5e1;
-		border-radius: 0.9rem;
-		background: #f8fafc;
+		border: 2px solid var(--color-border);
+		border-radius: var(--radius-md);
+		background: var(--color-surface-muted);
+		color: var(--color-text);
 		cursor: pointer;
 	}
 
+	.choice-option:hover {
+		border-color: var(--color-primary);
+		background: var(--color-primary-soft);
+	}
+
 	.choice-option input {
-		transform: scale(1.2);
+		width: 1.2rem;
+		height: 1.2rem;
+		margin: 0;
+		accent-color: var(--color-primary);
+		flex-shrink: 0;
 	}
 
 	.field-label {
 		font-size: 0.95rem;
 		font-weight: 700;
-		color: #1e293b;
-	}
-
-	select {
-		width: 100%;
-		padding: 0.85rem 1rem;
-		border: 2px solid #cbd5e1;
-		border-radius: 0.8rem;
-		font-size: 1rem;
-		background: white;
+		color: var(--color-text);
 	}
 
 	.word-ordering {
@@ -252,26 +235,7 @@
 		gap: 0.6rem;
 	}
 
-	.submit-button {
-		padding: 0.9rem 1.1rem;
-		border: 0;
-		border-radius: 0.8rem;
-		background: #2563eb;
-		color: white;
-		font-size: 1rem;
-		font-weight: 700;
-		cursor: pointer;
-	}
-
 	@media (max-width: 480px) {
-		.page-shell {
-			padding: 1rem;
-		}
-
-		.quiz-card {
-			padding: 1rem;
-		}
-
 		.top-bar {
 			flex-direction: column;
 		}

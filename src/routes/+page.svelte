@@ -31,10 +31,12 @@
 
 			<div class="field-group" role="radiogroup" aria-label="Choose quiz level">
 				<p class="field-label">Choose a level</p>
+
 				<label class="level-option">
 					<input type="radio" name="level" value="N4" checked={level === 'N4'} />
 					<span>N4</span>
 				</label>
+
 				<label class="level-option">
 					<input type="radio" name="level" value="N3" checked={level === 'N3'} />
 					<span>N3</span>
@@ -56,38 +58,20 @@
 </main>
 
 <style>
-	:global(body) {
-		margin: 0;
-		font-family: Arial, sans-serif;
-		background: linear-gradient(180deg, #f8fafc 0%, #e0f2fe 100%);
-	}
-
-	.page-shell {
-		min-height: 100vh;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		padding: 1.5rem;
-	}
-
 	.start-card {
-		width: min(100%, 640px);
-		background: rgba(255, 255, 255, 0.96);
-		border: 1px solid #dbeafe;
-		border-radius: 1rem;
-		box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08);
-		padding: 2rem;
+		max-width: 640px;
 	}
 
 	h1 {
-		margin: 0;
-		font-size: clamp(2rem, 4vw, 2.6rem);
+		margin-bottom: 0;
+		font-size: clamp(2rem, 8vw, 2.6rem);
+		line-height: 1.2;
 	}
 
 	.intro {
 		margin: 0.75rem 0 1.5rem;
 		font-size: 1.05rem;
-		color: #475569;
+		color: var(--color-text-muted);
 	}
 
 	.start-form {
@@ -95,58 +79,48 @@
 		gap: 1rem;
 	}
 
-	.field-label {
-		font-size: 0.95rem;
-		font-weight: 700;
-		color: #1e293b;
-	}
-
-	input[type='text'] {
-		width: 100%;
-		padding: 0.85rem 1rem;
-		border: 2px solid #cbd5e1;
-		border-radius: 0.8rem;
-		font-size: 1rem;
-		box-sizing: border-box;
-	}
-
 	.field-group {
 		display: grid;
 		gap: 0.75rem;
+	}
+
+	.field-group > .field-label {
+		margin: 0;
 	}
 
 	.level-option {
 		display: flex;
 		align-items: center;
 		gap: 0.7rem;
+		width: 100%;
 		padding: 0.85rem 1rem;
-		border: 2px solid #cbd5e1;
-		border-radius: 0.8rem;
-		background: #f8fafc;
+		border: 2px solid var(--color-border);
+		border-radius: var(--radius-md);
+		background: var(--color-surface-muted);
+		color: var(--color-text);
+		cursor: pointer;
+	}
+
+	.level-option:hover {
+		border-color: var(--color-primary);
+		background: var(--color-primary-soft);
 	}
 
 	.level-option input {
-		transform: scale(1.2);
-	}
-
-	.start-button {
-		padding: 0.9rem 1.1rem;
-		border: 0;
-		border-radius: 0.8rem;
-		background: #2563eb;
-		color: white;
-		font-size: 1rem;
-		font-weight: 700;
-		cursor: pointer;
+		width: 1.2rem;
+		height: 1.2rem;
+		margin: 0;
+		accent-color: var(--color-primary);
+		flex-shrink: 0;
 	}
 
 	.error {
 		margin: 0;
 		padding: 0.75rem 1rem;
-		border-radius: 0.75rem;
-		background: #fef2f2;
-		border: 1px solid #fecaca;
-		color: #b91c1c;
+		border-radius: var(--radius-md);
+		background: var(--color-danger-background);
+		border: 1px solid var(--color-danger-border);
+		color: var(--color-danger);
 		font-weight: 600;
 	}
 
@@ -158,13 +132,27 @@
 	}
 
 	.quick-links a {
-		display: inline-block;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 2.75rem;
 		padding: 0.7rem 0.9rem;
-		border-radius: 0.75rem;
-		background: #eff6ff;
-		border: 1px solid #bfdbfe;
-		color: #1d4ed8;
+		border-radius: var(--radius-md);
+		background: var(--color-primary-soft);
+		border: 1px solid var(--color-border-soft);
+		color: var(--color-primary);
 		text-decoration: none;
 		font-weight: 700;
+	}
+
+	.quick-links a:hover {
+		background: var(--color-primary);
+		color: #ffffff;
+	}
+
+	@media (max-width: 480px) {
+		.quick-links a {
+			flex: 1 1 100%;
+		}
 	}
 </style>
