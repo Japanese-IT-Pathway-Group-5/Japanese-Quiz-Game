@@ -21,12 +21,23 @@
 
 	let leaveTimeout: ReturnType<typeof setTimeout> | null = null;
 	let switchTimeout: ReturnType<typeof setTimeout> | null = null;
+	let rafId: number | null = null;
+	let lastPointerEvent: { clientX: number; clientY: number } | null = null;
 
 	const CANVAS_WIDTH = 640;
 	const CANVAS_HEIGHT = 476.5;
 
 	// Priority order for hit testing (foreground members first)
 	const hitTestOrder = ['vathana', 'lyleab', 'panha', 'karona', 'menghour', 'virakbot'];
+
+	// Pre-sort members once
+	let sortedMembers = $derived(
+		[...members].sort((a, b) => {
+			const indexA = hitTestOrder.indexOf(a.id);
+			const indexB = hitTestOrder.indexOf(b.id);
+			return (indexA === -1 ? 99 : indexA) - (indexB === -1 ? 99 : indexB);
+		})
+	);
 
 	onMount(() => {
 		let loadedCount = 0;
@@ -59,6 +70,7 @@
 	onDestroy(() => {
 		if (leaveTimeout) clearTimeout(leaveTimeout);
 		if (switchTimeout) clearTimeout(switchTimeout);
+		if (rafId !== null) cancelAnimationFrame(rafId);
 	});
 
 	function getMemberAtPoint(clientX: number, clientY: number): string | null {
@@ -74,13 +86,6 @@
 		if (svgX < 0 || svgX > 1280 || svgY < 0 || svgY > 953) {
 			return null;
 		}
-
-		// Sort members according to foreground hit test order
-		const sortedMembers = [...members].sort((a, b) => {
-			const indexA = hitTestOrder.indexOf(a.id);
-			const indexB = hitTestOrder.indexOf(b.id);
-			return (indexA === -1 ? 99 : indexA) - (indexB === -1 ? 99 : indexB);
-		});
 
 		const canvasX = Math.floor((svgX / 1280) * CANVAS_WIDTH);
 		const canvasY = Math.floor((svgY / 953) * CANVAS_HEIGHT);
@@ -112,8 +117,8 @@
 		return null;
 	}
 
-	function handlePointerMove(event: PointerEvent) {
-		const detectedId = getMemberAtPoint(event.clientX, event.clientY);
+	function processPointer(clientX: number, clientY: number) {
+		const detectedId = getMemberAtPoint(clientX, clientY);
 
 		if (detectedId) {
 			if (leaveTimeout) {
@@ -126,7 +131,7 @@
 				switchTimeout = setTimeout(() => {
 					activeMemberId = detectedId;
 					onhover?.(detectedId);
-				}, 40);
+				}, 25);
 			}
 		} else {
 			if (switchTimeout) {
@@ -139,12 +144,28 @@
 					activeMemberId = null;
 					onhover?.(null);
 					leaveTimeout = null;
-				}, 140);
+				}, 120);
 			}
 		}
 	}
 
+	function handlePointerMove(event: PointerEvent) {
+		lastPointerEvent = { clientX: event.clientX, clientY: event.clientY };
+		if (rafId === null) {
+			rafId = requestAnimationFrame(() => {
+				rafId = null;
+				if (lastPointerEvent) {
+					processPointer(lastPointerEvent.clientX, lastPointerEvent.clientY);
+				}
+			});
+		}
+	}
+
 	function handlePointerLeave() {
+		if (rafId !== null) {
+			cancelAnimationFrame(rafId);
+			rafId = null;
+		}
 		if (switchTimeout) {
 			clearTimeout(switchTimeout);
 			switchTimeout = null;
@@ -157,7 +178,7 @@
 				onhover?.(null);
 			}
 			leaveTimeout = null;
-		}, 150);
+		}, 120);
 	}
 
 	function handlePointerDown(event: PointerEvent) {
@@ -197,7 +218,7 @@
 		>
 			<!-- Base team illustration with background -->
 			<image
-				href="/images/team/team-with-background.svg"
+				href="/images/team/team-with-background.png"
 				x="0"
 				y="0"
 				width="1280"

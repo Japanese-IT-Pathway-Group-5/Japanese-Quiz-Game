@@ -18,7 +18,7 @@ export const teamMembers: TeamMember[] = [
 		japaneseRole: 'チームリーダー・DevOps・UI/UXリーダー',
 		role: 'Team Lead · DevOps · UX/UI Lead',
 		imageUrl: '/images/team/laysopanha.png',
-		cutoutUrl: '/images/team/panha.svg',
+		cutoutUrl: '/images/team/panha.png',
 		box: { x: 340, y: 285, width: 286, height: 372 },
 		contributions: [
 			'Project architecture, Cloudflare D1 database schema, and CI/CD pipelines',
@@ -36,7 +36,7 @@ export const teamMembers: TeamMember[] = [
 		japaneseRole: 'フロントエンド・ゲームプレイ開発',
 		role: 'Frontend & Gameplay Developer',
 		imageUrl: '/images/team/cheavirakbott.png',
-		cutoutUrl: '/images/team/virakbot.svg',
+		cutoutUrl: '/images/team/virakbot.png',
 		box: { x: 134, y: 328, width: 247, height: 269 },
 		contributions: [
 			'Built the Start Screen and nickname onboarding flow',
@@ -51,7 +51,7 @@ export const teamMembers: TeamMember[] = [
 		japaneseRole: 'テキスト解析・入力判定開発',
 		role: 'Frontend & NLP/Grading Developer',
 		imageUrl: '/images/team/hassereivathana.png',
-		cutoutUrl: '/images/team/vathana.svg',
+		cutoutUrl: '/images/team/vathana.png',
 		box: { x: 0, y: 578, width: 344, height: 345 },
 		contributions: [
 			'Built the interactive Typing Question component',
@@ -65,7 +65,7 @@ export const teamMembers: TeamMember[] = [
 		japaneseRole: 'アクセシビリティ・UI開発',
 		role: 'Frontend & Accessibility Engineer',
 		imageUrl: '/images/team/chhinmenghour.png',
-		cutoutUrl: '/images/team/menghour.svg',
+		cutoutUrl: '/images/team/menghour.png',
 		box: { x: 971, y: 284, width: 309, height: 508 },
 		contributions: [
 			'Built the Leaderboard page and interactive ranking UI',
@@ -81,7 +81,7 @@ export const teamMembers: TeamMember[] = [
 		japaneseRole: 'コンテンツ制作・QAエンジニア',
 		role: 'Content Specialist & QA Engineer',
 		imageUrl: '/images/team/lyleab.png',
-		cutoutUrl: '/images/team/lyleab.svg',
+		cutoutUrl: '/images/team/lyleab.png',
 		box: { x: 0, y: 313, width: 375, height: 609 },
 		contributions: [
 			'Created the Timer component for the play screen',
@@ -98,7 +98,7 @@ export const teamMembers: TeamMember[] = [
 		japaneseRole: 'セキュリティ・E2Eテスト開発',
 		role: 'Security & QA/Testing Engineer',
 		imageUrl: '/images/team/thaikarona.png',
-		cutoutUrl: '/images/team/karona.svg',
+		cutoutUrl: '/images/team/karona.png',
 		box: { x: 606, y: 304, width: 308, height: 412 },
 		contributions: [
 			'Implemented HMAC-signed value helpers for authentication and tamper-proof security',

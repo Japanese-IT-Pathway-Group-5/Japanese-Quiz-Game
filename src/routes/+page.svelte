@@ -68,7 +68,7 @@
 			{/if}
 
 			<button type="submit" class="start-btn" aria-label="Start Quiz">
-				<img src="/images/start-button.svg" alt="Start Quiz" class="start-btn-img" />
+				<img src="/images/start-button.png" alt="Start Quiz" class="start-btn-img" />
 			</button>
 		</form>
 

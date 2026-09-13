@@ -8,8 +8,8 @@
 
 	<!-- Top-Center: Japanese Celestial Disk (Sun in Light Mode / Moon in Dark Mode) -->
 	<div class="art-layer sun-layer">
-		<img src="/images/sun.svg" alt="" class="art-img sun-img" loading="eager" decoding="async" />
-		<img src="/images/moon.webp" alt="" class="art-img moon-img" loading="eager" decoding="async" />
+		<img src="/images/sun.png" alt="" class="art-img sun-img" loading="eager" decoding="async" />
+		<img src="/images/moon.png" alt="" class="art-img moon-img" loading="eager" decoding="async" />
 	</div>
 
 	<div class="art-layer sfx-layer sun-sfx" aria-hidden="true">
@@ -57,7 +57,7 @@
 	<!-- Bottom-Left: Wind-Blown Leaf Breeze -->
 	<div class="art-layer leaf-breeze-bottom">
 		<img
-			src="/images/leaf-blow-with-wind.svg"
+			src="/images/leaf-blow-with-wind.png"
 			alt=""
 			class="art-img"
 			loading="eager"

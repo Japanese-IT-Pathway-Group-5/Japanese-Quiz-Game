@@ -4,11 +4,11 @@ import { render } from 'vitest-browser-svelte';
 import SarcasticStickman from './SarcasticStickman.svelte';
 
 describe('SarcasticStickman.svelte', () => {
-	it('renders animated stickman SVG graphic', async () => {
+	it('renders animated stickman graphic', async () => {
 		render(SarcasticStickman);
 
-		const img = page.getByAltText('Sarcastic stickman blinking');
+		const img = page.getByAltText('Sarcastic stickman');
 		await expect.element(img).toBeInTheDocument();
-		await expect.element(img).toHaveAttribute('src', '/images/sacarstic-stickman-animated.svg');
+		await expect.element(img).toHaveAttribute('src', '/images/stickman-open.png');
 	});
 });
