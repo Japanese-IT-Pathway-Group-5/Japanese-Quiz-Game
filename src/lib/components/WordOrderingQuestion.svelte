@@ -99,15 +99,15 @@
 	}
 
 	.title {
-		font-size: clamp(1rem, 2vw, 1.2rem);
 		margin: 0;
+		font-size: clamp(1rem, 2vw, 1.2rem);
 	}
 
 	.prompt {
+		margin: 0;
 		font-size: clamp(1.1rem, 2.5vw, 1.5rem);
 		line-height: 1.7;
-		margin: 0;
-		word-break: break-word;
+		overflow-wrap: anywhere;
 	}
 
 	.sentence-box,
@@ -115,11 +115,12 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0.5rem;
-		padding: 0.75rem;
-		border: 2px solid #cbd5e1;
-		border-radius: 0.75rem;
-		background: rgb(255 255 255 / 0.95);
 		min-height: 4rem;
+		padding: 0.75rem;
+		border: 2px solid var(--color-border);
+		border-radius: var(--radius-md);
+		background: var(--color-surface);
+		color: var(--color-text);
 	}
 
 	.word-bank {
@@ -127,38 +128,41 @@
 	}
 
 	.empty-state {
-		color: #64748b;
+		color: var(--color-text-muted);
 		font-size: 1rem;
 	}
 
 	.word-chip {
+		width: auto;
+		min-height: 0;
 		padding: 0.7rem 1rem;
+		border: 1px solid var(--color-border);
 		border-radius: 999px;
-		border: 1px solid #94a3b8;
-		background: #f8fafc;
+		background: var(--color-surface-muted);
+		color: var(--color-text);
 		font-size: 1rem;
 		line-height: 1.2;
 		cursor: pointer;
 	}
 
-	.word-chip.primary {
-		background: #eff6ff;
-		border-color: #60a5fa;
+	.word-chip:hover {
+		border-color: var(--color-primary);
+		background: var(--color-primary-soft);
 	}
 
-	.submit-button {
-		padding: 0.85rem 1.1rem;
-		border: none;
-		border-radius: 0.75rem;
-		background: #2563eb;
-		color: white;
-		font-size: 1rem;
-		font-weight: 600;
-		cursor: pointer;
+	.word-chip.primary {
+		background: var(--color-primary-soft);
+		border-color: var(--color-primary);
+	}
+
+	.word-chip.primary:hover {
+		background: var(--color-primary);
+		color: #ffffff;
 	}
 
 	.submit-button:disabled {
-		background: #cbd5e1;
+		background: var(--color-border);
+		color: var(--color-text-muted);
 		cursor: not-allowed;
 	}
 
