@@ -3,6 +3,7 @@
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
+
 	const attempt = $derived(data.attempt);
 	const questionResults = $derived(data.questionResults);
 
@@ -20,64 +21,82 @@
 
 <main class="page-shell">
 	<div class="results-card">
-		<h1>Quiz Results</h1>
+		<header class="results-header">
+			<h1>Quiz Results</h1>
+			<p>Review your answers and see where you can improve.</p>
+		</header>
 
-		<section class="summary">
-			<div>
-				<span>Score</span>
+		<section class="summary" aria-label="Quiz summary">
+			<div class="summary-item">
+				<span>Final Score</span>
 				<strong>{attempt.finalScore ?? 0}</strong>
 			</div>
 
-			<div>
+			<div class="summary-item">
 				<span>Correct</span>
 				<strong>{attempt.correctCount} / {attempt.chosenQuestions.length}</strong>
 			</div>
 
-			<div>
+			<div class="summary-item">
 				<span>Time</span>
 				<strong>{formatTime(data.timeTaken)}</strong>
 			</div>
 		</section>
 
-		<section class="questions">
-			<h2>Question Review</h2>
+		<section class="questions" aria-labelledby="review-title">
+			<div class="section-heading">
+				<h2 id="review-title">Question Review</h2>
+				<p>{questionResults.length} questions</p>
+			</div>
 
-			{#each questionResults as question, index (question.questionId)}
-				<article class:correct={question.isCorrect} class:wrong={!question.isCorrect}>
-					<div class="question-header">
-						<h3>Question {index + 1}</h3>
+			{#if questionResults.length === 0}
+				<div class="empty-state">
+					<p>No question results are available.</p>
+				</div>
+			{:else}
+				<div class="question-list">
+					{#each questionResults as question, index (question.questionId)}
+						<article
+							class:correct={question.isCorrect}
+							class:wrong={!question.isCorrect}
+							class="question-result"
+						>
+							<div class="question-header">
+								<h3>Question {index + 1}</h3>
 
-						<span class="result">
-							{question.isCorrect ? 'Correct' : 'Wrong'}
-						</span>
-					</div>
+								<span class="result-badge">
+									{question.isCorrect ? 'Correct' : 'Wrong'}
+								</span>
+							</div>
 
-					<p class="prompt">{question.prompt}</p>
+							<p class="prompt">{question.prompt}</p>
 
-					<p>
-						<strong>Your answer:</strong>
-						{question.answer || 'No answer'}
-					</p>
+							<div class="answer-section">
+								<p>
+									<strong>Your answer</strong>
+									<span>{question.answer || 'No answer'}</span>
+								</p>
 
-					{#if !question.isCorrect}
-						<p>
-							<strong>Correct answer:</strong>
-							{question.correctAnswers.join(', ') || 'Not available'}
-						</p>
-					{/if}
+								{#if !question.isCorrect}
+									<p class="correct-answer">
+										<strong>Correct answer</strong>
+										<span>{question.correctAnswers.join(', ') || 'Not available'}</span>
+									</p>
+								{/if}
+							</div>
 
-					{#if question.explanation}
-						<div class="explanation">
-							<strong>Explanation</strong>
-							<p>{question.explanation}</p>
-						</div>
-					{/if}
+							{#if question.explanation}
+								<div class="explanation">
+									<strong>Explanation</strong>
+									<p>{question.explanation}</p>
+								</div>
+							{/if}
 
-					<p class="duration">
-						Time: {formatTime(question.durationSeconds)}
-					</p>
-				</article>
-			{/each}
+							<p class="duration">Time: {formatTime(question.durationSeconds)}</p>
+						</article>
+					{/each}
+				</div>
+			{/if}
 		</section>
 
 		<div class="actions">
@@ -88,6 +107,7 @@
 </main>
 
 <style>
+<<<<<<< HEAD
 	:global(*) {
 		box-sizing: border-box;
 	}
@@ -114,124 +134,198 @@
 		border-radius: 1rem;
 		box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08);
 		padding: 2rem;
+=======
+	.results-card {
+		max-width: 800px;
+>>>>>>> origin/main
 	}
 
-	h1 {
-		margin-top: 0;
+	.results-header {
+		margin-bottom: var(--space-lg);
+	}
+
+	.results-header h1 {
+		margin: 0;
+		font-size: clamp(1.8rem, 5vw, 2.5rem);
+	}
+
+	.results-header p {
+		margin: 0.5rem 0 0;
+		color: var(--color-text-muted);
 	}
 
 	.summary {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
-		gap: 1rem;
-		margin: 1.5rem 0 2rem;
+		gap: var(--space-md);
+		margin-bottom: var(--space-xl);
 	}
 
-	.summary div {
-		padding: 1rem;
-		border-radius: 0.75rem;
-		background: #f8fafc;
+	.summary-item {
+		padding: var(--space-md);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
+		background: var(--color-surface-muted);
 		text-align: center;
 	}
 
-	.summary span {
+	.summary-item span {
 		display: block;
-		color: #64748b;
+		color: var(--color-text-muted);
+		font-size: 0.9rem;
+		font-weight: 600;
+	}
+
+	.summary-item strong {
+		display: block;
+		margin-top: 0.35rem;
+		font-size: 1.5rem;
+	}
+
+	.section-heading {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: var(--space-md);
+		margin-bottom: var(--space-md);
+	}
+
+	.section-heading h2 {
+		margin: 0;
+	}
+
+	.section-heading p {
+		margin: 0;
+		color: var(--color-text-muted);
 		font-size: 0.9rem;
 	}
 
-	.summary strong {
-		display: block;
-		margin-top: 0.35rem;
-		font-size: 1.4rem;
+	.question-list {
+		display: grid;
+		gap: var(--space-md);
 	}
 
-	.questions h2 {
-		margin-bottom: 1rem;
+	.question-result {
+		padding: var(--space-lg);
+		border: 1px solid var(--color-border);
+		border-left: 5px solid var(--color-border);
+		border-radius: var(--radius-md);
+		background: var(--color-surface);
 	}
 
-	article {
-		margin-bottom: 1rem;
-		padding: 1.25rem;
-		border: 1px solid #e2e8f0;
-		border-radius: 0.75rem;
+	.question-result.correct {
+		border-left-color: #16a34a;
 	}
 
-	article.correct {
-		border-left: 5px solid #16a34a;
-	}
-
-	article.wrong {
-		border-left: 5px solid #dc2626;
+	.question-result.wrong {
+		border-left-color: #dc2626;
 	}
 
 	.question-header {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		gap: 1rem;
+		gap: var(--space-md);
 	}
 
-	h3 {
+	.question-header h3 {
 		margin: 0;
+		font-size: 1.1rem;
 	}
 
-	.result {
+	.result-badge {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0.35rem 0.7rem;
+		border-radius: 999px;
+		font-size: 0.85rem;
 		font-weight: 700;
+		white-space: nowrap;
 	}
 
-	.correct .result {
-		color: #16a34a;
+	.correct .result-badge {
+		background: #dcfce7;
+		color: #166534;
 	}
 
-	.wrong .result {
-		color: #dc2626;
+	.wrong .result-badge {
+		background: var(--color-danger-background);
+		color: var(--color-danger);
 	}
 
 	.prompt {
-		font-size: 1.05rem;
-		font-weight: 600;
+		margin: var(--space-md) 0;
+		font-size: 1.1rem;
+		font-weight: 700;
+		line-height: 1.7;
+		overflow-wrap: anywhere;
+	}
+
+	.answer-section {
+		display: grid;
+		gap: 0.75rem;
+	}
+
+	.answer-section p {
+		display: grid;
+		gap: 0.25rem;
+		margin: 0;
+	}
+
+	.answer-section span {
+		overflow-wrap: anywhere;
+	}
+
+	.correct-answer {
+		color: var(--color-text);
 	}
 
 	.explanation {
-		margin-top: 1rem;
-		padding: 1rem;
-		border-radius: 0.5rem;
-		background: #f8fafc;
+		margin-top: var(--space-md);
+		padding: var(--space-md);
+		border-radius: var(--radius-sm);
+		background: var(--color-primary-soft);
+		border: 1px solid var(--color-border-soft);
 	}
 
 	.explanation p {
-		margin-bottom: 0;
+		margin: 0.4rem 0 0;
+		overflow-wrap: anywhere;
 	}
 
 	.duration {
-		color: #64748b;
+		margin: var(--space-md) 0 0;
+		color: var(--color-text-muted);
 		font-size: 0.9rem;
 	}
 
 	.actions {
 		display: flex;
-		gap: 1rem;
-		margin-top: 2rem;
+		gap: var(--space-md);
+		margin-top: var(--space-xl);
 	}
 
 	.actions a {
 		flex: 1;
-		padding: 0.85rem 1rem;
-		border-radius: 0.75rem;
-		text-align: center;
-		font-weight: 700;
-		text-decoration: none;
-	}
-
-	.primary-link {
-		background: #2563eb;
-		color: white;
 	}
 
 	.secondary-link {
-		background: #e2e8f0;
-		color: #1e293b;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 2.75rem;
+		padding: 0.8rem 1rem;
+		border-radius: var(--radius-md);
+		background: var(--color-surface-muted);
+		border: 1px solid var(--color-border);
+		color: var(--color-text);
+		text-decoration: none;
+		font-weight: 700;
+	}
+
+	.secondary-link:hover {
+		background: var(--color-border);
 	}
 	.questions,
 	article,
@@ -248,22 +342,27 @@
 		}
 
 		.results-card {
-			padding: 1rem;
-			border-radius: 0.75rem;
+			padding: var(--space-md);
 		}
 
 		.summary {
 			grid-template-columns: 1fr;
 		}
 
+		.section-heading {
+			align-items: flex-start;
+			flex-direction: column;
+			gap: 0.25rem;
+		}
+
+		.question-result {
+			padding: var(--space-md);
+		}
+
 		.question-header {
 			align-items: flex-start;
 			flex-direction: column;
 			gap: 0.5rem;
-		}
-
-		article {
-			padding: 1rem;
 		}
 
 		.actions {
