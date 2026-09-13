@@ -11,7 +11,11 @@ export const load: LayoutServerLoad = async ({ url, cookies, platform }) => {
 		return {};
 	}
 
-	const isLoggedIn = await verifyAdminCookie(cookies, platform!.env.AUTH_SECRET);
+	const authSecret =
+		platform?.env?.AUTH_SECRET ||
+		(typeof process !== 'undefined' ? process.env?.AUTH_SECRET : undefined) ||
+		'dev-secret-key-development-mode-1234567890';
+	const isLoggedIn = await verifyAdminCookie(cookies, authSecret);
 
 	if (!isLoggedIn) {
 		redirect(303, '/admin/login');

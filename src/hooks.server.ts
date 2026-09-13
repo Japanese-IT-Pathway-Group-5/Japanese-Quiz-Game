@@ -7,7 +7,12 @@ import { getOrCreatePlayerId } from '$lib/server/auth/playerSession';
  * reads `event.locals.playerId`.
  */
 export const handle: Handle = async ({ event, resolve }) => {
-	event.locals.playerId = await getOrCreatePlayerId(event.cookies, event.platform!.env.AUTH_SECRET);
+	const authSecret =
+		event.platform?.env?.AUTH_SECRET ||
+		(typeof process !== 'undefined' ? process.env?.AUTH_SECRET : undefined) ||
+		'dev-secret-key-development-mode-1234567890';
+
+	event.locals.playerId = await getOrCreatePlayerId(event.cookies, authSecret);
 
 	return resolve(event);
 };

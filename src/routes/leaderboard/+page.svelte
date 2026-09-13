@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import type { PageData } from './$types';
+	import { Button } from '$lib/components/ui';
+	import { navigating } from '$app/stores';
 
 	let { data }: { data: PageData } = $props();
 
@@ -13,30 +15,26 @@
 </script>
 
 <svelte:head>
-	<title>Leaderboard</title>
+	<title>Leaderboard · ランキング · Japanese Quiz Game</title>
 	<meta name="description" content="Japanese Quiz Game leaderboard" />
 </svelte:head>
 
 <div class="leaderboard-page">
 	<div class="leaderboard-container">
 		<header class="leaderboard-header">
-			<nav class="top-nav">
-				<a href={resolve('/')} class="back-link">Back to start</a>
-			</nav>
-			<h1>Leaderboard</h1>
-			<p>See the best quiz scores and find your ranking.</p>
+			<h1 class="title font-brush text-gold-gradient">ランキング</h1>
+			<p class="subtitle">See the best quiz scores and find your ranking.</p>
 		</header>
 
 		<nav class="level-filter" aria-label="Filter leaderboard by level">
 			<a href={resolve('/leaderboard')} class:active={data.level === 'all'}> All </a>
-
 			<a href="{resolve('/leaderboard')}?level=N3" class:active={data.level === 'N3'}> N3 </a>
-
 			<a href="{resolve('/leaderboard')}?level=N4" class:active={data.level === 'N4'}> N4 </a>
 		</nav>
 
 		{#if data.leaderboard.length === 0}
 			<div class="empty-state">
+				<i class="fa-solid fa-ranking-star empty-icon"></i>
 				<h2>No scores yet</h2>
 				<p>
 					There are no finished quiz games for this level yet. Complete a quiz and be the first on
@@ -48,8 +46,8 @@
 				<table>
 					<thead>
 						<tr>
-							<th>Position</th>
-							<th>Nickname</th>
+							<th>Rank</th>
+							<th>Player</th>
 							<th>Level</th>
 							<th>Score</th>
 							<th>Time</th>
@@ -57,212 +55,308 @@
 					</thead>
 
 					<tbody>
-						{#each data.leaderboard as entry (entry.playerId)}
-							<tr class:current-player={entry.isCurrentPlayer}>
-								<td class="position">
-									#{entry.position}
-								</td>
+						{#if $navigating}
+							{#each [0, 1, 2, 3, 4] as idx (idx)}
+								<tr class="skeleton-row">
+									<td class="position">
+										<div
+											class="skeleton"
+											style="width: 28px; height: 1.1rem; margin: 0 auto;"
+										></div>
+									</td>
+									<td class="nickname">
+										<div
+											class="skeleton"
+											style="width: {80 + (idx % 3) * 20}px; height: 1.1rem;"
+										></div>
+									</td>
+									<td>
+										<div
+											class="skeleton"
+											style="width: 36px; height: 1.1rem; margin: 0 auto; border-radius: 999px;"
+										></div>
+									</td>
+									<td class="score">
+										<div
+											class="skeleton"
+											style="width: 32px; height: 1.1rem; margin: 0 auto;"
+										></div>
+									</td>
+									<td class="time">
+										<div
+											class="skeleton"
+											style="width: 44px; height: 1.1rem; margin: 0 auto;"
+										></div>
+									</td>
+								</tr>
+							{/each}
+						{:else}
+							{#each data.leaderboard as entry (entry.playerId)}
+								<tr class:current-player={entry.isCurrentPlayer}>
+									<td class="position">
+										#{entry.position}
+									</td>
 
-								<td class="nickname">
-									{entry.nickname}
+									<td class="nickname">
+										{entry.nickname}
+										{#if entry.isCurrentPlayer}
+											<span class="you">You</span>
+										{/if}
+									</td>
 
-									{#if entry.isCurrentPlayer}
-										<span class="you">You</span>
-									{/if}
-								</td>
+									<td>
+										<span class="level-badge">
+											{entry.level}
+										</span>
+									</td>
 
-								<td>
-									<span class="level">
-										{entry.level}
-									</span>
-								</td>
+									<td class="score">
+										{entry.score}
+									</td>
 
-								<td class="score">
-									{entry.score}
-								</td>
-
-								<td class="time">
-									{formatTime(entry.timeSeconds)}
-								</td>
-							</tr>
-						{/each}
+									<td class="time">
+										{formatTime(entry.timeSeconds)}
+									</td>
+								</tr>
+							{/each}
+						{/if}
 					</tbody>
 				</table>
 			</div>
 		{/if}
+
+		<div class="actions">
+			<Button href={resolve('/')} variant="gold" size="md">
+				<i class="fa-solid fa-house"></i>
+				<span>Back to Home</span>
+			</Button>
+		</div>
 	</div>
 </div>
 
 <style>
-	a {
-		display: inline-block;
-		margin-top: 1rem;
-		padding: 0.8rem 1rem;
-		background: #2563eb;
-		color: white;
-		border-radius: 0.75rem;
-		text-decoration: none;
-		font-weight: 700;
-	}
 	.leaderboard-page {
-		min-height: 100vh;
-		padding: 32px 16px;
-		background: #f5f5f5;
+		height: 100vh;
+		padding: 1.5rem 1rem;
+		display: flex;
+		justify-content: center;
+		overflow: hidden;
 	}
 
 	.leaderboard-container {
-		width: 100%;
-		max-width: 900px;
-		margin: 0 auto;
+		width: min(100%, 800px);
+		height: 100%;
+		min-height: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
 	}
 
 	.leaderboard-header {
-		margin-bottom: 24px;
+		text-align: center;
 	}
 
-	h1 {
-		margin: 0 0 8px;
-		font-size: 32px;
-	}
-
-	.leaderboard-header p {
+	.title {
 		margin: 0;
-		color: #666;
+		font-size: clamp(2.2rem, 5vw, 3rem);
+		font-weight: 900;
+		letter-spacing: 0.05em;
+	}
+
+	.subtitle {
+		margin: 0.25rem 0 0;
+		color: var(--theme-text-muted, #94a3b8);
+		font-size: 0.9rem;
 	}
 
 	.level-filter {
 		display: flex;
-		gap: 8px;
-		margin-bottom: 20px;
+		justify-content: center;
+		gap: 0.5rem;
 	}
 
 	.level-filter a {
-		padding: 8px 18px;
-		border: 1px solid #ccc;
-		border-radius: 8px;
-		background: white;
-		color: #333;
+		padding: 0.5rem 1.25rem;
+		border-radius: var(--radius-pill, 9999px);
+		border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.1));
+		background: var(--theme-paper, rgba(255, 255, 255, 0.05));
+		color: var(--theme-text-muted, #94a3b8);
 		text-decoration: none;
-		font-weight: 600;
+		font-weight: 700;
+		font-size: 0.9rem;
+		position: relative;
+		overflow: hidden;
+		transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+		user-select: none;
+		box-shadow: 0 4px 14px rgba(0, 15, 45, 0.25);
 	}
 
-	.level-filter a:hover {
-		background: #eee;
+	.level-filter a:hover:not(.active) {
+		background: color-mix(in srgb, var(--theme-paper, #05367b) 75%, #1952a8 25%);
+		color: #ffffff;
+		transform: translateY(-2px);
+		box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
 	}
 
 	.level-filter a.active {
-		background: #333;
-		color: white;
-		border-color: #333;
+		background: var(--theme-gold-shimmer, #ffbc0d);
+		border-color: var(--theme-gold, #ffbc0d);
+		color: #022659;
+		font-weight: 800;
+		box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+		transform: translateY(-2px);
+	}
+
+	.level-filter a.active:hover {
+		filter: brightness(1.05);
+	}
+
+	.level-filter a:active {
+		transform: translateY(1px) scale(0.98);
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 	}
 
 	.table-wrapper {
-		overflow-x: auto;
-		border-radius: 10px;
-		background: white;
-		box-shadow: 0 2px 8px rgb(0 0 0 / 8%);
+		flex: 1;
+		min-height: 0;
+		overflow: auto;
+		border-radius: var(--radius-lg, 1rem);
+		background: rgba(0, 15, 45, 0.6);
+		backdrop-filter: blur(12px);
+		border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.1));
+		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 	}
 
 	table {
 		width: 100%;
-		min-width: 600px;
 		border-collapse: collapse;
+		text-align: left;
 	}
 
 	th,
 	td {
-		padding: 14px 16px;
-		text-align: left;
-		border-bottom: 1px solid #eee;
+		padding: 1rem 1.25rem;
+		border-bottom: 1px solid var(--theme-border, rgba(255, 255, 255, 0.08));
 	}
 
 	th {
-		background: #fafafa;
-		font-size: 14px;
-		color: #555;
+		position: sticky;
+		top: 0;
+		z-index: 1;
+		background: rgba(255, 255, 255, 0.03);
+		font-family: var(--font-mono, monospace);
+		font-size: 0.75rem;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		color: var(--theme-text-muted, #94a3b8);
 	}
 
-	tbody tr:last-child td {
+	tr:last-child td {
 		border-bottom: none;
 	}
 
-	tbody tr.current-player {
-		background: #fff8d6;
+	tr.current-player {
+		background: rgba(255, 188, 13, 0.08);
 	}
 
 	.position {
-		width: 100px;
+		font-family: var(--font-mono, monospace);
 		font-weight: 700;
+		color: var(--theme-gold, #ffbc0d);
 	}
 
 	.nickname {
-		font-weight: 600;
+		font-weight: 700;
+		color: var(--theme-text-main, #ffffff);
 	}
 
 	.you {
 		display: inline-block;
-		margin-left: 8px;
-		padding: 2px 7px;
-		border-radius: 10px;
-		background: #333;
-		color: white;
-		font-size: 11px;
-		font-weight: 600;
+		margin-left: 0.5rem;
+		padding: 0.15rem 0.5rem;
+		border-radius: 9999px;
+		background: var(--theme-gold, #ffbc0d);
+		color: #000f2d;
+		font-size: 0.7rem;
+		font-weight: 800;
+		text-transform: uppercase;
 	}
 
-	.level {
-		font-weight: 600;
-	}
-
-	.score {
+	.level-badge {
+		display: inline-block;
+		padding: 0.2rem 0.5rem;
+		border-radius: 4px;
+		background: rgba(255, 255, 255, 0.08);
+		font-size: 0.8rem;
 		font-weight: 700;
 	}
 
+	.score {
+		font-family: var(--font-mono, monospace);
+		font-weight: 800;
+		font-size: 1.05rem;
+		color: var(--theme-gold, #ffbc0d);
+	}
+
 	.time {
-		font-variant-numeric: tabular-nums;
+		font-family: var(--font-mono, monospace);
+		color: var(--theme-text-muted, #94a3b8);
 	}
 
 	.empty-state {
-		padding: 48px 24px;
-		border-radius: 10px;
-		background: white;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding: 3rem 1.5rem;
 		text-align: center;
-		box-shadow: 0 2px 8px rgb(0 0 0 / 8%);
+		border-radius: var(--radius-lg, 1rem);
+		background: rgba(0, 15, 45, 0.6);
+		backdrop-filter: blur(12px);
+		border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.1));
+		gap: 0.75rem;
+	}
+
+	.empty-icon {
+		font-size: 2.5rem;
+		color: var(--theme-gold, #ffbc0d);
+		margin-bottom: 0.5rem;
 	}
 
 	.empty-state h2 {
-		margin: 0 0 8px;
+		margin: 0;
+		font-size: 1.3rem;
+		color: var(--theme-text-main, #ffffff);
 	}
 
 	.empty-state p {
-		max-width: 500px;
-		margin: 0 auto;
-		color: #666;
+		margin: 0;
+		max-width: 420px;
+		color: var(--theme-text-muted, #94a3b8);
 		line-height: 1.5;
+		font-size: 0.95rem;
 	}
 
-	@media (max-width: 600px) {
+	.actions {
+		display: flex;
+		justify-content: center;
+	}
+
+	@media (max-height: 720px) {
 		.leaderboard-page {
-			padding: 20px 10px;
+			padding-block: 1rem;
 		}
 
-		h1 {
-			font-size: 26px;
+		.leaderboard-container {
+			gap: 0.75rem;
 		}
 
-		.level-filter {
-			width: 100%;
+		.title {
+			font-size: clamp(2rem, 5vw, 2.5rem);
 		}
 
-		.level-filter a {
-			flex: 1;
-			padding: 8px 12px;
-			text-align: center;
-		}
-
-		th,
-		td {
-			padding: 12px;
+		.subtitle {
+			display: none;
 		}
 	}
 </style>

@@ -23,8 +23,10 @@ export type GetQuizAttemptParams = {
 export type SubmitAttemptAnswerParams = {
 	attemptId: string;
 	playerId: string;
-	answer: string | readonly string[];
+	questionId?: string;
+	answer?: string | readonly string[];
 	durationSeconds?: number;
+	finish?: boolean;
 };
 
 export type SubmitAttemptAnswerResult = {
@@ -43,6 +45,8 @@ export type GetQuizAttemptResult = {
 	currentQuestion: ClientQuestion | null;
 	totalQuestions: number;
 	isFinished: boolean;
+	allQuestions: ClientQuestion[];
+	answeredMap: Record<string, string>;
 };
 
 /**
@@ -111,7 +115,7 @@ export async function startQuizAttempt(
 }
 
 /**
- * Retrieves a quiz attempt and its sanitized current question.
+ * Retrieves a quiz attempt, all its sanitized client questions, and current answered status.
  *
  * Enforces ownership: only the player who created the attempt can read it.
  */
@@ -136,27 +140,44 @@ export async function getQuizAttempt(
 	const isFinished =
 		attempt.status === 'finished' || attempt.currentQuestionIndex >= totalQuestions;
 
-	let currentQuestion: ClientQuestion | null = null;
+	const allQuestions: ClientQuestion[] = [];
+	for (const qId of attempt.chosenQuestions) {
+		const [rawQuestion] = await db
+			.select()
+			.from(schema.questions)
+			.where(eq(schema.questions.id, qId));
 
+		if (rawQuestion) {
+			const rawChoices = await db
+				.select()
+				.from(schema.choices)
+				.where(eq(schema.choices.questionId, qId));
+
+			allQuestions.push(
+				toClientQuestion({
+					...rawQuestion,
+					choices: rawChoices
+				})
+			);
+		}
+	}
+
+	const answeredRows = await db
+		.select()
+		.from(schema.attemptAnswers)
+		.where(eq(schema.attemptAnswers.attemptId, attempt.id));
+
+	const answeredMap: Record<string, string> = {};
+	for (const row of answeredRows) {
+		answeredMap[row.questionId] = row.answer;
+	}
+
+	let currentQuestion: ClientQuestion | null = null;
 	if (!isFinished && attempt.status === 'active') {
 		const currentQuestionId = attempt.chosenQuestions[attempt.currentQuestionIndex];
 		if (currentQuestionId) {
-			const [rawQuestion] = await db
-				.select()
-				.from(schema.questions)
-				.where(eq(schema.questions.id, currentQuestionId));
-
-			if (rawQuestion) {
-				const rawChoices = await db
-					.select()
-					.from(schema.choices)
-					.where(eq(schema.choices.questionId, currentQuestionId));
-
-				currentQuestion = toClientQuestion({
-					...rawQuestion,
-					choices: rawChoices
-				});
-			}
+			currentQuestion =
+				allQuestions.find((q) => q.id === currentQuestionId) ?? allQuestions[0] ?? null;
 		}
 	}
 
@@ -164,17 +185,19 @@ export async function getQuizAttempt(
 		attempt,
 		currentQuestion,
 		totalQuestions,
-		isFinished
+		isFinished,
+		allQuestions,
+		answeredMap
 	};
 }
 
 /**
- * Submits an answer for the current question:
+ * Submits an answer for a question in the attempt (supports reviewing & updating answers):
  * - Refuses access if player does not own attempt
  * - Refuses answer if attempt is already finished
- * - Grades the answer and records it in attempt_answers
- * - Advances attempt by 1 question and increments correctCount
- * - If last question, marks attempt finished and sets finishedAt
+ * - Grades the answer and upserts it in attempt_answers
+ * - Recalculates total correct answers
+ * - Advances attempt state or marks finished
  */
 export async function submitAttemptAnswer(
 	db: AppDb,
@@ -200,7 +223,7 @@ export async function submitAttemptAnswer(
 		throw new Error('Quiz attempt is already finished');
 	}
 
-	const questionId = attempt.chosenQuestions[attempt.currentQuestionIndex];
+	const questionId = params.questionId ?? attempt.chosenQuestions[attempt.currentQuestionIndex];
 	const [question] = await db
 		.select()
 		.from(schema.questions)
@@ -215,35 +238,82 @@ export async function submitAttemptAnswer(
 		.from(schema.choices)
 		.where(eq(schema.choices.questionId, questionId));
 
-	// Grade the answer
-	const gradeResult = gradeAnswer(
-		{
-			...question,
-			choices: questionChoices
-		},
-		params.answer
-	);
+	let isCorrect = false;
+	let explanation: string | null = null;
+	let correctAnswer: string | string[] | undefined;
 
-	// Record answer in attempt_answers
-	const answerString =
-		typeof params.answer === 'string' ? params.answer : JSON.stringify(params.answer);
+	if (params.answer !== undefined) {
+		// Grade the answer
+		const gradeResult = gradeAnswer(
+			{
+				...question,
+				choices: questionChoices
+			},
+			params.answer
+		);
 
-	await db.insert(schema.attemptAnswers).values({
-		id: crypto.randomUUID(),
-		attemptId: attempt.id,
-		questionId: question.id,
-		answer: answerString,
-		isCorrect: gradeResult.isCorrect,
-		durationSeconds: params.durationSeconds ?? 0
-	});
+		isCorrect = gradeResult.isCorrect;
+		explanation = gradeResult.explanation ?? null;
+		correctAnswer = gradeResult.correctAnswer;
 
-	// Advance attempt state
-	const nextIndex = attempt.currentQuestionIndex + 1;
-	const newCorrectCount = gradeResult.isCorrect ? attempt.correctCount + 1 : attempt.correctCount;
-	const isFinished = nextIndex >= attempt.chosenQuestions.length;
+		const answerString =
+			typeof params.answer === 'string' ? params.answer : JSON.stringify(params.answer);
+
+		// Check if answer already exists
+		const existingAnswer = await db
+			.select()
+			.from(schema.attemptAnswers)
+			.where(
+				and(
+					eq(schema.attemptAnswers.attemptId, attempt.id),
+					eq(schema.attemptAnswers.questionId, question.id)
+				)
+			);
+
+		if (existingAnswer.length > 0) {
+			await db
+				.update(schema.attemptAnswers)
+				.set({
+					answer: answerString,
+					isCorrect,
+					durationSeconds: params.durationSeconds ?? 0,
+					answeredAt: new Date()
+				})
+				.where(eq(schema.attemptAnswers.id, existingAnswer[0].id));
+		} else {
+			await db.insert(schema.attemptAnswers).values({
+				id: crypto.randomUUID(),
+				attemptId: attempt.id,
+				questionId: question.id,
+				answer: answerString,
+				isCorrect,
+				durationSeconds: params.durationSeconds ?? 0
+			});
+		}
+	}
+
+	// Calculate overall correct count across all answered questions
+	const allAnswers = await db
+		.select()
+		.from(schema.attemptAnswers)
+		.where(eq(schema.attemptAnswers.attemptId, attempt.id));
+
+	const newCorrectCount = allAnswers.filter((a) => a.isCorrect).length;
+	const isFinishRequested = params.finish === true;
+
+	// Calculate next index
+	const currentIndex = attempt.chosenQuestions.indexOf(questionId);
+	const nextIndex =
+		currentIndex >= 0
+			? Math.min(currentIndex + 1, attempt.chosenQuestions.length)
+			: attempt.currentQuestionIndex + 1;
+	const isFinished =
+		isFinishRequested ||
+		(nextIndex >= attempt.chosenQuestions.length &&
+			allAnswers.length >= attempt.chosenQuestions.length);
 
 	const updateValues: Partial<typeof schema.quizAttempts.$inferInsert> = {
-		currentQuestionIndex: nextIndex,
+		currentQuestionIndex: isFinished ? attempt.chosenQuestions.length : nextIndex,
 		correctCount: newCorrectCount
 	};
 
@@ -268,13 +338,13 @@ export async function submitAttemptAnswer(
 		.returning();
 
 	return {
-		isCorrect: gradeResult.isCorrect,
+		isCorrect,
 		isFinished,
 		correctCount: newCorrectCount,
 		currentQuestionIndex: nextIndex,
 		totalQuestions: attempt.chosenQuestions.length,
-		explanation: gradeResult.explanation ?? null,
-		correctAnswer: gradeResult.correctAnswer,
+		explanation,
+		correctAnswer,
 		attempt: updatedAttempt
 	};
 }

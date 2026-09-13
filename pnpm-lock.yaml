@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      '@lottiefiles/dotlottie-svelte':
+        specifier: ^0.10.15
+        version: 0.10.15(svelte@5.56.10(@typescript-eslint/types@8.68.0))
     devDependencies:
       '@eslint/js':
         specifier: ^10.0.1
@@ -992,6 +996,16 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
+
+  '@lottiefiles/dotlottie-svelte@0.10.15':
+    resolution: {integrity: sha512-K3ARCZ+rZgXIWkDgihifseFy0K70eKCihjICMMledRmzhotTtxExUzWm2cHo8hLspSSr57xfsyS7EuCHLAyjxQ==}
+    engines: {node: '>=18.17.0', npm: '>=9.5.0'}
+    peerDependencies:
+      svelte: ^5.0.0
+
+  '@lottiefiles/dotlottie-web@0.80.0':
+    resolution: {integrity: sha512-M00APgOJfP6xPZ3kAzZAUNATxluFiMU0wD3asp6HQSXDX8qLzSDh/Jmqbo0H7+WcqfpQkN8WYBu3aOzm2y/b4g==}
+    engines: {node: '>=18.17.0', npm: '>=9.5.0'}
 
   '@oxc-project/types@0.146.0':
     resolution: {integrity: sha512-XC0QsnnhVe7sLIWmYmdPw7x5P0h4W8vUU3Nv1ySgWXtvCz8NizoAEpGXA0sOYoJQV2Rl13LgURAHQ5cI5ILCSA==}
@@ -2784,6 +2798,13 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
+
+  '@lottiefiles/dotlottie-svelte@0.10.15(svelte@5.56.10(@typescript-eslint/types@8.68.0))':
+    dependencies:
+      '@lottiefiles/dotlottie-web': 0.80.0
+      svelte: 5.56.10(@typescript-eslint/types@8.68.0)
+
+  '@lottiefiles/dotlottie-web@0.80.0': {}
 
   '@oxc-project/types@0.146.0': {}
 

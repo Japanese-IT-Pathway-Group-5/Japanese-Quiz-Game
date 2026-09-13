@@ -4,9 +4,39 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="text-scale" content="scale" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=IBM+Plex+Mono:wght@400;600&family=Kaisei+Tokumin:wght@400;700;900&family=Lora:ital,wght@0,400..700;1,400..700&family=Shippori+Mincho:wght@400;700;900&family=Yuji+Boku&family=Zen+Old+Mincho:wght@400;500;700;900&display=swap"
+			rel="stylesheet"
+		/>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+			integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+			crossorigin="anonymous"
+			referrerpolicy="no-referrer"
+		/>
+		<script>
+			(function () {
+				try {
+					const theme = localStorage.getItem('theme');
+					if (
+						theme === 'dark' ||
+						(!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)
+					) {
+						document.documentElement.classList.add('dark');
+						document.documentElement.setAttribute('data-theme', 'dark');
+					} else {
+						document.documentElement.classList.remove('dark');
+						document.documentElement.setAttribute('data-theme', 'light');
+					}
+				} catch (e) {}
+			})();
+		</script>
 		%sveltekit.head%
 	</head>
-	<body data-sveltekit-preload-data="hover">
+	<body data-sveltekit-preload-data="hover" class="paper-grain">
 		<div style="display: contents">%sveltekit.body%</div>
 	</body>
 </html>
