@@ -69,6 +69,7 @@ export const load: PageServerLoad = async ({ params, locals, platform, setHeader
 			isCorrect: attemptAnswers.isCorrect,
 			durationSeconds: attemptAnswers.durationSeconds,
 			prompt: questions.prompt,
+			promptJa: questions.promptJa,
 			explanation: questions.explanation,
 			format: questions.format,
 			acceptedAnswers: questions.acceptedAnswers
@@ -204,6 +205,8 @@ export const load: PageServerLoad = async ({ params, locals, platform, setHeader
 		return {
 			questionId: answer.questionId,
 			prompt: answer.prompt,
+			promptJa: answer.promptJa,
+			format: answer.format,
 			answer: playerAnswer,
 			isCorrect: answer.isCorrect,
 			durationSeconds: answer.durationSeconds,
@@ -211,6 +214,15 @@ export const load: PageServerLoad = async ({ params, locals, platform, setHeader
 			correctAnswers
 		};
 	});
+
+	// Sort question results by the attempt's chosen questions order
+	if (Array.isArray(attempt.chosenQuestions)) {
+		questionResults.sort((a, b) => {
+			const idxA = attempt.chosenQuestions.indexOf(a.questionId);
+			const idxB = attempt.chosenQuestions.indexOf(b.questionId);
+			return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
+		});
+	}
 
 	const timeTaken =
 		attempt.finishedAt && attempt.startedAt

@@ -10,13 +10,14 @@
 	const normalizedAnswer = $derived(normalizeTypedAnswer(typedAnswer));
 
 	function renderGapFillSentence(text: string) {
-		if (!text.includes('___')) {
+		const gapRegex = /(_{3,5}|（\s*）|\(\s*\)|\[\s*\])/g;
+		if (!gapRegex.test(text)) {
 			return [{ type: 'text', value: text }];
 		}
 
-		const segments = text.split(/(_____|___)/);
+		const segments = text.split(gapRegex);
 		return segments.map((segment) => {
-			if (segment === '___' || segment === '_____') {
+			if (/^(_{3,5}|（\s*）|\(\s*\)|\[\s*\])$/.test(segment)) {
 				return { type: 'blank', value: blankMarker };
 			}
 

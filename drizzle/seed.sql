@@ -12,7 +12,8 @@ VALUES (
     'Choose the correct option.',
     '毎朝、パンを（ ）コーヒーを飲みます。',
     NULL,
-    'Lay Sopanha',
+    '【正解】「食べて」
+文脈に最も適した選択肢は「食べて」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -35,7 +36,8 @@ VALUES (
     'Fill in the blank.',
     '辞書を（ ）言葉の意味を調べました。',
     NULL,
-    'Lay Sopanha',
+    '【正解】「引いて」
+文脈に最も適した選択肢は「引いて」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -58,7 +60,8 @@ VALUES (
     'Type the correct answer.',
     '「いしゃ」の漢字を書いてください。',
     '["医者","いしゃ","isha"]',
-    'Lay Sopanha',
+    '【正解】「医者」
+「いしゃ」の漢字を書いてください。に対する正しい表記です。漢字の読み書きと意味をしっかり確認しておきましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -72,7 +75,8 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (Please take an umbrella.)',
     NULL,
-    'Lay Sopanha',
+    '【正解の文】「傘を 持って 行って ください」
+文法構造と助詞の接続順序に注意して、正しい文を組み立てましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -95,7 +99,8 @@ VALUES (
     'Choose the correct option.',
     '暗くなりましたから、電気を（ ）ください。',
     NULL,
-    'Lay Sopanha',
+    '【正解】「つけて」
+文脈に最も適した選択肢は「つけて」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -118,7 +123,8 @@ VALUES (
     'Fill in the blank.',
     '風邪を（ ）ので、会社を休みます。',
     NULL,
-    'Lay Sopanha',
+    '【正解】「ひいた」
+文脈に最も適した選択肢は「ひいた」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -141,7 +147,8 @@ VALUES (
     'Type the correct answer.',
     '「ぎんこう」の漢字を書いてください。',
     '["銀行","ぎんこう","ginkou","ginko"]',
-    'Lay Sopanha',
+    '【正解】「銀行」
+「ぎんこう」の漢字を書いてください。に対する正しい表記です。漢字の読み書きと意味をしっかり確認しておきましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -155,7 +162,8 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (I returned the wallet to the police station.)',
     NULL,
-    'Lay Sopanha',
+    '【正解の文】「交番の 警察に 財布を 届けました」
+文法構造と助詞の接続順序に注意して、正しい文を組み立てましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -178,7 +186,8 @@ VALUES (
     'Choose the correct option.',
     '荷物が重いので、（ ）手伝ってください。',
     NULL,
-    'Lay Sopanha',
+    '【正解】「少し」
+文脈に最も適した選択肢は「少し」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -201,7 +210,8 @@ VALUES (
     'Fill in the blank.',
     'エレベーターが（ ）ので階段を使いました。',
     NULL,
-    'Lay Sopanha',
+    '【正解】「故障した」
+文脈に最も適した選択肢は「故障した」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -224,7 +234,8 @@ VALUES (
     'Type the correct answer.',
     '「くすり」の漢字を書いてください。',
     '["薬","くすり","kusuri"]',
-    'Lay Sopanha',
+    '【正解】「薬」
+「くすり」の漢字を書いてください。に対する正しい表記です。漢字の読み書きと意味をしっかり確認しておきましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -238,7 +249,8 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (I brushed my teeth after eating.)',
     NULL,
-    'Lay Sopanha',
+    '【正解の文】「ご飯を 食べた後で 歯を 磨きました」
+文法構造と助詞の接続順序に注意して、正しい文を組み立てましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -261,7 +273,8 @@ VALUES (
     'Choose the correct option.',
     'この料理の（ ）方を教えてください。',
     NULL,
-    'Lay Sopanha',
+    '【正解】「作り」
+文脈に最も適した選択肢は「作り」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -284,7 +297,8 @@ VALUES (
     'Fill in the blank.',
     '靴を脱いで、（ ）を履いてください。',
     NULL,
-    'Lay Sopanha',
+    '【正解】「スリッパ」
+文脈に最も適した選択肢は「スリッパ」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -307,7 +321,8 @@ VALUES (
     'Type the correct answer.',
     '「しんぶん」の漢字を書いてください。',
     '["新聞","しんぶん","shinbun","shimbun"]',
-    'Lay Sopanha',
+    '【正解】「新聞」
+「しんぶん」の漢字を書いてください。に対する正しい表記です。漢字の読み書きと意味をしっかり確認しておきましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -321,7 +336,8 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (The train was packed with people.)',
     NULL,
-    'Lay Sopanha',
+    '【正解の文】「電車は 満員で 人で いっぱいでした」
+文法構造と助詞の接続順序に注意して、正しい文を組み立てましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -344,7 +360,8 @@ VALUES (
     'Choose the correct option.',
     'バスに乗り（ ）ので、走りました。',
     NULL,
-    'Lay Sopanha',
+    '【正解】「遅れた」
+文脈に最も適した選択肢は「遅れた」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -367,7 +384,8 @@ VALUES (
     'Fill in the blank.',
     '約束の時間を（ ）しまいました。',
     NULL,
-    'Lay Sopanha',
+    '【正解】「忘れて」
+文脈に最も適した選択肢は「忘れて」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -390,7 +408,8 @@ VALUES (
     'Type the correct answer.',
     '「みち」の漢字を書いてください。',
     '["道","みち","michi"]',
-    'Lay Sopanha',
+    '【正解】「道」
+「みち」の漢字を書いてください。に対する正しい表記です。漢字の読み書きと意味をしっかり確認しておきましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -404,7 +423,8 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (Turn right at the corner.)',
     NULL,
-    'Lay Sopanha',
+    '【正解の文】「角を 右へ 曲がって ください」
+文法構造と助詞の接続順序に注意して、正しい文を組み立てましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -427,7 +447,8 @@ VALUES (
     'Choose the correct option.',
     '「図書館」の正しい読み方はどれですか。',
     NULL,
-    'Chea Virakbott',
+    '【正解】「としょかん」
+文脈に最も適した選択肢は「としょかん」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -450,7 +471,8 @@ VALUES (
     'Fill in the blank.',
     'このビルはとても（高い＝たかい）です。下線部の反対語は？',
     NULL,
-    'Chea Virakbott',
+    '【正解】「低い」
+文脈に最も適した選択肢は「低い」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -473,7 +495,8 @@ VALUES (
     'Type the correct answer.',
     '「危険」の読み方をひらがなで書いてください。',
     '["きけん","危険","キケン","kiken"]',
-    'Chea Virakbott',
+    '【正解】「きけん」
+「危険」の読み方をひらがなで書いてください。に対する正しい表記です。漢字の読み書きと意味をしっかり確認しておきましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -487,7 +510,8 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (The bicycle was repaired.)',
     NULL,
-    'Chea Virakbott',
+    '【正解の文】「壊れた 自転車が 自転車屋で 修理されました」
+文法構造と助詞の接続順序に注意して、正しい文を組み立てましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -510,7 +534,8 @@ VALUES (
     'Choose the correct option.',
     '「案内」の正しい読み方はどれですか。',
     NULL,
-    'Chea Virakbott',
+    '【正解】「あんない」
+文脈に最も適した選択肢は「あんない」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -533,7 +558,8 @@ VALUES (
     'Fill in the blank.',
     '「出発」の反対の意味を持つ漢字の言葉は？',
     NULL,
-    'Chea Virakbott',
+    '【正解】「到着」
+文脈に最も適した選択肢は「到着」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -556,7 +582,8 @@ VALUES (
     'Type the correct answer.',
     '「安全」の読み方をひらがなで書いてください。',
     '["あんぜん","安全","アンゼン","anzen"]',
-    'Chea Virakbott',
+    '【正解】「あんぜん」
+「安全」の読み方をひらがなで書いてください。に対する正しい表記です。漢字の読み書きと意味をしっかり確認しておきましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -570,7 +597,8 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (Please open the window.)',
     NULL,
-    'Chea Virakbott',
+    '【正解の文】「そこの 窓を 開けて ください」
+文法構造と助詞の接続順序に注意して、正しい文を組み立てましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -593,7 +621,8 @@ VALUES (
     'Choose the correct option.',
     '「急行」の正しい読み方はどれですか。',
     NULL,
-    'Chea Virakbott',
+    '【正解】「きゅうこう」
+文脈に最も適した選択肢は「きゅうこう」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -616,7 +645,8 @@ VALUES (
     'Fill in the blank.',
     '兄は（大学＝だいがく）に通っています。「大」の訓読みは？',
     NULL,
-    'Chea Virakbott',
+    '【正解】「おおきい」
+文脈に最も適した選択肢は「おおきい」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -639,7 +669,8 @@ VALUES (
     'Type the correct answer.',
     '「目的」の読み方をひらがなで書いてください。',
     '["もくてき","目的","モクテキ","mokuteki"]',
-    'Chea Virakbott',
+    '【正解】「もくてき」
+「目的」の読み方をひらがなで書いてください。に対する正しい表記です。漢字の読み書きと意味をしっかり確認しておきましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -653,7 +684,8 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (The meeting started at 10.)',
     NULL,
-    'Chea Virakbott',
+    '【正解の文】「会議室で 会議が 10時に 始まりました」
+文法構造と助詞の接続順序に注意して、正しい文を組み立てましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -676,7 +708,8 @@ VALUES (
     'Choose the correct option.',
     '「複雑」の正しい読み方はどれですか。',
     NULL,
-    'Chea Virakbott',
+    '【正解】「ふくざつ」
+文脈に最も適した選択肢は「ふくざつ」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -699,7 +732,8 @@ VALUES (
     'Fill in the blank.',
     '「（禁止＝きんし）」の意味はどれですか。',
     NULL,
-    'Chea Virakbott',
+    '【正解】「してはいけない」
+文脈に最も適した選択肢は「してはいけない」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -722,7 +756,8 @@ VALUES (
     'Type the correct answer.',
     '「都合」の読み方をひらがなで書いてください。',
     '["つごう","都合","ツゴウ","tsugou","tsugo"]',
-    'Chea Virakbott',
+    '【正解】「つごう」
+「都合」の読み方をひらがなで書いてください。に対する正しい表記です。漢字の読み書きと意味をしっかり確認しておきましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -736,7 +771,8 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (I sent a letter by airmail.)',
     NULL,
-    'Chea Virakbott',
+    '【正解の文】「海外へ 航空便で 手紙を 送りました」
+文法構造と助詞の接続順序に注意して、正しい文を組み立てましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -759,7 +795,8 @@ VALUES (
     'Choose the correct option.',
     '「相談」の正しい読み方はどれですか。',
     NULL,
-    'Chea Virakbott',
+    '【正解】「そうだん」
+文脈に最も適した選択肢は「そうだん」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -782,7 +819,8 @@ VALUES (
     'Fill in the blank.',
     '「（返事＝へんじ）」をする相手は誰ですか。',
     NULL,
-    'Chea Virakbott',
+    '【正解】「質問した人」
+文脈に最も適した選択肢は「質問した人」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -805,7 +843,8 @@ VALUES (
     'Type the correct answer.',
     '「注意」の読み方をひらがなで書いてください。',
     '["ちゅうい","注意","チュウイ","chuui","chui"]',
-    'Chea Virakbott',
+    '【正解】「ちゅうい」
+「注意」の読み方をひらがなで書いてください。に対する正しい表記です。漢字の読み書きと意味をしっかり確認しておきましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -819,7 +858,8 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (I reserved a hotel room.)',
     NULL,
-    'Chea Virakbott',
+    '【正解の文】「インターネットで ホテルの 部屋を 予約しました」
+文法構造と助詞の接続順序に注意して、正しい文を組み立てましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -842,7 +882,8 @@ VALUES (
     'Choose the correct option.',
     '日本へ行ったことが（ ）。',
     NULL,
-    'Has Sereivathana',
+    '【正解】「あります」
+文脈に最も適した選択肢は「あります」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -865,7 +906,8 @@ VALUES (
     'Fill in the blank.',
     '明日テストがあるので、勉強し（ ）なりません。',
     NULL,
-    'Has Sereivathana',
+    '【正解】「なければ」
+文脈に最も適した選択肢は「なければ」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -888,7 +930,8 @@ VALUES (
     'Type the correct answer.',
     '「ここに入って（ ）いいですか。」の空欄の助詞を一文字入れなさい。',
     '["も","mo"]',
-    'Has Sereivathana',
+    '【正解】「も」
+「ここに入って（ ）いいですか。」の空欄の助詞を一文字入れなさい。に対する正しい表記です。漢字の読み書きと意味をしっかり確認しておきましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -902,7 +945,8 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (Please don''t forget your homework.)',
     NULL,
-    'Has Sereivathana',
+    '【正解の文】「明日の 宿題を 忘れないで ください」
+文法構造と助詞の接続順序に注意して、正しい文を組み立てましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -925,7 +969,8 @@ VALUES (
     'Choose the correct option.',
     '雨が降って（ ）、傘を持っていきます。',
     NULL,
-    'Has Sereivathana',
+    '【正解】「いるから」
+文脈に最も適した選択肢は「いるから」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -948,7 +993,8 @@ VALUES (
     'Fill in the blank.',
     '窓が（ ）います。風が入ってきます。',
     NULL,
-    'Has Sereivathana',
+    '【正解】「開いて」
+文脈に最も適した選択肢は「開いて」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -971,7 +1017,8 @@ VALUES (
     'Type the correct answer.',
     '「傘を持た（ ）に出かけました。」の空欄に入る平仮名2文字を書きなさい。',
     '["ずに","ない","zuni","nai"]',
-    'Has Sereivathana',
+    '【正解】「ずに」
+「傘を持た（ ）に出かけました。」の空欄に入る平仮名2文字を書きなさい。に対する正しい表記です。漢字の読み書きと意味をしっかり確認しておきましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -985,7 +1032,8 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (I will go after eating dinner.)',
     NULL,
-    'Has Sereivathana',
+    '【正解の文】「夕食を 食べてから 駅へ 行きます」
+文法構造と助詞の接続順序に注意して、正しい文を組み立てましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1008,7 +1056,8 @@ VALUES (
     'Choose the correct option.',
     '先生、（ ）質問してもよろしいですか。',
     NULL,
-    'Has Sereivathana',
+    '【正解】「一つ」
+文脈に最も適した選択肢は「一つ」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1031,7 +1080,8 @@ VALUES (
     'Fill in the blank.',
     '日本語が上手に（ ）たいです。',
     NULL,
-    'Has Sereivathana',
+    '【正解】「なり」
+文脈に最も適した選択肢は「なり」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1054,7 +1104,8 @@ VALUES (
     'Type the correct answer.',
     '「先生は本を読（ ）いらっしゃいます。」尊敬語の助詞を1字入れなさい。',
     '["んで","nde"]',
-    'Has Sereivathana',
+    '【正解】「んで」
+「先生は本を読（ ）いらっしゃいます。」尊敬語の助詞を1字入れなさい。に対する正しい表記です。漢字の読み書きと意味をしっかり確認しておきましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1068,7 +1119,8 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (Even if it is cold, I run.)',
     NULL,
-    'Has Sereivathana',
+    '【正解の文】「寒くても 毎朝 公園を 走ります」
+文法構造と助詞の接続順序に注意して、正しい文を組み立てましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1091,7 +1143,8 @@ VALUES (
     'Choose the correct option.',
     'この本は難し（ ）読めません。',
     NULL,
-    'Has Sereivathana',
+    '【正解】「すぎて」
+文脈に最も適した選択肢は「すぎて」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1114,7 +1167,8 @@ VALUES (
     'Fill in the blank.',
     'テレビを（ ）ながらご飯を食べます。',
     NULL,
-    'Has Sereivathana',
+    '【正解】「見」
+文脈に最も適した選択肢は「見」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1137,7 +1191,8 @@ VALUES (
     'Type the correct answer.',
     '「彼が来（ ）どうか分かりません。」の接続助詞を平仮名2文字で入れなさい。',
     '["るか","ruka"]',
-    'Has Sereivathana',
+    '【正解】「るか」
+「彼が来（ ）どうか分かりません。」の接続助詞を平仮名2文字で入れなさい。に対する正しい表記です。漢字の読み書きと意味をしっかり確認しておきましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1151,7 +1206,8 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (I was praised by the teacher.)',
     NULL,
-    'Has Sereivathana',
+    '【正解の文】「よくできたので テストで 先生に 褒められました」
+文法構造と助詞の接続順序に注意して、正しい文を組み立てましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1174,7 +1230,8 @@ VALUES (
     'Choose the correct option.',
     '明日は雨が降る（ ）です。天気予報で言っていました。',
     NULL,
-    'Has Sereivathana',
+    '【正解】「そう」
+文脈に最も適した選択肢は「そう」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1197,7 +1254,8 @@ VALUES (
     'Fill in the blank.',
     '母に部屋を掃除（ ）られました。',
     NULL,
-    'Has Sereivathana',
+    '【正解】「さ」
+文脈に最も適した選択肢は「さ」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1220,7 +1278,8 @@ VALUES (
     'Type the correct answer.',
     '「どうぞお茶を（ ）あがりください。」の平仮名2文字を書きなさい。',
     '["お召","おめ","おめし","omeshi","ome"]',
-    'Has Sereivathana',
+    '【正解】「お召」
+「どうぞお茶を（ ）あがりください。」の平仮名2文字を書きなさい。に対する正しい表記です。漢字の読み書きと意味をしっかり確認しておきましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1234,7 +1293,8 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (It looks like it will rain soon.)',
     NULL,
-    'Has Sereivathana',
+    '【正解の文】「空が暗くて 今にも 雨が 降りそうです」
+文法構造と助詞の接続順序に注意して、正しい文を組み立てましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1257,7 +1317,8 @@ VALUES (
     'Choose the correct option.',
     '会議の資料を全員に（ ）してください。',
     NULL,
-    'Chhin Menghour',
+    '【正解】「配布」
+文脈に最も適した選択肢は「配布」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1280,7 +1341,8 @@ VALUES (
     'Fill in the blank.',
     'お客様からの（ ）に対応する窓口を設置した。',
     NULL,
-    'Chhin Menghour',
+    '【正解】「苦情」
+文脈に最も適した選択肢は「苦情」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1303,7 +1365,8 @@ VALUES (
     'Type the correct answer.',
     '「えんき」の漢字を書いてください（日程を遅らせること）。',
     '["延期","えんき","enki"]',
-    'Chhin Menghour',
+    '【正解】「延期」
+「えんき」の漢字を書いてください（日程を遅らせること）。に対する正しい表記です。漢字の読み書きと意味をしっかり確認しておきましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1317,7 +1380,8 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (Expenses increased due to unexpected events.)',
     NULL,
-    'Chhin Menghour',
+    '【正解の文】「思いがけない 出来事で 出費が 重なりました」
+文法構造と助詞の接続順序に注意して、正しい文を組み立てましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1340,7 +1404,8 @@ VALUES (
     'Choose the correct option.',
     'プロジェクトの成功に向けて、全員で（ ）した。',
     NULL,
-    'Chhin Menghour',
+    '【正解】「協力」
+文脈に最も適した選択肢は「協力」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1363,7 +1428,8 @@ VALUES (
     'Fill in the blank.',
     '彼女の意見に強く（ ）した。',
     NULL,
-    'Chhin Menghour',
+    '【正解】「賛成」
+文脈に最も適した選択肢は「賛成」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1386,7 +1452,8 @@ VALUES (
     'Type the correct answer.',
     '「けいやく」の漢字を書いてください。',
     '["契約","けいやく","keiyaku"]',
-    'Chhin Menghour',
+    '【正解】「契約」
+「けいやく」の漢字を書いてください。に対する正しい表記です。漢字の読み書きと意味をしっかり確認しておきましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1400,7 +1467,8 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (We are recruiting staff for the new project.)',
     NULL,
-    'Chhin Menghour',
+    '【正解の文】「新規プロジェクトの スタッフを 募集して います」
+文法構造と助詞の接続順序に注意して、正しい文を組み立てましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1423,7 +1491,8 @@ VALUES (
     'Choose the correct option.',
     '電車のダイヤが（ ）、30分遅れて到着した。',
     NULL,
-    'Chhin Menghour',
+    '【正解】「乱れて」
+文脈に最も適した選択肢は「乱れて」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1446,7 +1515,8 @@ VALUES (
     'Fill in the blank.',
     '健康のために栄養の（ ）を考えることが大切だ。',
     NULL,
-    'Chhin Menghour',
+    '【正解】「バランス」
+文脈に最も適した選択肢は「バランス」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1469,7 +1539,8 @@ VALUES (
     'Type the correct answer.',
     '「せつやく」の漢字を書いてください。',
     '["節約","せつやく","setsuyaku"]',
-    'Chhin Menghour',
+    '【正解】「節約」
+「せつやく」の漢字を書いてください。に対する正しい表記です。漢字の読み書きと意味をしっかり確認しておきましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1483,7 +1554,8 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (He is trusted by everyone at work.)',
     NULL,
-    'Chhin Menghour',
+    '【正解の文】「彼は 職場の 皆から 信頼されています」
+文法構造と助詞の接続順序に注意して、正しい文を組み立てましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1506,7 +1578,8 @@ VALUES (
     'Choose the correct option.',
     '上司に相談して、問題を（ ）した。',
     NULL,
-    'Chhin Menghour',
+    '【正解】「解決」
+文脈に最も適した選択肢は「解決」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1529,7 +1602,8 @@ VALUES (
     'Fill in the blank.',
     'この製品は省エネ機能が（ ）いる。',
     NULL,
-    'Chhin Menghour',
+    '【正解】「優れて」
+文脈に最も適した選択肢は「優れて」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1552,7 +1626,8 @@ VALUES (
     'Type the correct answer.',
     '「しんちょう」の漢字を書いてください（注意深いこと）。',
     '["慎重","しんちょう","shinchou","shincho"]',
-    'Chhin Menghour',
+    '【正解】「慎重」
+「しんちょう」の漢字を書いてください（注意深いこと）。に対する正しい表記です。漢字の読み書きと意味をしっかり確認しておきましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1566,7 +1641,8 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (The event was canceled due to bad weather.)',
     NULL,
-    'Chhin Menghour',
+    '【正解の文】「悪天候の ために イベントは 中止に なりました」
+文法構造と助詞の接続順序に注意して、正しい文を組み立てましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1591,7 +1667,8 @@ VALUES (
     'Choose the correct option.',
     '努力のかいがあって、試験に（ ）した。',
     NULL,
-    'Chhin Menghour',
+    '【正解】「合格」
+文脈に最も適した選択肢は「合格」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1614,7 +1691,8 @@ VALUES (
     'Fill in the blank.',
     '予算が大幅に（ ）してしまった。',
     NULL,
-    'Chhin Menghour',
+    '【正解】「超過」
+文脈に最も適した選択肢は「超過」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1637,7 +1715,8 @@ VALUES (
     'Type the correct answer.',
     '「きょうしゅく」の漢字を書いてください（恐縮です）。',
     '["恐縮","きょうしゅく","kyoushuku","kyoshuku"]',
-    'Chhin Menghour',
+    '【正解】「恐縮」
+「きょうしゅく」の漢字を書いてください（恐縮です）。に対する正しい表記です。漢字の読み書きと意味をしっかり確認しておきましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1651,7 +1730,8 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (I appreciate your prompt response.)',
     NULL,
-    'Chhin Menghour',
+    '【正解の文】「迅速な ご対応を いただき 感謝いたします」
+文法構造と助詞の接続順序に注意して、正しい文を組み立てましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1674,7 +1754,8 @@ VALUES (
     'Choose the correct option.',
     '「維持」の正しい読み方はどれですか。',
     NULL,
-    'LY_LEAB',
+    '【正解】「いじ」
+文脈に最も適した選択肢は「いじ」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1697,7 +1778,8 @@ VALUES (
     'Fill in the blank.',
     '「（規則＝きそく）」を守ることは大切だ。下線部の同義語は？',
     NULL,
-    'LY_LEAB',
+    '【正解】「ルール」
+文脈に最も適した選択肢は「ルール」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1720,7 +1802,8 @@ VALUES (
     'Type the correct answer.',
     '「努力」の読み方をひらがなで書いてください。',
     '["どりょく","努力","ドリョク","doryoku"]',
-    'LY_LEAB',
+    '【正解】「どりょく」
+「努力」の読み方をひらがなで書いてください。に対する正しい表記です。漢字の読み書きと意味をしっかり確認しておきましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1734,7 +1817,8 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (The factory resumed production after inspection.)',
     NULL,
-    'LY_LEAB',
+    '【正解の文】「工場は 点検の後に 生産を 再開した」
+文法構造と助詞の接続順序に注意して、正しい文を組み立てましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1757,7 +1841,8 @@ VALUES (
     'Choose the correct option.',
     '「象徴」の正しい読み方はどれですか。',
     NULL,
-    'LY_LEAB',
+    '【正解】「しょうちょう」
+文脈に最も適した選択肢は「しょうちょう」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1780,7 +1865,8 @@ VALUES (
     'Fill in the blank.',
     '「（冷静＝れいせい）」の対義語として適切なものはどれか。',
     NULL,
-    'LY_LEAB',
+    '【正解】「興奮」
+文脈に最も適した選択肢は「興奮」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1803,7 +1889,8 @@ VALUES (
     'Type the correct answer.',
     '「効率」の読み方をひらがなで書いてください。',
     '["こうりつ","効率","コウリツ","kouritsu","koritsu"]',
-    'LY_LEAB',
+    '【正解】「こうりつ」
+「効率」の読み方をひらがなで書いてください。に対する正しい表記です。漢字の読み書きと意味をしっかり確認しておきましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1817,7 +1904,8 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (The new policy had a major impact on society.)',
     NULL,
-    'LY_LEAB',
+    '【正解の文】「新方針は 社会に 大きな影響を 与えた」
+文法構造と助詞の接続順序に注意して、正しい文を組み立てましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1840,7 +1928,8 @@ VALUES (
     'Choose the correct option.',
     '「傾向」の正しい読み方はどれですか。',
     NULL,
-    'LY_LEAB',
+    '【正解】「けいこう」
+文脈に最も適した選択肢は「けいこう」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1863,7 +1952,8 @@ VALUES (
     'Fill in the blank.',
     '「環境を（保護＝ほご）する」の「保護」の意味は？',
     NULL,
-    'LY_LEAB',
+    '【正解】「守ること」
+文脈に最も適した選択肢は「守ること」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1886,7 +1976,8 @@ VALUES (
     'Type the correct answer.',
     '「謙虚」の読み方をひらがなで書いてください。',
     '["けんきょ","謙虚","ケンキョ","kenkyo"]',
-    'LY_LEAB',
+    '【正解】「けんきょ」
+「謙虚」の読み方をひらがなで書いてください。に対する正しい表記です。漢字の読み書きと意味をしっかり確認しておきましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1900,7 +1991,8 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (Natural resources must be used carefully.)',
     NULL,
-    'LY_LEAB',
+    '【正解の文】「天然資源を 大切に 消費しなければ ならない」
+文法構造と助詞の接続順序に注意して、正しい文を組み立てましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1923,7 +2015,8 @@ VALUES (
     'Choose the correct option.',
     '「曖昧」の正しい読み方はどれですか。',
     NULL,
-    'LY_LEAB',
+    '【正解】「あいまい」
+文脈に最も適した選択肢は「あいまい」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1946,7 +2039,8 @@ VALUES (
     'Fill in the blank.',
     '「（具体的＝ぐたいてき）」の反対語はどれですか。',
     NULL,
-    'LY_LEAB',
+    '【正解】「抽象的」
+文脈に最も適した選択肢は「抽象的」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1969,7 +2063,8 @@ VALUES (
     'Type the correct answer.',
     '「柔軟」の読み方をひらがなで書いてください。',
     '["じゅうなん","柔軟","ジュウナン","juunan","jyunan","junan"]',
-    'LY_LEAB',
+    '【正解】「じゅうなん」
+「柔軟」の読み方をひらがなで書いてください。に対する正しい表記です。漢字の読み書きと意味をしっかり確認しておきましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -1983,7 +2078,8 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (Traffic restrictions were enforced downtown.)',
     NULL,
-    'LY_LEAB',
+    '【正解の文】「今日から 都心で 交通規制が 実施された」
+文法構造と助詞の接続順序に注意して、正しい文を組み立てましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -2006,7 +2102,8 @@ VALUES (
     'Choose the correct option.',
     '「妥協」の正しい読み方はどれですか。',
     NULL,
-    'LY_LEAB',
+    '【正解】「だきょう」
+文脈に最も適した選択肢は「だきょう」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -2029,7 +2126,8 @@ VALUES (
     'Fill in the blank.',
     '「（莫大＝ばくだい）」な費用の意味は？',
     NULL,
-    'LY_LEAB',
+    '【正解】「非常に大きい」
+文脈に最も適した選択肢は「非常に大きい」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -2052,7 +2150,8 @@ VALUES (
     'Type the correct answer.',
     '「把握」の読み方をひらがなで書いてください。',
     '["はあく","把握","ハアク","haaku","haku"]',
-    'LY_LEAB',
+    '【正解】「はあく」
+「把握」の読み方をひらがなで書いてください。に対する正しい表記です。漢字の読み書きと意味をしっかり確認しておきましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -2066,7 +2165,8 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (The experiment produced unexpected results.)',
     NULL,
-    'LY_LEAB',
+    '【正解の文】「実験によって 予期せぬ結果が もたらされた」
+文法構造と助詞の接続順序に注意して、正しい文を組み立てましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -2087,7 +2187,8 @@ VALUES (
     'Choose the correct option.',
     '忙しい（ ）、手伝ってくれてありがとう。',
     NULL,
-    'Thaikarona',
+    '【正解】「ところを」
+文脈に最も適した選択肢は「ところを」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -2110,7 +2211,8 @@ VALUES (
     'Fill in the blank.',
     '彼はお金持ちだが、必ずしも幸せな（ ）。',
     NULL,
-    'Thaikarona',
+    '【正解】「わけではない」
+文脈に最も適した選択肢は「わけではない」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -2133,7 +2235,8 @@ VALUES (
     'Type the correct answer.',
     '「この薬を飲めば飲む（ ）効き目が弱くなる。」の平仮名2文字を入れなさい。',
     '["ほど","hodo"]',
-    'Thaikarona',
+    '【正解】「ほど」
+「この薬を飲めば飲む（ ）効き目が弱くなる。」の平仮名2文字を入れなさい。に対する正しい表記です。漢字の読み書きと意味をしっかり確認しておきましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -2147,7 +2250,8 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (Finish it while the coffee is hot.)',
     NULL,
-    'Thaikarona',
+    '【正解の文】「コーヒーが 温かいうちに 飲んで ください」
+文法構造と助詞の接続順序に注意して、正しい文を組み立てましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -2170,7 +2274,8 @@ VALUES (
     'Choose the correct option.',
     '祖父は80歳である（ ）、足腰がとても丈夫だ。',
     NULL,
-    'Thaikarona',
+    '【正解】「にもかかわらず」
+文脈に最も適した選択肢は「にもかかわらず」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -2193,7 +2298,8 @@ VALUES (
     'Fill in the blank.',
     '会議の資料は事前に目を通して（ ）べきだ。',
     NULL,
-    'Thaikarona',
+    '【正解】「おく」
+文脈に最も適した選択肢は「おく」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -2216,7 +2322,8 @@ VALUES (
     'Type the correct answer.',
     '「日本に滞在してい（ ）間に、富士山に登りたい。」の平仮名1文字を入れなさい。',
     '["る","ru"]',
-    'Thaikarona',
+    '【正解】「る」
+「日本に滞在してい（ ）間に、富士山に登りたい。」の平仮名1文字を入れなさい。に対する正しい表記です。漢字の読み書きと意味をしっかり確認しておきましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -2230,7 +2337,8 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (The price is cheap relative to its high quality.)',
     NULL,
-    'Thaikarona',
+    '【正解の文】「品質が 高い わりに 値段が安い」
+文法構造と助詞の接続順序に注意して、正しい文を組み立てましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -2253,7 +2361,8 @@ VALUES (
     'Choose the correct option.',
     '彼の説明は初心者（ ）わかりやすかった。',
     NULL,
-    'Thaikarona',
+    '【正解】「にしては」
+文脈に最も適した選択肢は「にしては」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -2276,7 +2385,8 @@ VALUES (
     'Fill in the blank.',
     '先生のアドバイスの（ ）勉強したら成績が伸びた。',
     NULL,
-    'Thaikarona',
+    '【正解】「とおりに」
+文脈に最も適した選択肢は「とおりに」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -2299,7 +2409,8 @@ VALUES (
     'Type the correct answer.',
     '「山田さんに（ ）は、明日の会議で報告します。」の平仮名3文字を入れなさい。',
     '["ついて","tsuite"]',
-    'Thaikarona',
+    '【正解】「ついて」
+「山田さんに（ ）は、明日の会議で報告します。」の平仮名3文字を入れなさい。に対する正しい表記です。漢字の読み書きと意味をしっかり確認しておきましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -2313,7 +2424,8 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (He acts as if he knows everything.)',
     NULL,
-    'Thaikarona',
+    '【正解の文】「彼は 何でも 知っている かのように 話す」
+文法構造と助詞の接続順序に注意して、正しい文を組み立てましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -2338,7 +2450,8 @@ VALUES (
     'Choose the correct option.',
     '子供（ ）公園で静かに遊ぶのは難しい。',
     NULL,
-    'Thaikarona',
+    '【正解】「にとって」
+文脈に最も適した選択肢は「にとって」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -2361,7 +2474,8 @@ VALUES (
     'Fill in the blank.',
     'この靴はデザインが素敵な（ ）、歩きやすい。',
     NULL,
-    'Thaikarona',
+    '【正解】「うえに」
+文脈に最も適した選択肢は「うえに」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -2384,7 +2498,8 @@ VALUES (
     'Type the correct answer.',
     '「台風の影響（ ）、電車が止まりました。」の助詞・接続平仮名2文字を入れなさい。',
     '["で","により","de","niyori"]',
-    'Thaikarona',
+    '【正解】「で」
+「台風の影響（ ）、電車が止まりました。」の助詞・接続平仮名2文字を入れなさい。に対する正しい表記です。漢字の読み書きと意味をしっかり確認しておきましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -2398,7 +2513,8 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (Don''t decide until you consult your family.)',
     NULL,
-    'Thaikarona',
+    '【正解の文】「家族と 相談した 上で 決めてください」
+文法構造と助詞の接続順序に注意して、正しい文を組み立てましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -2421,7 +2537,8 @@ VALUES (
     'Choose the correct option.',
     '練習を重ねる（ ）、次第に上達してきた。',
     NULL,
-    'Thaikarona',
+    '【正解】「につれて」
+文脈に最も適した選択肢は「につれて」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -2444,7 +2561,8 @@ VALUES (
     'Fill in the blank.',
     '熱がある（ ）、無理をして出勤した。',
     NULL,
-    'Thaikarona',
+    '【正解】「のに」
+文脈に最も適した選択肢は「のに」です。前後の接続や文法規則を確認しましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -2467,7 +2585,8 @@ VALUES (
     'Type the correct answer.',
     '「一度決めた（ ）は、最後までやり抜くべきだ。」の平仮名2文字を入れなさい。',
     '["から","kara"]',
-    'Thaikarona',
+    '【正解】「から」
+「一度決めた（ ）は、最後までやり抜くべきだ。」の平仮名2文字を入れなさい。に対する正しい表記です。漢字の読み書きと意味をしっかり確認しておきましょう。',
     1,
     strftime('%s', 'now')
 );
@@ -2481,7 +2600,8 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (Whether we go depends on tomorrow''s weather.)',
     NULL,
-    'Thaikarona',
+    '【正解の文】「明日の 天気 次第で 決めましょう」
+文法構造と助詞の接続順序に注意して、正しい文を組み立てましょう。',
     1,
     strftime('%s', 'now')
 );

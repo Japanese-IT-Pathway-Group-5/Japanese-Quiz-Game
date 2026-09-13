@@ -96,6 +96,52 @@ export const actions: Actions = {
 			throw error(403, 'This game is no longer active.');
 		}
 
+		const rawAllAnswers = formData.get('allAnswers')?.toString();
+		let allAnswersMap: Record<string, string> | null = null;
+		if (rawAllAnswers) {
+			try {
+				allAnswersMap = JSON.parse(rawAllAnswers);
+			} catch {}
+		}
+
+		const rawDuration = formData.get('durationSeconds');
+		const durationSeconds =
+			typeof rawDuration === 'string' ? Math.max(0, parseInt(rawDuration, 10) || 0) : 0;
+
+		if (isFinishAction && allAnswersMap) {
+			// Save and grade all questions in the attempt
+			for (const q of quizResult.allQuestions) {
+				const rawQAns = allAnswersMap[q.id] ?? '';
+				let qAns: string | string[] = rawQAns;
+
+				if (q.format === 'word_ordering') {
+					try {
+						const parsed = JSON.parse(rawQAns);
+						if (Array.isArray(parsed)) qAns = parsed;
+					} catch {}
+				}
+
+				await submitAttemptAnswer(db, {
+					attemptId: params.attemptId,
+					playerId: locals.playerId,
+					questionId: q.id,
+					answer: qAns,
+					durationSeconds,
+					finish: false
+				});
+			}
+
+			// Finalize attempt
+			await submitAttemptAnswer(db, {
+				attemptId: params.attemptId,
+				playerId: locals.playerId,
+				questionId: quizResult.allQuestions[0].id,
+				finish: true
+			});
+
+			throw redirect(303, `/results/${params.attemptId}`);
+		}
+
 		const targetQuestion = submittedQuestionId
 			? (quizResult.allQuestions.find((q) => q.id === submittedQuestionId) ??
 				quizResult.currentQuestion)
@@ -135,10 +181,6 @@ export const actions: Actions = {
 				answer = rawAnswer.trim();
 			}
 		}
-
-		const rawDuration = formData.get('durationSeconds');
-		const durationSeconds =
-			typeof rawDuration === 'string' ? Math.max(0, parseInt(rawDuration, 10) || 0) : 0;
 
 		const outcome = await submitAttemptAnswer(db, {
 			attemptId: params.attemptId,
