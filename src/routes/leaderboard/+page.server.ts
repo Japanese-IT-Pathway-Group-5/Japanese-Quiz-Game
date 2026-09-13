@@ -17,9 +17,7 @@ export const load: PageServerLoad = async ({ url, platform, locals }) => {
 	const requestedLevel = url.searchParams.get('level');
 
 	const level: LevelFilter =
-		requestedLevel === 'N3' || requestedLevel === 'N4'
-			? requestedLevel
-			: 'all';
+		requestedLevel === 'N3' || requestedLevel === 'N4' ? requestedLevel : 'all';
 
 	const db = getDb(platform!.env.DB);
 
@@ -51,19 +49,13 @@ export const load: PageServerLoad = async ({ url, platform, locals }) => {
 	const bestByPlayer = new Map<string, LeaderboardEntry>();
 
 	for (const attempt of attempts) {
-		if (
-			attempt.finalScore === null ||
-			attempt.startedAt === null ||
-			attempt.finishedAt === null
-		) {
+		if (attempt.finalScore === null || attempt.startedAt === null || attempt.finishedAt === null) {
 			continue;
 		}
 
 		const timeSeconds = Math.max(
 			0,
-			Math.floor(
-				(attempt.finishedAt.getTime() - attempt.startedAt.getTime()) / 1000
-			)
+			Math.floor((attempt.finishedAt.getTime() - attempt.startedAt.getTime()) / 1000)
 		);
 
 		const candidate: LeaderboardEntry = {
@@ -79,8 +71,7 @@ export const load: PageServerLoad = async ({ url, platform, locals }) => {
 		if (
 			!existing ||
 			candidate.score > existing.score ||
-			(candidate.score === existing.score &&
-				candidate.timeSeconds < existing.timeSeconds)
+			(candidate.score === existing.score && candidate.timeSeconds < existing.timeSeconds)
 		) {
 			bestByPlayer.set(attempt.playerId, candidate);
 		}

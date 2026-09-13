@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -9,20 +10,11 @@
 
 		return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 	};
-
-	const getLevelUrl = (level: string) => {
-		return level === 'all'
-			? '/leaderboard'
-			: `/leaderboard?level=${level}`;
-	};
 </script>
 
 <svelte:head>
 	<title>Leaderboard</title>
-	<meta
-		name="description"
-		content="Japanese Quiz Game leaderboard"
-	/>
+	<meta name="description" content="Japanese Quiz Game leaderboard" />
 </svelte:head>
 
 <div class="leaderboard-page">
@@ -33,34 +25,19 @@
 		</header>
 
 		<nav class="level-filter" aria-label="Filter leaderboard by level">
-			<a
-				href={getLevelUrl('all')}
-				class:active={data.level === 'all'}
-			>
-				All
-			</a>
+			<a href={resolve('/leaderboard')} class:active={data.level === 'all'}> All </a>
 
-			<a
-				href={getLevelUrl('N3')}
-				class:active={data.level === 'N3'}
-			>
-				N3
-			</a>
+			<a href="{resolve('/leaderboard')}?level=N3" class:active={data.level === 'N3'}> N3 </a>
 
-			<a
-				href={getLevelUrl('N4')}
-				class:active={data.level === 'N4'}
-			>
-				N4
-			</a>
+			<a href="{resolve('/leaderboard')}?level=N4" class:active={data.level === 'N4'}> N4 </a>
 		</nav>
 
 		{#if data.leaderboard.length === 0}
 			<div class="empty-state">
 				<h2>No scores yet</h2>
 				<p>
-					There are no finished quiz games for this level yet.
-					Complete a quiz and be the first on the leaderboard!
+					There are no finished quiz games for this level yet. Complete a quiz and be the first on
+					the leaderboard!
 				</p>
 			</div>
 		{:else}
@@ -77,7 +54,7 @@
 					</thead>
 
 					<tbody>
-						{#each data.leaderboard as entry}
+						{#each data.leaderboard as entry (entry.playerId)}
 							<tr class:current-player={entry.isCurrentPlayer}>
 								<td class="position">
 									#{entry.position}
