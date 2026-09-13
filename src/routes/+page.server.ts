@@ -1,24 +1,17 @@
-import { eq, and } from 'drizzle-orm';
 import { fail, redirect } from '@sveltejs/kit';
+import { eq } from 'drizzle-orm';
 import type { Actions, PageServerLoad } from './$types';
 import { getDb } from '$lib/server/db';
-import { players, questions, quizAttempts } from '$lib/server/db/schema';
+import { players } from '$lib/server/db/schema';
+import { startQuizAttempt } from '$lib/server/quiz';
 
 const MAX_NICKNAME_LENGTH = 30;
-const DEFAULT_QUESTION_COUNT = 10;
-
-const chooseQuestions = (availableQuestionIds: string[]) => {
-	const shuffled = [...availableQuestionIds];
-
-	for (let index = shuffled.length - 1; index > 0; index -= 1) {
-		const swapIndex = Math.floor(Math.random() * (index + 1));
-		[shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
-	}
-
-	return shuffled.slice(0, Math.min(DEFAULT_QUESTION_COUNT, shuffled.length));
-};
 
 export const load: PageServerLoad = async ({ locals, platform }) => {
+	if (!locals.playerId) {
+		return { nickname: '' };
+	}
+
 	const db = getDb(platform!.env.DB);
 	const [player] = await db.select().from(players).where(eq(players.id, locals.playerId));
 
@@ -29,7 +22,6 @@ export const load: PageServerLoad = async ({ locals, platform }) => {
 
 export const actions: Actions = {
 	default: async ({ request, locals, platform }) => {
-		const db = getDb(platform!.env.DB);
 		const formData = await request.formData();
 		const rawNickname = formData.get('nickname');
 		const rawLevel = formData.get('level');
@@ -60,45 +52,23 @@ export const actions: Actions = {
 			});
 		}
 
-		await db
-			.insert(players)
-			.values({
-				id: locals.playerId,
-				nickname
-			})
-			.onConflictDoUpdate({
-				target: players.id,
-				set: { nickname }
+		const db = getDb(platform!.env.DB);
+
+		let attempt;
+		try {
+			attempt = await startQuizAttempt(db, {
+				playerId: locals.playerId,
+				nickname,
+				level
 			});
-
-		const activeQuestions = await db
-			.select({ id: questions.id })
-			.from(questions)
-			.where(and(eq(questions.level, level), eq(questions.isActive, true)));
-
-		if (activeQuestions.length === 0) {
+		} catch (e: unknown) {
+			const message = e instanceof Error ? e.message : 'Failed to start quiz.';
 			return fail(400, {
 				nickname,
 				level,
-				error: `No active questions are available for ${level}.`
+				error: message
 			});
 		}
-
-		const chosenQuestions = chooseQuestions(activeQuestions.map((question) => question.id));
-
-		const [attempt] = await db
-			.insert(quizAttempts)
-			.values({
-				id: crypto.randomUUID(),
-				playerId: locals.playerId,
-				nickname,
-				level,
-				chosenQuestions,
-				currentQuestionIndex: 0,
-				correctCount: 0,
-				status: 'active'
-			})
-			.returning();
 
 		throw redirect(303, `/play/${attempt.id}`);
 	}
