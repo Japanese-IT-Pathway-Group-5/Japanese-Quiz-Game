@@ -30,16 +30,8 @@
 	--radius-lg: 1rem;
 
 	--font-sans:
-		Inter,
-		'Noto Sans JP',
-		'Hiragino Kaku Gothic ProN',
-		'Yu Gothic',
-		Meiryo,
-		system-ui,
-		-apple-system,
-		BlinkMacSystemFont,
-		'Segoe UI',
-		sans-serif;
+		Inter, 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', Meiryo, system-ui,
+		-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 /* Base styles shared by every page. */

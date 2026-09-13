@@ -10,9 +10,7 @@
 	<div class="info-card">
 		<h1>Leaderboard</h1>
 
-		<p>
-			Coming soon. This page will show the top scores for each player.
-		</p>
+		<p>Coming soon. This page will show the top scores for each player.</p>
 
 		<a href={resolve('/')}>Back to start</a>
 	</div>

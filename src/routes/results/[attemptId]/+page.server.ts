@@ -131,8 +131,7 @@ export const load: PageServerLoad = async ({ params, locals, platform, setHeader
 	}
 
 	const questionResults = answers.map((answer) => {
-		const isChoiceQuestion =
-			answer.format === 'multiple_choice' || answer.format === 'gap_fill';
+		const isChoiceQuestion = answer.format === 'multiple_choice' || answer.format === 'gap_fill';
 
 		const isWordOrdering = answer.format === 'word_ordering';
 
@@ -158,9 +157,7 @@ export const load: PageServerLoad = async ({ params, locals, platform, setHeader
 			const orderedChoices = orderedChoiceMap.get(answer.questionId) ?? [];
 
 			correctAnswers =
-				orderedChoices.length > 0
-					? [orderedChoices.map((choice) => choice.text).join(' ')]
-					: [];
+				orderedChoices.length > 0 ? [orderedChoices.map((choice) => choice.text).join(' ')] : [];
 		}
 
 		if (answer.format === 'typing') {
@@ -180,10 +177,7 @@ export const load: PageServerLoad = async ({ params, locals, platform, setHeader
 
 	const timeTaken =
 		attempt.finishedAt && attempt.startedAt
-			? Math.max(
-					0,
-					Math.round((attempt.finishedAt.getTime() - attempt.startedAt.getTime()) / 1000)
-				)
+			? Math.max(0, Math.round((attempt.finishedAt.getTime() - attempt.startedAt.getTime()) / 1000))
 			: 0;
 
 	return {

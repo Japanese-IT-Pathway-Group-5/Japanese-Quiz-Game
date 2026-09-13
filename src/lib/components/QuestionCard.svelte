@@ -81,6 +81,7 @@
 		</div>
 	{/if}
 </div>
+
 <style>
 	.question-card {
 		width: min(100%, 720px);

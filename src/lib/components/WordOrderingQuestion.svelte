@@ -88,6 +88,7 @@
 		Submit answer
 	</button>
 </div>
+
 <style>
 	.word-ordering {
 		display: grid;

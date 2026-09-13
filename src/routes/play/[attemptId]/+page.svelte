@@ -92,6 +92,7 @@
 		</form>
 	</div>
 </main>
+
 <style>
 	.quiz-card {
 		max-width: 760px;
