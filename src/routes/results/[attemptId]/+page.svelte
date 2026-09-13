@@ -88,6 +88,9 @@
 </main>
 
 <style>
+	:global(*) {
+		box-sizing: border-box;
+	}
 	:global(body) {
 		margin: 0;
 		font-family: Arial, sans-serif;
@@ -96,11 +99,16 @@
 
 	.page-shell {
 		min-height: 100vh;
+		width: 100%;
+		max-width: 100%;
+		overflow-x: hidden;
 		padding: 2rem 1rem;
 	}
 
 	.results-card {
-		width: min(100%, 800px);
+		width: 100%;
+		max-width: 800px;
+		box-sizing: border-box;
 		margin: 0 auto;
 		background: white;
 		border-radius: 1rem;
@@ -225,18 +233,45 @@
 		background: #e2e8f0;
 		color: #1e293b;
 	}
+	.questions,
+	article,
+	.question-header,
+	.prompt {
+		min-width: 0;
+		max-width: 100%;
+		overflow-wrap: anywhere;
+	}
 
 	@media (max-width: 600px) {
+		.page-shell {
+			padding: 1rem 0.75rem;
+		}
+
 		.results-card {
-			padding: 1.25rem;
+			padding: 1rem;
+			border-radius: 0.75rem;
 		}
 
 		.summary {
 			grid-template-columns: 1fr;
 		}
 
+		.question-header {
+			align-items: flex-start;
+			flex-direction: column;
+			gap: 0.5rem;
+		}
+
+		article {
+			padding: 1rem;
+		}
+
 		.actions {
 			flex-direction: column;
+		}
+
+		.actions a {
+			width: 100%;
 		}
 	}
 </style>

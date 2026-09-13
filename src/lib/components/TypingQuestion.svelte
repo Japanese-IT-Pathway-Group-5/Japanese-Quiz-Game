@@ -33,6 +33,7 @@
 
 	.text-input {
 		width: 100%;
+		box-sizing: border-box;
 		padding: 0.85rem 1rem;
 		border: 2px solid #cbd5e1;
 		border-radius: 0.8rem;
