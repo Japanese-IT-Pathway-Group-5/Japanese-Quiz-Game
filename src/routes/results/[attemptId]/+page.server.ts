@@ -1,3 +1,59 @@
+// import { error, redirect } from '@sveltejs/kit';
+// import type { PageServerLoad } from './$types';
+// import { getDb } from '$lib/server/db';
+// import { quizAttempts } from '$lib/server/db/schema';
+// import { eq } from 'drizzle-orm';
+// import { calculateScore } from '$lib/quiz/calculateScore';
+
+// export const load: PageServerLoad = async ({ params, locals, platform, setHeaders }) => {
+// 	setHeaders({
+// 		'cache-control': 'no-store'
+// 	});
+
+// 	if (!locals.playerId) {
+// 		throw error(403, 'This game does not belong to this player.');
+// 	}
+
+// 	const db = getDb(platform!.env.DB);
+// 	const [attempt] = await db
+// 		.select()
+// 		.from(quizAttempts)
+// 		.where(eq(quizAttempts.id, params.attemptId));
+
+// 	if (!attempt) {
+// 		throw error(404, 'Game not found.');
+// 	}
+
+// 	if (attempt.playerId !== locals.playerId) {
+// 		throw error(403, 'This game does not belong to this player.');
+// 	}
+
+// 	if (attempt.status !== 'finished') {
+// 		throw redirect(303, `/play/${attempt.id}`);
+// 	}
+
+// 	if (attempt.finalScore === null) {
+// 		const totalQuestions = (attempt.chosenQuestions ?? []).length;
+// 		const timeTaken =
+// 			attempt.finishedAt && attempt.startedAt
+// 				? Math.max(
+// 						0,
+// 						Math.round((attempt.finishedAt.getTime() - attempt.startedAt.getTime()) / 1000)
+// 					)
+// 				: 0;
+
+// 		const finalScore = calculateScore(attempt.correctCount, totalQuestions, timeTaken);
+
+// 		await db.update(quizAttempts).set({ finalScore }).where(eq(quizAttempts.id, attempt.id));
+
+// 		attempt.finalScore = finalScore;
+// 	}
+
+// 	return {
+// 		attempt
+// 	};
+// };
+
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { getDb } from '$lib/server/db';
@@ -103,18 +159,23 @@ export const load: PageServerLoad = async ({ params, locals, platform, setHeader
 			: [];
 
 	const choiceMap = new Map<string, string>();
+
 	const correctChoiceMap = new Map<string, string[]>();
+
 	const orderedChoiceMap = new Map<string, { text: string; order: number }[]>();
 
 	for (const choice of allChoices) {
+		// Convert choice ID -> readable choice text.
 		choiceMap.set(choice.id, choice.text);
 
+		// Store correct choices for multiple-choice/gap-fill.
 		if (choice.isCorrect) {
 			const existing = correctChoiceMap.get(choice.questionId) ?? [];
 			existing.push(choice.text);
 			correctChoiceMap.set(choice.questionId, existing);
 		}
 
+		// Store choices for reconstructing word-ordering answers.
 		const orderedChoices = orderedChoiceMap.get(choice.questionId) ?? [];
 
 		orderedChoices.push({
@@ -125,6 +186,7 @@ export const load: PageServerLoad = async ({ params, locals, platform, setHeader
 		orderedChoiceMap.set(choice.questionId, orderedChoices);
 	}
 
+	// Sort each question's choices using the database order.
 	for (const [questionId, orderedChoices] of orderedChoiceMap) {
 		orderedChoices.sort((a, b) => a.order - b.order);
 		orderedChoiceMap.set(questionId, orderedChoices);
@@ -138,11 +200,29 @@ export const load: PageServerLoad = async ({ params, locals, platform, setHeader
 		let playerAnswer = answer.answer;
 		let correctAnswers: string[] = [];
 
+		/*
+		 * Multiple-choice / gap-fill:
+		 *
+		 * The database stores the selected choice ID.
+		 * Convert it to the actual choice text.
+		 */
 		if (isChoiceQuestion) {
 			playerAnswer = choiceMap.get(answer.answer) ?? answer.answer;
+
 			correctAnswers = correctChoiceMap.get(answer.questionId) ?? [];
 		}
 
+		/*
+		 * Word ordering:
+		 *
+		 * The player's answer is stored as JSON, for example:
+		 *
+		 * ["日本語を","上手に","話せるように","なります。"]
+		 *
+		 * Convert it to readable text.
+		 *
+		 * The correct answer is reconstructed from choices.order.
+		 */
 		if (isWordOrdering) {
 			try {
 				const playerWords = JSON.parse(answer.answer);
@@ -151,6 +231,7 @@ export const load: PageServerLoad = async ({ params, locals, platform, setHeader
 					playerAnswer = playerWords.join(' ');
 				}
 			} catch {
+				// Keep the original answer if it is not valid JSON.
 				playerAnswer = answer.answer;
 			}
 
@@ -160,6 +241,12 @@ export const load: PageServerLoad = async ({ params, locals, platform, setHeader
 				orderedChoices.length > 0 ? [orderedChoices.map((choice) => choice.text).join(' ')] : [];
 		}
 
+		/*
+		 * Typing:
+		 *
+		 * Keep the player's typed answer as-is.
+		 * acceptedAnswers contains the valid answers.
+		 */
 		if (answer.format === 'typing') {
 			correctAnswers = answer.acceptedAnswers ?? [];
 		}
