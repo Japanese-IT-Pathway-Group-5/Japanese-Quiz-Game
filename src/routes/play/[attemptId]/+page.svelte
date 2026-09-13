@@ -15,7 +15,7 @@
 
 	let questionStartTime = $state(Date.now());
 	$effect(() => {
-		question.id; // Subscribe to question id changes
+		void question.id; // Subscribe to question id changes
 		questionStartTime = Date.now();
 	});
 
