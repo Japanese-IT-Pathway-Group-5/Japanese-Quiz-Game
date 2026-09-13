@@ -431,8 +431,10 @@
 										{activeQuestion.promptJa ?? activeQuestion.prompt}
 									</h2>
 								{/if}
-								{:else if activeQuestion.format === 'gap_fill'}
-								{@const selectedChoice = activeQuestion.choices?.find((c) => c.id === userAnswers[activeQuestion.id])}
+							{:else if activeQuestion.format === 'gap_fill'}
+								{@const selectedChoice = activeQuestion.choices?.find(
+									(c) => c.id === userAnswers[activeQuestion.id]
+								)}
 								<h2 class="prompt-japanese prompt-gap font-japanese">
 									{#each renderGapFillSentence(activeQuestion.promptJa ?? activeQuestion.prompt) as part, index (part.type + '-' + index)}
 										{#if part.type === 'blank'}

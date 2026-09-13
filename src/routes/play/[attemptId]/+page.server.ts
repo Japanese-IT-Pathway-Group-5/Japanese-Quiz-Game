@@ -101,7 +101,9 @@ export const actions: Actions = {
 		if (rawAllAnswers) {
 			try {
 				allAnswersMap = JSON.parse(rawAllAnswers);
-			} catch {}
+			} catch {
+				allAnswersMap = null;
+			}
 		}
 
 		const rawDuration = formData.get('durationSeconds');
@@ -118,7 +120,9 @@ export const actions: Actions = {
 					try {
 						const parsed = JSON.parse(rawQAns);
 						if (Array.isArray(parsed)) qAns = parsed;
-					} catch {}
+					} catch {
+						// Keep raw answer if JSON parse fails
+					}
 				}
 
 				await submitAttemptAnswer(db, {

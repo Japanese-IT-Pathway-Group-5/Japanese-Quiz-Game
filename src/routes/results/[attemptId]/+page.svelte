@@ -42,9 +42,7 @@
 		return questionResults.map((q, idx) => ({ ...q, originalIndex: idx }));
 	});
 
-	const activeQuestion = $derived(
-		questionResults[selectedIndex] ?? questionResults[0] ?? null
-	);
+	const activeQuestion = $derived(questionResults[selectedIndex] ?? questionResults[0] ?? null);
 
 	function selectQuestionByIndex(idx: number) {
 		if (idx >= 0 && idx < questionResults.length) {
@@ -83,10 +81,13 @@
 
 	// Dynamic sarcastic commentary based on accuracy
 	const sarcasticRemark = $derived.by(() => {
-		if (accuracy === 100) return '「満点！？本当にカンニングしてない？」 (Perfect! Are you sure you didn\'t cheat?)';
-		if (accuracy >= 80) return '「まあまあだな。次は全問正解を目指せ！」 (Not bad. Next time go for perfection!)';
-		if (accuracy >= 50) return '「惜しい！もっと日本語を勉強しよう！」 (Halfway there! Keep grinding your Japanese!)';
-		return '「えっ…本気で解いた？もう一回やってみようか！」 (Wait, were you serious? Let\'s try again!)';
+		if (accuracy === 100)
+			return "「満点！？本当にカンニングしてない？」 (Perfect! Are you sure you didn't cheat?)";
+		if (accuracy >= 80)
+			return '「まあまあだな。次は全問正解を目指せ！」 (Not bad. Next time go for perfection!)';
+		if (accuracy >= 50)
+			return '「惜しい！もっと日本語を勉強しよう！」 (Halfway there! Keep grinding your Japanese!)';
+		return "「えっ…本気で解いた？もう一回やってみようか！」 (Wait, were you serious? Let's try again!)";
 	});
 </script>
 
@@ -181,7 +182,9 @@
 								{@const isSelected = selectedIndex === q.originalIndex}
 								<button
 									type="button"
-									class="q-nav-item {isSelected ? 'active' : ''} {q.isCorrect ? 'is-correct' : 'is-wrong'}"
+									class="q-nav-item {isSelected ? 'active' : ''} {q.isCorrect
+										? 'is-correct'
+										: 'is-wrong'}"
 									onclick={() => selectQuestionByIndex(q.originalIndex)}
 								>
 									<div class="q-nav-badge font-mono">
@@ -261,7 +264,11 @@
 							<!-- Answer Comparison Cards -->
 							<div class="answers-comparison">
 								<!-- Player's Answer -->
-								<div class="answer-card user-ans-card {activeQuestion.isCorrect ? 'card-correct' : 'card-wrong'}">
+								<div
+									class="answer-card user-ans-card {activeQuestion.isCorrect
+										? 'card-correct'
+										: 'card-wrong'}"
+								>
 									<div class="card-label">
 										<i class="fa-solid {activeQuestion.isCorrect ? 'fa-check' : 'fa-xmark'}"></i>
 										<span>Your Answer</span>
