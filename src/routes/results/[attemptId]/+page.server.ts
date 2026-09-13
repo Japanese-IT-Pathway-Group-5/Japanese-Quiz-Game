@@ -38,8 +38,42 @@ export const load: PageServerLoad = async ({ params, locals, platform, setHeader
 	}
 
 	// Correct answers must only be available after the quiz is finished.
+	// If the attempt is active but all questions are answered, auto-finalize it here to avoid any redirect loops.
 	if (attempt.status !== 'finished') {
-		throw redirect(303, `/play/${attempt.id}`);
+		const totalQuestions = attempt.chosenQuestions.length;
+		const existingAnswers = await db
+			.select()
+			.from(attemptAnswers)
+			.where(eq(attemptAnswers.attemptId, attempt.id));
+
+		if (
+			existingAnswers.length >= totalQuestions ||
+			attempt.currentQuestionIndex >= totalQuestions
+		) {
+			const finishedAt = new Date();
+			const correctCount = existingAnswers.filter((a) => a.isCorrect).length;
+			const started = attempt.startedAt ? new Date(attempt.startedAt) : new Date();
+			const timeTaken = Math.max(0, Math.floor((finishedAt.getTime() - started.getTime()) / 1000));
+			const finalScore = calculateScore(correctCount, totalQuestions, timeTaken);
+
+			await db
+				.update(quizAttempts)
+				.set({
+					status: 'finished',
+					finishedAt,
+					correctCount,
+					finalScore,
+					currentQuestionIndex: totalQuestions
+				})
+				.where(eq(quizAttempts.id, attempt.id));
+
+			attempt.status = 'finished';
+			attempt.finishedAt = finishedAt;
+			attempt.correctCount = correctCount;
+			attempt.finalScore = finalScore;
+		} else {
+			throw redirect(303, `/play/${attempt.id}`);
+		}
 	}
 
 	// Calculate and save the final score if it has not already been calculated.
