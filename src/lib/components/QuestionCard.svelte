@@ -81,7 +81,6 @@
 		</div>
 	{/if}
 </div>
-
 <style>
 	.question-card {
 		width: min(100%, 720px);
@@ -90,15 +89,15 @@
 	}
 
 	.question-title {
-		font-size: clamp(1rem, 2vw, 1.2rem);
 		margin-bottom: 0.75rem;
+		font-size: clamp(1rem, 2vw, 1.2rem);
 	}
 
 	.prompt {
+		margin: 0 0 1rem;
 		font-size: clamp(1.1rem, 2.5vw, 1.5rem);
 		line-height: 1.7;
-		margin: 0 0 1rem;
-		word-break: break-word;
+		overflow-wrap: anywhere;
 	}
 
 	.prompt-gap {
@@ -109,17 +108,17 @@
 		display: inline-block;
 		min-width: 4.5rem;
 		padding: 0 0.35rem;
-		border-bottom: 3px solid #3b82f6;
+		border-bottom: 3px solid var(--color-primary);
 		text-align: center;
 		font-weight: 700;
 	}
 
 	.options {
-		list-style: none;
-		padding: 0;
-		margin: 0;
 		display: grid;
 		gap: 0.75rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
 	}
 
 	.option {
@@ -128,43 +127,45 @@
 		gap: 0.75rem;
 		width: 100%;
 		padding: 0.9rem 1rem;
-		border: 2px solid #d1d5db;
-		border-radius: 0.9rem;
-		background: #ffffff;
+		border: 2px solid var(--color-border);
+		border-radius: var(--radius-md);
+		background: var(--color-surface);
+		color: var(--color-text);
 		cursor: pointer;
 		transition:
 			border-color 0.15s ease,
-			background 0.15s ease,
+			background-color 0.15s ease,
 			transform 0.15s ease;
 	}
 
 	.option:hover {
-		border-color: #60a5fa;
-		background: #f8fbff;
+		border-color: var(--color-primary);
+		background: var(--color-primary-soft);
 	}
 
 	.option:has(input:focus-visible) {
-		outline: 3px solid #2563eb;
+		outline: 3px solid var(--color-primary);
 		outline-offset: 3px;
 	}
 
 	.option.selected {
-		border-color: #2563eb;
-		background: #eff6ff;
+		border-color: var(--color-primary);
+		background: var(--color-primary-soft);
 	}
 
 	.option input {
 		width: 1.2rem;
 		height: 1.2rem;
 		margin: 0;
-		accent-color: #2563eb;
+		accent-color: var(--color-primary);
 		flex-shrink: 0;
 	}
 
 	.option-text {
+		flex: 1;
 		font-size: clamp(1rem, 2vw, 1.25rem);
 		line-height: 1.5;
-		flex: 1;
+		overflow-wrap: anywhere;
 	}
 
 	.typing-box {
@@ -179,20 +180,11 @@
 
 	.typing-input {
 		width: 100%;
-		padding: 0.85rem 1rem;
-		border: 2px solid #d1d5db;
-		border-radius: 0.75rem;
-		font-size: 1rem;
-	}
-
-	.typing-input:focus-visible {
-		outline: 3px solid #2563eb;
-		outline-offset: 2px;
 	}
 
 	.normalized-answer {
 		margin: 0;
-		color: #1d4ed8;
+		color: var(--color-primary);
 		font-weight: 600;
 	}
 

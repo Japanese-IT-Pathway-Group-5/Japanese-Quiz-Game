@@ -23,49 +23,21 @@
 		<a href={resolve('/')} class="primary-link">Back to home</a>
 	</div>
 </main>
-
 <style>
-	:global(body) {
-		margin: 0;
-		font-family: Arial, sans-serif;
-		background: linear-gradient(180deg, #f8fafc 0%, #e0f2fe 100%);
-	}
-
-	.page-shell {
-		min-height: 100vh;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		padding: 1.5rem;
-	}
-
 	.results-card {
-		background: rgba(255, 255, 255, 0.96);
-		border: 1px solid #dbeafe;
-		border-radius: 1rem;
-		box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08);
-		padding: 2rem;
-		width: min(100%, 560px);
+		max-width: 560px;
 	}
 
 	h1 {
-		margin-top: 0;
 		margin-bottom: 1rem;
 	}
 
 	.score-line {
-		font-size: 1.1rem;
 		margin: 0.5rem 0;
+		font-size: 1.1rem;
 	}
 
-	.primary-link {
-		display: inline-block;
+	.results-card .primary-link {
 		margin-top: 1rem;
-		padding: 0.8rem 1rem;
-		border-radius: 0.75rem;
-		background: #2563eb;
-		color: white;
-		text-decoration: none;
-		font-weight: 700;
 	}
 </style>

@@ -23,25 +23,19 @@
 	spellcheck="false"
 	required
 />
-
 <style>
 	.field-label {
 		font-size: 0.95rem;
 		font-weight: 700;
-		color: #1e293b;
+		color: var(--color-text);
 	}
 
 	.text-input {
 		width: 100%;
-		padding: 0.85rem 1rem;
-		border: 2px solid #cbd5e1;
-		border-radius: 0.8rem;
-		font-size: 1rem;
-		background: white;
 	}
 
 	.text-input:focus-visible {
-		outline: 3px solid #2563eb;
+		outline: 3px solid var(--color-primary);
 		outline-offset: 2px;
 	}
 </style>
