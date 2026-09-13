@@ -13,8 +13,12 @@ describe('normalizeTypedAnswer', () => {
 	});
 
 	it('treats all three ways of writing n as equivalent', () => {
+		expect(normalizeTypedAnswer('nn')).toBe('ん');
 		expect(normalizeTypedAnswer("n'")).toBe('ん');
 		expect(normalizeTypedAnswer('ん')).toBe('ん');
+	});
+
+	it('converts n before a vowel correctly in context', () => {
 		expect(normalizeTypedAnswer('konna')).toBe('こんな');
 	});
 
@@ -33,5 +37,13 @@ describe('normalizeTypedAnswer', () => {
 	it('handles empty input without throwing', () => {
 		expect(() => normalizeTypedAnswer('')).not.toThrow();
 		expect(normalizeTypedAnswer('')).toBe('');
+	});
+
+	it('handles mixed romaji and hiragana input without throwing', () => {
+		expect(() => normalizeTypedAnswer('とうtoumei')).not.toThrow();
+	});
+
+	it('treats full-width apostrophe-n the same as half-width', () => {
+		expect(normalizeTypedAnswer("ｎ'")).toBe(normalizeTypedAnswer("n'"));
 	});
 });

@@ -1,19 +1,13 @@
 <script lang="ts">
-	type Choice = {
-		id: string;
-		text: string;
-	};
+	import type { ClientQuestion } from '$lib/quiz/types';
 
-	type Question = {
-		id: string;
-		format: 'word_ordering';
-		prompt: string;
-		promptJa?: string | null;
-		choices?: readonly Choice[];
-	};
-
-	let { question, onSubmit }: { question: Question; onSubmit?: (sentence: string[]) => void } =
-		$props();
+	let {
+		question,
+		onSubmit
+	}: {
+		question: ClientQuestion & { format: 'word_ordering' };
+		onSubmit?: (sentence: string[]) => void;
+	} = $props();
 
 	let availableWords = $state<string[]>([]);
 	let builtSentence = $state<string[]>([]);
