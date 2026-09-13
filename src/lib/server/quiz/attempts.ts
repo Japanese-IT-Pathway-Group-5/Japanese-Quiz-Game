@@ -3,6 +3,7 @@ import * as schema from '$lib/server/db/schema';
 import type { AppDb } from '$lib/server/db';
 import { toClientQuestion, shuffleArray } from '$lib/quiz/toClientQuestion';
 import { gradeAnswer } from '$lib/quiz/gradeAnswer';
+import { calculateScore } from '$lib/quiz/calculateScore';
 import type { ClientQuestion } from '$lib/quiz/types';
 
 export const DEFAULT_QUESTION_COUNT = 10;
@@ -247,8 +248,17 @@ export async function submitAttemptAnswer(
 	};
 
 	if (isFinished) {
+		const finishedAt = new Date();
 		updateValues.status = 'finished';
-		updateValues.finishedAt = new Date();
+		updateValues.finishedAt = finishedAt;
+
+		const started = attempt.startedAt ? new Date(attempt.startedAt) : new Date();
+		const totalSeconds = Math.max(0, Math.floor((finishedAt.getTime() - started.getTime()) / 1000));
+		updateValues.finalScore = calculateScore(
+			newCorrectCount,
+			attempt.chosenQuestions.length,
+			totalSeconds
+		);
 	}
 
 	const [updatedAttempt] = await db
