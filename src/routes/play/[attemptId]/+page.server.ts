@@ -12,7 +12,14 @@ export const load: PageServerLoad = async ({ params, locals, platform, setHeader
 		throw error(403, 'This game does not belong to this player.');
 	}
 
-	const db = getDb(platform!.env.DB);
+	if (!platform?.env?.DB) {
+		throw error(
+			500,
+			'Database binding (DB) is unavailable. Run `npm run preview` to test with Cloudflare D1.'
+		);
+	}
+
+	const db = getDb(platform.env.DB);
 	let quizResult;
 	try {
 		quizResult = await getQuizAttempt(db, {
@@ -43,7 +50,9 @@ export const load: PageServerLoad = async ({ params, locals, platform, setHeader
 		attempt: quizResult.attempt,
 		question: quizResult.currentQuestion,
 		totalQuestions: quizResult.totalQuestions,
-		answerResult: url.searchParams.get('result')
+		answerResult: url.searchParams.get('result'),
+		allQuestions: quizResult.allQuestions,
+		answeredMap: quizResult.answeredMap
 	};
 };
 
@@ -53,9 +62,17 @@ export const actions: Actions = {
 			throw error(403, 'This game does not belong to this player.');
 		}
 
-		const db = getDb(platform!.env.DB);
+		if (!platform?.env?.DB) {
+			throw error(
+				500,
+				'Database binding (DB) is unavailable. Run `npm run preview` to test with Cloudflare D1.'
+			);
+		}
+
+		const db = getDb(platform.env.DB);
 		const formData = await request.formData();
-		const submittedQuestionId = formData.get('questionId');
+		const submittedQuestionId = formData.get('questionId')?.toString();
+		const isFinishAction = formData.get('finish') === 'true';
 
 		let quizResult;
 		try {
@@ -79,14 +96,18 @@ export const actions: Actions = {
 			throw error(403, 'This game is no longer active.');
 		}
 
-		const currentQuestion = quizResult.currentQuestion;
-		if (!currentQuestion || (submittedQuestionId && submittedQuestionId !== currentQuestion.id)) {
+		const targetQuestion = submittedQuestionId
+			? (quizResult.allQuestions.find((q) => q.id === submittedQuestionId) ??
+				quizResult.currentQuestion)
+			: quizResult.currentQuestion;
+
+		if (!targetQuestion) {
 			throw error(400, 'This question is no longer available to answer.');
 		}
 
-		let answer: string | string[];
+		let answer: string | string[] = '';
 
-		if (currentQuestion.format === 'word_ordering') {
+		if (targetQuestion.format === 'word_ordering') {
 			const rawAnswer = formData.get('answer');
 			if (typeof rawAnswer === 'string' && rawAnswer.length > 0) {
 				try {
@@ -96,7 +117,7 @@ export const actions: Actions = {
 					answer = rawAnswer;
 				}
 			} else {
-				const choices = currentQuestion.choices ?? [];
+				const choices = targetQuestion.choices ?? [];
 				const values: string[] = [];
 				for (let i = 0; i < choices.length; i++) {
 					const val = formData.get(`answer-${i}`);
@@ -104,22 +125,15 @@ export const actions: Actions = {
 						values.push(val);
 					}
 				}
-				if (values.length === 0) {
-					throw error(400, 'Please choose every word in the sentence.');
+				if (values.length > 0) {
+					answer = values;
 				}
-				answer = values;
 			}
 		} else {
 			const rawAnswer = formData.get('answer');
-			if (typeof rawAnswer !== 'string' || rawAnswer.trim().length === 0) {
-				throw error(
-					400,
-					currentQuestion.format === 'typing'
-						? 'Please enter your answer.'
-						: 'Please make a selection.'
-				);
+			if (typeof rawAnswer === 'string' && rawAnswer.trim().length > 0) {
+				answer = rawAnswer.trim();
 			}
-			answer = rawAnswer.trim();
 		}
 
 		const rawDuration = formData.get('durationSeconds');
@@ -129,8 +143,10 @@ export const actions: Actions = {
 		const outcome = await submitAttemptAnswer(db, {
 			attemptId: params.attemptId,
 			playerId: locals.playerId,
+			questionId: targetQuestion.id,
 			answer,
-			durationSeconds
+			durationSeconds,
+			finish: isFinishAction
 		});
 
 		if (outcome.isFinished) {

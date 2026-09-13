@@ -8,11 +8,11 @@ import { startQuizAttempt } from '$lib/server/quiz';
 const MAX_NICKNAME_LENGTH = 30;
 
 export const load: PageServerLoad = async ({ locals, platform }) => {
-	if (!locals.playerId) {
+	if (!locals.playerId || !platform?.env?.DB) {
 		return { nickname: '' };
 	}
 
-	const db = getDb(platform!.env.DB);
+	const db = getDb(platform.env.DB);
 	const [player] = await db.select().from(players).where(eq(players.id, locals.playerId));
 
 	return {
@@ -52,7 +52,16 @@ export const actions: Actions = {
 			});
 		}
 
-		const db = getDb(platform!.env.DB);
+		if (!platform?.env?.DB) {
+			return fail(500, {
+				nickname,
+				level,
+				error:
+					'Database binding (DB) is unavailable. Run `npm run preview` to run with Cloudflare D1 local database.'
+			});
+		}
+
+		const db = getDb(platform.env.DB);
 
 		let attempt;
 		try {

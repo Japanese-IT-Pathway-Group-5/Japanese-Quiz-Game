@@ -48,7 +48,7 @@ describe('QuestionCard.svelte', () => {
 
 		await expect.element(page.getByText('日曜日')).toBeVisible();
 		await expect.element(page.getByText('友達と映画を見に行きます。')).toBeVisible();
-		await expect.element(page.getByText('_____')).toBeVisible();
+		await expect.element(page.getByLabelText('blank')).toBeVisible();
 	});
 
 	it('renders a typing input for typing questions and normalizes the answer', async () => {

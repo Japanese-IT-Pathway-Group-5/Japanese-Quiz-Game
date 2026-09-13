@@ -84,15 +84,25 @@ describe('Quiz Attempts', () => {
 						if (tableName === 'quiz_attempts') {
 							return Promise.resolve(mockAttempts);
 						}
+						if (tableName === 'attempt_answers') {
+							return Promise.resolve(mockAttemptAnswers);
+						}
 						return Promise.resolve([]);
 					})
 				}))
 			})),
 
-			update: vi.fn(() => ({
+			update: vi.fn((table: unknown) => ({
 				set: vi.fn((values: Record<string, unknown>) => ({
 					where: vi.fn(() => ({
 						returning: vi.fn(() => {
+							const tableName = table
+								? getTableName(table as Parameters<typeof getTableName>[0])
+								: 'quiz_attempts';
+							if (tableName === 'attempt_answers' && mockAttemptAnswers.length > 0) {
+								Object.assign(mockAttemptAnswers[0], values);
+								return Promise.resolve([mockAttemptAnswers[0]]);
+							}
 							if (mockAttempts.length > 0) {
 								Object.assign(mockAttempts[0], values);
 								return Promise.resolve([mockAttempts[0]]);

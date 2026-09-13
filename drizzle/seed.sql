@@ -12,7 +12,7 @@ VALUES (
     'Choose the correct option.',
     '毎朝、パンを（ ）コーヒーを飲みます。',
     NULL,
-    'Actions in sequence use the て-form: 食べて (eat, then drink).',
+    'Lay Sopanha',
     1,
     strftime('%s', 'now')
 );
@@ -35,7 +35,7 @@ VALUES (
     'Fill in the blank.',
     '辞書を（ ）言葉の意味を調べました。',
     NULL,
-    'To look up a word in a dictionary is 辞書を引く.',
+    'Lay Sopanha',
     1,
     strftime('%s', 'now')
 );
@@ -58,7 +58,7 @@ VALUES (
     'Type the correct answer.',
     '「いしゃ」の漢字を書いてください。',
     '["医者","いしゃ","isha"]',
-    '「いしゃ」 is written as 「医者」 (doctor).',
+    'Lay Sopanha',
     1,
     strftime('%s', 'now')
 );
@@ -72,13 +72,19 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (Please take an umbrella.)',
     NULL,
-    '傘を持って行ってください means ''Please take an umbrella with you''.',
+    'Lay Sopanha',
     1,
     strftime('%s', 'now')
 );
 
 INSERT INTO choices (id, question_id, text, is_correct, "order")
-VALUES ('c_q_n4_word_ordering_4_1', 'q_n4_word_ordering_4', '傘を / 持って / 行って / ください', 0, 0);
+VALUES ('c_q_n4_word_ordering_4_1', 'q_n4_word_ordering_4', '傘を', 1, 0);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_4_2', 'q_n4_word_ordering_4', '持って', 1, 1);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_4_3', 'q_n4_word_ordering_4', '行って', 1, 2);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_4_4', 'q_n4_word_ordering_4', 'ください', 1, 3);
 
 INSERT INTO questions (id, level, category, format, prompt, prompt_ja, accepted_answers, explanation, is_active, created_at)
 VALUES (
@@ -89,7 +95,7 @@ VALUES (
     'Choose the correct option.',
     '暗くなりましたから、電気を（ ）ください。',
     NULL,
-    'To turn on lights/appliances is つける.',
+    'Lay Sopanha',
     1,
     strftime('%s', 'now')
 );
@@ -112,7 +118,7 @@ VALUES (
     'Fill in the blank.',
     '風邪を（ ）ので、会社を休みます。',
     NULL,
-    'To catch a cold is 風邪をひく.',
+    'Lay Sopanha',
     1,
     strftime('%s', 'now')
 );
@@ -135,7 +141,7 @@ VALUES (
     'Type the correct answer.',
     '「ぎんこう」の漢字を書いてください。',
     '["銀行","ぎんこう","ginkou","ginko"]',
-    '「ぎんこう」 is written as 「銀行」 (bank).',
+    'Lay Sopanha',
     1,
     strftime('%s', 'now')
 );
@@ -149,13 +155,19 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (I returned the wallet to the police station.)',
     NULL,
-    '交番の警察に財布を届けました expresses turning in a lost item.',
+    'Lay Sopanha',
     1,
     strftime('%s', 'now')
 );
 
 INSERT INTO choices (id, question_id, text, is_correct, "order")
-VALUES ('c_q_n4_word_ordering_8_1', 'q_n4_word_ordering_8', '警察に / 財布を / 届けました / 交番の', 0, 0);
+VALUES ('c_q_n4_word_ordering_8_1', 'q_n4_word_ordering_8', '交番の', 1, 0);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_8_2', 'q_n4_word_ordering_8', '警察に', 1, 1);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_8_3', 'q_n4_word_ordering_8', '財布を', 1, 2);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_8_4', 'q_n4_word_ordering_8', '届けました', 1, 3);
 
 INSERT INTO questions (id, level, category, format, prompt, prompt_ja, accepted_answers, explanation, is_active, created_at)
 VALUES (
@@ -166,7 +178,7 @@ VALUES (
     'Choose the correct option.',
     '荷物が重いので、（ ）手伝ってください。',
     NULL,
-    '少し (a little) modifies the request politely: 少し手伝ってください.',
+    'Lay Sopanha',
     1,
     strftime('%s', 'now')
 );
@@ -189,7 +201,7 @@ VALUES (
     'Fill in the blank.',
     'エレベーターが（ ）ので階段を使いました。',
     NULL,
-    '故障する means out of order / broke down.',
+    'Lay Sopanha',
     1,
     strftime('%s', 'now')
 );
@@ -212,7 +224,7 @@ VALUES (
     'Type the correct answer.',
     '「くすり」の漢字を書いてください。',
     '["薬","くすり","kusuri"]',
-    '「くすり」 is written as 「薬」 (medicine).',
+    'Lay Sopanha',
     1,
     strftime('%s', 'now')
 );
@@ -226,13 +238,19 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (I brushed my teeth after eating.)',
     NULL,
-    '〜た後で means ''after doing [verb]''.',
+    'Lay Sopanha',
     1,
     strftime('%s', 'now')
 );
 
 INSERT INTO choices (id, question_id, text, is_correct, "order")
-VALUES ('c_q_n4_word_ordering_12_1', 'q_n4_word_ordering_12', 'ご飯を / 食べた後で / 磨きました / 歯を', 0, 0);
+VALUES ('c_q_n4_word_ordering_12_1', 'q_n4_word_ordering_12', 'ご飯を', 1, 0);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_12_2', 'q_n4_word_ordering_12', '食べた後で', 1, 1);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_12_3', 'q_n4_word_ordering_12', '歯を', 1, 2);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_12_4', 'q_n4_word_ordering_12', '磨きました', 1, 3);
 
 INSERT INTO questions (id, level, category, format, prompt, prompt_ja, accepted_answers, explanation, is_active, created_at)
 VALUES (
@@ -243,7 +261,7 @@ VALUES (
     'Choose the correct option.',
     'この料理の（ ）方を教えてください。',
     NULL,
-    'Verb stem + 方 means ''way of doing'': 作り方 (way of making/recipe).',
+    'Lay Sopanha',
     1,
     strftime('%s', 'now')
 );
@@ -266,7 +284,7 @@ VALUES (
     'Fill in the blank.',
     '靴を脱いで、（ ）を履いてください。',
     NULL,
-    'スリッパ (slippers) are worn inside after removing shoes.',
+    'Lay Sopanha',
     1,
     strftime('%s', 'now')
 );
@@ -289,7 +307,7 @@ VALUES (
     'Type the correct answer.',
     '「しんぶん」の漢字を書いてください。',
     '["新聞","しんぶん","shinbun","shimbun"]',
-    '「しんぶん」 is written as 「新聞」 (newspaper).',
+    'Lay Sopanha',
     1,
     strftime('%s', 'now')
 );
@@ -303,13 +321,19 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (The train was packed with people.)',
     NULL,
-    '人でいっぱい means ''full of people''.',
+    'Lay Sopanha',
     1,
     strftime('%s', 'now')
 );
 
 INSERT INTO choices (id, question_id, text, is_correct, "order")
-VALUES ('c_q_n4_word_ordering_16_1', 'q_n4_word_ordering_16', '電車は / いっぱいでした / 人で / 満員で', 0, 0);
+VALUES ('c_q_n4_word_ordering_16_1', 'q_n4_word_ordering_16', '電車は', 1, 0);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_16_2', 'q_n4_word_ordering_16', '満員で', 1, 1);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_16_3', 'q_n4_word_ordering_16', '人で', 1, 2);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_16_4', 'q_n4_word_ordering_16', 'いっぱいでした', 1, 3);
 
 INSERT INTO questions (id, level, category, format, prompt, prompt_ja, accepted_answers, explanation, is_active, created_at)
 VALUES (
@@ -320,7 +344,7 @@ VALUES (
     'Choose the correct option.',
     'バスに乗り（ ）ので、走りました。',
     NULL,
-    '乗り遅れる means ''to miss (a train/bus)''.',
+    'Lay Sopanha',
     1,
     strftime('%s', 'now')
 );
@@ -343,7 +367,7 @@ VALUES (
     'Fill in the blank.',
     '約束の時間を（ ）しまいました。',
     NULL,
-    '約束の時間を忘れる means ''to forget the appointment time''.',
+    'Lay Sopanha',
     1,
     strftime('%s', 'now')
 );
@@ -366,7 +390,7 @@ VALUES (
     'Type the correct answer.',
     '「みち」の漢字を書いてください。',
     '["道","みち","michi"]',
-    '「みち」 is written as 「道」 (street/road).',
+    'Lay Sopanha',
     1,
     strftime('%s', 'now')
 );
@@ -380,13 +404,19 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (Turn right at the corner.)',
     NULL,
-    '〜を曲がる marks the point where you make a turn.',
+    'Lay Sopanha',
     1,
     strftime('%s', 'now')
 );
 
 INSERT INTO choices (id, question_id, text, is_correct, "order")
-VALUES ('c_q_n4_word_ordering_20_1', 'q_n4_word_ordering_20', '角を / 右へ / 曲がって / ください', 0, 0);
+VALUES ('c_q_n4_word_ordering_20_1', 'q_n4_word_ordering_20', '角を', 1, 0);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_20_2', 'q_n4_word_ordering_20', '右へ', 1, 1);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_20_3', 'q_n4_word_ordering_20', '曲がって', 1, 2);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_20_4', 'q_n4_word_ordering_20', 'ください', 1, 3);
 
 INSERT INTO questions (id, level, category, format, prompt, prompt_ja, accepted_answers, explanation, is_active, created_at)
 VALUES (
@@ -397,7 +427,7 @@ VALUES (
     'Choose the correct option.',
     '「図書館」の正しい読み方はどれですか。',
     NULL,
-    '図書館 is read as としょかん (library).',
+    'Chea Virakbott',
     1,
     strftime('%s', 'now')
 );
@@ -420,7 +450,7 @@ VALUES (
     'Fill in the blank.',
     'このビルはとても（高い＝たかい）です。下線部の反対語は？',
     NULL,
-    '高い (tall/expensive) opposes 低い (low/short).',
+    'Chea Virakbott',
     1,
     strftime('%s', 'now')
 );
@@ -443,7 +473,7 @@ VALUES (
     'Type the correct answer.',
     '「危険」の読み方をひらがなで書いてください。',
     '["きけん","危険","キケン","kiken"]',
-    '危険 is read as きけん (danger).',
+    'Chea Virakbott',
     1,
     strftime('%s', 'now')
 );
@@ -457,13 +487,19 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (The bicycle was repaired.)',
     NULL,
-    'Passive structure: 壊れた自転車が修理されました.',
+    'Chea Virakbott',
     1,
     strftime('%s', 'now')
 );
 
 INSERT INTO choices (id, question_id, text, is_correct, "order")
-VALUES ('c_q_n4_word_ordering_24_1', 'q_n4_word_ordering_24', '修理されました / 自転車が / 自転車屋で / 壊れた', 0, 0);
+VALUES ('c_q_n4_word_ordering_24_1', 'q_n4_word_ordering_24', '壊れた', 1, 0);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_24_2', 'q_n4_word_ordering_24', '自転車が', 1, 1);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_24_3', 'q_n4_word_ordering_24', '自転車屋で', 1, 2);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_24_4', 'q_n4_word_ordering_24', '修理されました', 1, 3);
 
 INSERT INTO questions (id, level, category, format, prompt, prompt_ja, accepted_answers, explanation, is_active, created_at)
 VALUES (
@@ -474,7 +510,7 @@ VALUES (
     'Choose the correct option.',
     '「案内」の正しい読み方はどれですか。',
     NULL,
-    '案内 is read as あんない (guide/information).',
+    'Chea Virakbott',
     1,
     strftime('%s', 'now')
 );
@@ -497,7 +533,7 @@ VALUES (
     'Fill in the blank.',
     '「出発」の反対の意味を持つ漢字の言葉は？',
     NULL,
-    '出発 (departure) opposes 到着 (arrival).',
+    'Chea Virakbott',
     1,
     strftime('%s', 'now')
 );
@@ -520,7 +556,7 @@ VALUES (
     'Type the correct answer.',
     '「安全」の読み方をひらがなで書いてください。',
     '["あんぜん","安全","アンゼン","anzen"]',
-    '安全 is read as あんぜん (safety).',
+    'Chea Virakbott',
     1,
     strftime('%s', 'now')
 );
@@ -534,13 +570,19 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (Please open the window.)',
     NULL,
-    'そこの窓を開けてください means ''Please open that window''.',
+    'Chea Virakbott',
     1,
     strftime('%s', 'now')
 );
 
 INSERT INTO choices (id, question_id, text, is_correct, "order")
-VALUES ('c_q_n4_word_ordering_28_1', 'q_n4_word_ordering_28', '窓を / 開けて / そこの / ください', 0, 0);
+VALUES ('c_q_n4_word_ordering_28_1', 'q_n4_word_ordering_28', 'そこの', 1, 0);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_28_2', 'q_n4_word_ordering_28', '窓を', 1, 1);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_28_3', 'q_n4_word_ordering_28', '開けて', 1, 2);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_28_4', 'q_n4_word_ordering_28', 'ください', 1, 3);
 
 INSERT INTO questions (id, level, category, format, prompt, prompt_ja, accepted_answers, explanation, is_active, created_at)
 VALUES (
@@ -551,7 +593,7 @@ VALUES (
     'Choose the correct option.',
     '「急行」の正しい読み方はどれですか。',
     NULL,
-    '急行 is read as きゅうこう (express train).',
+    'Chea Virakbott',
     1,
     strftime('%s', 'now')
 );
@@ -574,7 +616,7 @@ VALUES (
     'Fill in the blank.',
     '兄は（大学＝だいがく）に通っています。「大」の訓読みは？',
     NULL,
-    '大''s primary kun-reading is おお(きい).',
+    'Chea Virakbott',
     1,
     strftime('%s', 'now')
 );
@@ -597,7 +639,7 @@ VALUES (
     'Type the correct answer.',
     '「目的」の読み方をひらがなで書いてください。',
     '["もくてき","目的","モクテキ","mokuteki"]',
-    '目的 is read as もくてき (purpose/goal).',
+    'Chea Virakbott',
     1,
     strftime('%s', 'now')
 );
@@ -611,13 +653,19 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (The meeting started at 10.)',
     NULL,
-    'Natural word ordering for meeting location and time.',
+    'Chea Virakbott',
     1,
     strftime('%s', 'now')
 );
 
 INSERT INTO choices (id, question_id, text, is_correct, "order")
-VALUES ('c_q_n4_word_ordering_32_1', 'q_n4_word_ordering_32', '10時に / 会議が / 始まりました / 会議室で', 0, 0);
+VALUES ('c_q_n4_word_ordering_32_1', 'q_n4_word_ordering_32', '会議室で', 1, 0);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_32_2', 'q_n4_word_ordering_32', '会議が', 1, 1);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_32_3', 'q_n4_word_ordering_32', '10時に', 1, 2);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_32_4', 'q_n4_word_ordering_32', '始まりました', 1, 3);
 
 INSERT INTO questions (id, level, category, format, prompt, prompt_ja, accepted_answers, explanation, is_active, created_at)
 VALUES (
@@ -628,7 +676,7 @@ VALUES (
     'Choose the correct option.',
     '「複雑」の正しい読み方はどれですか。',
     NULL,
-    '複雑 is read as ふくざつ (complex).',
+    'Chea Virakbott',
     1,
     strftime('%s', 'now')
 );
@@ -651,7 +699,7 @@ VALUES (
     'Fill in the blank.',
     '「（禁止＝きんし）」の意味はどれですか。',
     NULL,
-    '禁止 means forbidden / prohibited.',
+    'Chea Virakbott',
     1,
     strftime('%s', 'now')
 );
@@ -674,7 +722,7 @@ VALUES (
     'Type the correct answer.',
     '「都合」の読み方をひらがなで書いてください。',
     '["つごう","都合","ツゴウ","tsugou","tsugo"]',
-    '都合 is read as つごう (convenience/circumstances).',
+    'Chea Virakbott',
     1,
     strftime('%s', 'now')
 );
@@ -688,13 +736,19 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (I sent a letter by airmail.)',
     NULL,
-    '航空便 means airmail; 海外 means abroad.',
+    'Chea Virakbott',
     1,
     strftime('%s', 'now')
 );
 
 INSERT INTO choices (id, question_id, text, is_correct, "order")
-VALUES ('c_q_n4_word_ordering_36_1', 'q_n4_word_ordering_36', '航空便で / 手紙を / 海外へ / 送りました', 0, 0);
+VALUES ('c_q_n4_word_ordering_36_1', 'q_n4_word_ordering_36', '海外へ', 1, 0);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_36_2', 'q_n4_word_ordering_36', '航空便で', 1, 1);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_36_3', 'q_n4_word_ordering_36', '手紙を', 1, 2);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_36_4', 'q_n4_word_ordering_36', '送りました', 1, 3);
 
 INSERT INTO questions (id, level, category, format, prompt, prompt_ja, accepted_answers, explanation, is_active, created_at)
 VALUES (
@@ -705,7 +759,7 @@ VALUES (
     'Choose the correct option.',
     '「相談」の正しい読み方はどれですか。',
     NULL,
-    '相談 is read as そうだん (consultation/discussion).',
+    'Chea Virakbott',
     1,
     strftime('%s', 'now')
 );
@@ -728,7 +782,7 @@ VALUES (
     'Fill in the blank.',
     '「（返事＝へんじ）」をする相手は誰ですか。',
     NULL,
-    '返事 means reply, given to someone who asked or called.',
+    'Chea Virakbott',
     1,
     strftime('%s', 'now')
 );
@@ -751,7 +805,7 @@ VALUES (
     'Type the correct answer.',
     '「注意」の読み方をひらがなで書いてください。',
     '["ちゅうい","注意","チュウイ","chuui","chui"]',
-    '注意 is read as ちゅうい (caution/warning).',
+    'Chea Virakbott',
     1,
     strftime('%s', 'now')
 );
@@ -765,13 +819,19 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (I reserved a hotel room.)',
     NULL,
-    '予約する means to reserve.',
+    'Chea Virakbott',
     1,
     strftime('%s', 'now')
 );
 
 INSERT INTO choices (id, question_id, text, is_correct, "order")
-VALUES ('c_q_n4_word_ordering_40_1', 'q_n4_word_ordering_40', 'ホテルの / 部屋を / インターネットで / 予約しました', 0, 0);
+VALUES ('c_q_n4_word_ordering_40_1', 'q_n4_word_ordering_40', 'インターネットで', 1, 0);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_40_2', 'q_n4_word_ordering_40', 'ホテルの', 1, 1);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_40_3', 'q_n4_word_ordering_40', '部屋を', 1, 2);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_40_4', 'q_n4_word_ordering_40', '予約しました', 1, 3);
 
 INSERT INTO questions (id, level, category, format, prompt, prompt_ja, accepted_answers, explanation, is_active, created_at)
 VALUES (
@@ -782,7 +842,7 @@ VALUES (
     'Choose the correct option.',
     '日本へ行ったことが（ ）。',
     NULL,
-    'Verb た-form + ことがある indicates past experience.',
+    'Has Sereivathana',
     1,
     strftime('%s', 'now')
 );
@@ -805,7 +865,7 @@ VALUES (
     'Fill in the blank.',
     '明日テストがあるので、勉強し（ ）なりません。',
     NULL,
-    '〜なければならない means ''must do''.',
+    'Has Sereivathana',
     1,
     strftime('%s', 'now')
 );
@@ -828,7 +888,7 @@ VALUES (
     'Type the correct answer.',
     '「ここに入って（ ）いいですか。」の空欄の助詞を一文字入れなさい。',
     '["も","mo"]',
-    '〜てもいいですか asks for permission (''May I...?'').',
+    'Has Sereivathana',
     1,
     strftime('%s', 'now')
 );
@@ -842,13 +902,19 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (Please don''t forget your homework.)',
     NULL,
-    '〜ないでください expresses negative request (''please do not...'').',
+    'Has Sereivathana',
     1,
     strftime('%s', 'now')
 );
 
 INSERT INTO choices (id, question_id, text, is_correct, "order")
-VALUES ('c_q_n4_word_ordering_44_1', 'q_n4_word_ordering_44', '宿題を / 忘れないで / 明日の / ください', 0, 0);
+VALUES ('c_q_n4_word_ordering_44_1', 'q_n4_word_ordering_44', '明日の', 1, 0);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_44_2', 'q_n4_word_ordering_44', '宿題を', 1, 1);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_44_3', 'q_n4_word_ordering_44', '忘れないで', 1, 2);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_44_4', 'q_n4_word_ordering_44', 'ください', 1, 3);
 
 INSERT INTO questions (id, level, category, format, prompt, prompt_ja, accepted_answers, explanation, is_active, created_at)
 VALUES (
@@ -859,7 +925,7 @@ VALUES (
     'Choose the correct option.',
     '雨が降って（ ）、傘を持っていきます。',
     NULL,
-    'から indicates reason: because it is raining.',
+    'Has Sereivathana',
     1,
     strftime('%s', 'now')
 );
@@ -882,7 +948,7 @@ VALUES (
     'Fill in the blank.',
     '窓が（ ）います。風が入ってきます。',
     NULL,
-    'Intransitive verb + ている describes a continuing state: 開いている.',
+    'Has Sereivathana',
     1,
     strftime('%s', 'now')
 );
@@ -905,7 +971,7 @@ VALUES (
     'Type the correct answer.',
     '「傘を持た（ ）に出かけました。」の空欄に入る平仮名2文字を書きなさい。',
     '["ずに","ない","zuni","nai"]',
-    '〜ずに出かける means going out without holding an umbrella.',
+    'Has Sereivathana',
     1,
     strftime('%s', 'now')
 );
@@ -919,13 +985,19 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (I will go after eating dinner.)',
     NULL,
-    'Verb て-form + から indicates sequential action (''after doing...'').',
+    'Has Sereivathana',
     1,
     strftime('%s', 'now')
 );
 
 INSERT INTO choices (id, question_id, text, is_correct, "order")
-VALUES ('c_q_n4_word_ordering_48_1', 'q_n4_word_ordering_48', '夕食を / 行きます / 食べてから / 駅へ', 0, 0);
+VALUES ('c_q_n4_word_ordering_48_1', 'q_n4_word_ordering_48', '夕食を', 1, 0);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_48_2', 'q_n4_word_ordering_48', '食べてから', 1, 1);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_48_3', 'q_n4_word_ordering_48', '駅へ', 1, 2);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_48_4', 'q_n4_word_ordering_48', '行きます', 1, 3);
 
 INSERT INTO questions (id, level, category, format, prompt, prompt_ja, accepted_answers, explanation, is_active, created_at)
 VALUES (
@@ -936,7 +1008,7 @@ VALUES (
     'Choose the correct option.',
     '先生、（ ）質問してもよろしいですか。',
     NULL,
-    '一つ質問 indicates ''one question''.',
+    'Has Sereivathana',
     1,
     strftime('%s', 'now')
 );
@@ -959,7 +1031,7 @@ VALUES (
     'Fill in the blank.',
     '日本語が上手に（ ）たいです。',
     NULL,
-    '〜になりたい means ''want to become''.',
+    'Has Sereivathana',
     1,
     strftime('%s', 'now')
 );
@@ -982,7 +1054,7 @@ VALUES (
     'Type the correct answer.',
     '「先生は本を読（ ）いらっしゃいます。」尊敬語の助詞を1字入れなさい。',
     '["んで","nde"]',
-    'Verb て-form + いらっしゃる is the honorific form of 〜ている.',
+    'Has Sereivathana',
     1,
     strftime('%s', 'now')
 );
@@ -996,13 +1068,19 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (Even if it is cold, I run.)',
     NULL,
-    '〜ても marks a concession (''even if...'').',
+    'Has Sereivathana',
     1,
     strftime('%s', 'now')
 );
 
 INSERT INTO choices (id, question_id, text, is_correct, "order")
-VALUES ('c_q_n4_word_ordering_52_1', 'q_n4_word_ordering_52', '寒くても / 毎朝 / 走ります / 公園を', 0, 0);
+VALUES ('c_q_n4_word_ordering_52_1', 'q_n4_word_ordering_52', '寒くても', 1, 0);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_52_2', 'q_n4_word_ordering_52', '毎朝', 1, 1);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_52_3', 'q_n4_word_ordering_52', '公園を', 1, 2);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_52_4', 'q_n4_word_ordering_52', '走ります', 1, 3);
 
 INSERT INTO questions (id, level, category, format, prompt, prompt_ja, accepted_answers, explanation, is_active, created_at)
 VALUES (
@@ -1013,7 +1091,7 @@ VALUES (
     'Choose the correct option.',
     'この本は難し（ ）読めません。',
     NULL,
-    'Verb/i-adj stem + すぎる means ''too much / excessively''.',
+    'Has Sereivathana',
     1,
     strftime('%s', 'now')
 );
@@ -1036,7 +1114,7 @@ VALUES (
     'Fill in the blank.',
     'テレビを（ ）ながらご飯を食べます。',
     NULL,
-    'Verb stem + ながら means doing an action simultaneously.',
+    'Has Sereivathana',
     1,
     strftime('%s', 'now')
 );
@@ -1059,7 +1137,7 @@ VALUES (
     'Type the correct answer.',
     '「彼が来（ ）どうか分かりません。」の接続助詞を平仮名2文字で入れなさい。',
     '["るか","ruka"]',
-    '〜かどうか means ''whether or not''.',
+    'Has Sereivathana',
     1,
     strftime('%s', 'now')
 );
@@ -1073,13 +1151,19 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (I was praised by the teacher.)',
     NULL,
-    'Passive: 先生に褒められました (praised by teacher).',
+    'Has Sereivathana',
     1,
     strftime('%s', 'now')
 );
 
 INSERT INTO choices (id, question_id, text, is_correct, "order")
-VALUES ('c_q_n4_word_ordering_56_1', 'q_n4_word_ordering_56', '先生に / 褒められました / テストで / よくできたので', 0, 0);
+VALUES ('c_q_n4_word_ordering_56_1', 'q_n4_word_ordering_56', 'よくできたので', 1, 0);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_56_2', 'q_n4_word_ordering_56', 'テストで', 1, 1);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_56_3', 'q_n4_word_ordering_56', '先生に', 1, 2);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_56_4', 'q_n4_word_ordering_56', '褒められました', 1, 3);
 
 INSERT INTO questions (id, level, category, format, prompt, prompt_ja, accepted_answers, explanation, is_active, created_at)
 VALUES (
@@ -1090,7 +1174,7 @@ VALUES (
     'Choose the correct option.',
     '明日は雨が降る（ ）です。天気予報で言っていました。',
     NULL,
-    'Plain form + そうだ reports hearsay (''I heard that...'').',
+    'Has Sereivathana',
     1,
     strftime('%s', 'now')
 );
@@ -1113,7 +1197,7 @@ VALUES (
     'Fill in the blank.',
     '母に部屋を掃除（ ）られました。',
     NULL,
-    'Causative/passive marker: 掃除させられました (was made to clean).',
+    'Has Sereivathana',
     1,
     strftime('%s', 'now')
 );
@@ -1136,7 +1220,7 @@ VALUES (
     'Type the correct answer.',
     '「どうぞお茶を（ ）あがりください。」の平仮名2文字を書きなさい。',
     '["お召","おめ","おめし","omeshi","ome"]',
-    'お召し上がりください is the polite honorific for eating/drinking.',
+    'Has Sereivathana',
     1,
     strftime('%s', 'now')
 );
@@ -1150,13 +1234,19 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (It looks like it will rain soon.)',
     NULL,
-    '〜そう expresses that something looks imminent.',
+    'Has Sereivathana',
     1,
     strftime('%s', 'now')
 );
 
 INSERT INTO choices (id, question_id, text, is_correct, "order")
-VALUES ('c_q_n4_word_ordering_60_1', 'q_n4_word_ordering_60', '今にも / 降りそうです / 雨が / 空が暗くて', 0, 0);
+VALUES ('c_q_n4_word_ordering_60_1', 'q_n4_word_ordering_60', '空が暗くて', 1, 0);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_60_2', 'q_n4_word_ordering_60', '今にも', 1, 1);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_60_3', 'q_n4_word_ordering_60', '雨が', 1, 2);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n4_word_ordering_60_4', 'q_n4_word_ordering_60', '降りそうです', 1, 3);
 
 INSERT INTO questions (id, level, category, format, prompt, prompt_ja, accepted_answers, explanation, is_active, created_at)
 VALUES (
@@ -1167,7 +1257,7 @@ VALUES (
     'Choose the correct option.',
     '会議の資料を全員に（ ）してください。',
     NULL,
-    '配布 means distribution to everyone.',
+    'Chhin Menghour',
     1,
     strftime('%s', 'now')
 );
@@ -1190,7 +1280,7 @@ VALUES (
     'Fill in the blank.',
     'お客様からの（ ）に対応する窓口を設置した。',
     NULL,
-    '苦情 means complaint; 苦情に対応する is to handle complaints.',
+    'Chhin Menghour',
     1,
     strftime('%s', 'now')
 );
@@ -1213,7 +1303,7 @@ VALUES (
     'Type the correct answer.',
     '「えんき」の漢字を書いてください（日程を遅らせること）。',
     '["延期","えんき","enki"]',
-    '延期 means postponement.',
+    'Chhin Menghour',
     1,
     strftime('%s', 'now')
 );
@@ -1227,13 +1317,19 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (Expenses increased due to unexpected events.)',
     NULL,
-    '思いがけない means unexpected; 出費 means expenditure.',
+    'Chhin Menghour',
     1,
     strftime('%s', 'now')
 );
 
 INSERT INTO choices (id, question_id, text, is_correct, "order")
-VALUES ('c_q_n3_word_ordering_64_1', 'q_n3_word_ordering_64', '思いがけない / 出費が / 重なりました / 出来事で', 0, 0);
+VALUES ('c_q_n3_word_ordering_64_1', 'q_n3_word_ordering_64', '思いがけない', 1, 0);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_64_2', 'q_n3_word_ordering_64', '出来事で', 1, 1);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_64_3', 'q_n3_word_ordering_64', '出費が', 1, 2);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_64_4', 'q_n3_word_ordering_64', '重なりました', 1, 3);
 
 INSERT INTO questions (id, level, category, format, prompt, prompt_ja, accepted_answers, explanation, is_active, created_at)
 VALUES (
@@ -1244,7 +1340,7 @@ VALUES (
     'Choose the correct option.',
     'プロジェクトの成功に向けて、全員で（ ）した。',
     NULL,
-    '協力する means to cooperate toward a common goal.',
+    'Chhin Menghour',
     1,
     strftime('%s', 'now')
 );
@@ -1267,7 +1363,7 @@ VALUES (
     'Fill in the blank.',
     '彼女の意見に強く（ ）した。',
     NULL,
-    '賛成する means to agree/approve.',
+    'Chhin Menghour',
     1,
     strftime('%s', 'now')
 );
@@ -1290,7 +1386,7 @@ VALUES (
     'Type the correct answer.',
     '「けいやく」の漢字を書いてください。',
     '["契約","けいやく","keiyaku"]',
-    '契約 means contract.',
+    'Chhin Menghour',
     1,
     strftime('%s', 'now')
 );
@@ -1304,13 +1400,19 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (We are recruiting staff for the new project.)',
     NULL,
-    '募集する means to recruit or invite applications.',
+    'Chhin Menghour',
     1,
     strftime('%s', 'now')
 );
 
 INSERT INTO choices (id, question_id, text, is_correct, "order")
-VALUES ('c_q_n3_word_ordering_68_1', 'q_n3_word_ordering_68', '新規プロジェクトの / スタッフを / 募集して / います', 0, 0);
+VALUES ('c_q_n3_word_ordering_68_1', 'q_n3_word_ordering_68', '新規プロジェクトの', 1, 0);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_68_2', 'q_n3_word_ordering_68', 'スタッフを', 1, 1);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_68_3', 'q_n3_word_ordering_68', '募集して', 1, 2);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_68_4', 'q_n3_word_ordering_68', 'います', 1, 3);
 
 INSERT INTO questions (id, level, category, format, prompt, prompt_ja, accepted_answers, explanation, is_active, created_at)
 VALUES (
@@ -1321,7 +1423,7 @@ VALUES (
     'Choose the correct option.',
     '電車のダイヤが（ ）、30分遅れて到着した。',
     NULL,
-    'ダイヤが乱れる means train schedule disruption.',
+    'Chhin Menghour',
     1,
     strftime('%s', 'now')
 );
@@ -1344,7 +1446,7 @@ VALUES (
     'Fill in the blank.',
     '健康のために栄養の（ ）を考えることが大切だ。',
     NULL,
-    '栄養のバランス refers to nutritional balance.',
+    'Chhin Menghour',
     1,
     strftime('%s', 'now')
 );
@@ -1367,7 +1469,7 @@ VALUES (
     'Type the correct answer.',
     '「せつやく」の漢字を書いてください。',
     '["節約","せつやく","setsuyaku"]',
-    '節約 means saving / economizing.',
+    'Chhin Menghour',
     1,
     strftime('%s', 'now')
 );
@@ -1381,13 +1483,19 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (He is trusted by everyone at work.)',
     NULL,
-    '信頼される means to be trusted.',
+    'Chhin Menghour',
     1,
     strftime('%s', 'now')
 );
 
 INSERT INTO choices (id, question_id, text, is_correct, "order")
-VALUES ('c_q_n3_word_ordering_72_1', 'q_n3_word_ordering_72', '職場の / 彼は / 皆から / 信頼されています', 0, 0);
+VALUES ('c_q_n3_word_ordering_72_1', 'q_n3_word_ordering_72', '彼は', 1, 0);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_72_2', 'q_n3_word_ordering_72', '職場の', 1, 1);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_72_3', 'q_n3_word_ordering_72', '皆から', 1, 2);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_72_4', 'q_n3_word_ordering_72', '信頼されています', 1, 3);
 
 INSERT INTO questions (id, level, category, format, prompt, prompt_ja, accepted_answers, explanation, is_active, created_at)
 VALUES (
@@ -1398,7 +1506,7 @@ VALUES (
     'Choose the correct option.',
     '上司に相談して、問題を（ ）した。',
     NULL,
-    '解決する means to resolve a problem.',
+    'Chhin Menghour',
     1,
     strftime('%s', 'now')
 );
@@ -1421,7 +1529,7 @@ VALUES (
     'Fill in the blank.',
     'この製品は省エネ機能が（ ）いる。',
     NULL,
-    '優れている means to be superior/outstanding.',
+    'Chhin Menghour',
     1,
     strftime('%s', 'now')
 );
@@ -1444,7 +1552,7 @@ VALUES (
     'Type the correct answer.',
     '「しんちょう」の漢字を書いてください（注意深いこと）。',
     '["慎重","しんちょう","shinchou","shincho"]',
-    '慎重 means cautious or prudent.',
+    'Chhin Menghour',
     1,
     strftime('%s', 'now')
 );
@@ -1458,13 +1566,21 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (The event was canceled due to bad weather.)',
     NULL,
-    '中止になる means to be canceled.',
+    'Chhin Menghour',
     1,
     strftime('%s', 'now')
 );
 
 INSERT INTO choices (id, question_id, text, is_correct, "order")
-VALUES ('c_q_n3_word_ordering_76_1', 'q_n3_word_ordering_76', '悪天候の / ために / 中止に / なりました / イベントは', 0, 0);
+VALUES ('c_q_n3_word_ordering_76_1', 'q_n3_word_ordering_76', '悪天候の', 1, 0);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_76_2', 'q_n3_word_ordering_76', 'ために', 1, 1);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_76_3', 'q_n3_word_ordering_76', 'イベントは', 1, 2);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_76_4', 'q_n3_word_ordering_76', '中止に', 1, 3);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_76_5', 'q_n3_word_ordering_76', 'なりました', 1, 4);
 
 INSERT INTO questions (id, level, category, format, prompt, prompt_ja, accepted_answers, explanation, is_active, created_at)
 VALUES (
@@ -1475,7 +1591,7 @@ VALUES (
     'Choose the correct option.',
     '努力のかいがあって、試験に（ ）した。',
     NULL,
-    '試験に合格する means to pass an exam.',
+    'Chhin Menghour',
     1,
     strftime('%s', 'now')
 );
@@ -1498,7 +1614,7 @@ VALUES (
     'Fill in the blank.',
     '予算が大幅に（ ）してしまった。',
     NULL,
-    '超過する means to exceed (a budget/limit).',
+    'Chhin Menghour',
     1,
     strftime('%s', 'now')
 );
@@ -1521,7 +1637,7 @@ VALUES (
     'Type the correct answer.',
     '「きょうしゅく」の漢字を書いてください（恐縮です）。',
     '["恐縮","きょうしゅく","kyoushuku","kyoshuku"]',
-    '恐縮 means feeling grateful/apologetic in polite speech.',
+    'Chhin Menghour',
     1,
     strftime('%s', 'now')
 );
@@ -1535,13 +1651,19 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (I appreciate your prompt response.)',
     NULL,
-    '迅速なご対応 refers to prompt handling/response.',
+    'Chhin Menghour',
     1,
     strftime('%s', 'now')
 );
 
 INSERT INTO choices (id, question_id, text, is_correct, "order")
-VALUES ('c_q_n3_word_ordering_80_1', 'q_n3_word_ordering_80', '迅速な / ご対応を / いただき / 感謝いたします', 0, 0);
+VALUES ('c_q_n3_word_ordering_80_1', 'q_n3_word_ordering_80', '迅速な', 1, 0);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_80_2', 'q_n3_word_ordering_80', 'ご対応を', 1, 1);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_80_3', 'q_n3_word_ordering_80', 'いただき', 1, 2);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_80_4', 'q_n3_word_ordering_80', '感謝いたします', 1, 3);
 
 INSERT INTO questions (id, level, category, format, prompt, prompt_ja, accepted_answers, explanation, is_active, created_at)
 VALUES (
@@ -1552,7 +1674,7 @@ VALUES (
     'Choose the correct option.',
     '「維持」の正しい読み方はどれですか。',
     NULL,
-    '維持 is read as いじ (maintenance/preservation).',
+    'LY_LEAB',
     1,
     strftime('%s', 'now')
 );
@@ -1575,7 +1697,7 @@ VALUES (
     'Fill in the blank.',
     '「（規則＝きそく）」を守ることは大切だ。下線部の同義語は？',
     NULL,
-    '規則 equates to rules or regulations.',
+    'LY_LEAB',
     1,
     strftime('%s', 'now')
 );
@@ -1598,7 +1720,7 @@ VALUES (
     'Type the correct answer.',
     '「努力」の読み方をひらがなで書いてください。',
     '["どりょく","努力","ドリョク","doryoku"]',
-    '努力 is read as どりょく (effort).',
+    'LY_LEAB',
     1,
     strftime('%s', 'now')
 );
@@ -1612,13 +1734,19 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (The factory resumed production after inspection.)',
     NULL,
-    '再開する means to resume.',
+    'LY_LEAB',
     1,
     strftime('%s', 'now')
 );
 
 INSERT INTO choices (id, question_id, text, is_correct, "order")
-VALUES ('c_q_n3_word_ordering_84_1', 'q_n3_word_ordering_84', '点検の後に / 工場は / 生産を / 再開した', 0, 0);
+VALUES ('c_q_n3_word_ordering_84_1', 'q_n3_word_ordering_84', '工場は', 1, 0);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_84_2', 'q_n3_word_ordering_84', '点検の後に', 1, 1);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_84_3', 'q_n3_word_ordering_84', '生産を', 1, 2);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_84_4', 'q_n3_word_ordering_84', '再開した', 1, 3);
 
 INSERT INTO questions (id, level, category, format, prompt, prompt_ja, accepted_answers, explanation, is_active, created_at)
 VALUES (
@@ -1629,7 +1757,7 @@ VALUES (
     'Choose the correct option.',
     '「象徴」の正しい読み方はどれですか。',
     NULL,
-    '象徴 is read as しょうちょう (symbol).',
+    'LY_LEAB',
     1,
     strftime('%s', 'now')
 );
@@ -1652,7 +1780,7 @@ VALUES (
     'Fill in the blank.',
     '「（冷静＝れいせい）」の対義語として適切なものはどれか。',
     NULL,
-    '冷静 (calm) contrasts with 興奮 (excited/agitated).',
+    'LY_LEAB',
     1,
     strftime('%s', 'now')
 );
@@ -1675,7 +1803,7 @@ VALUES (
     'Type the correct answer.',
     '「効率」の読み方をひらがなで書いてください。',
     '["こうりつ","効率","コウリツ","kouritsu","koritsu"]',
-    '効率 is read as こうりつ (efficiency).',
+    'LY_LEAB',
     1,
     strftime('%s', 'now')
 );
@@ -1689,13 +1817,19 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (The new policy had a major impact on society.)',
     NULL,
-    '影響を与える means to exert an influence.',
+    'LY_LEAB',
     1,
     strftime('%s', 'now')
 );
 
 INSERT INTO choices (id, question_id, text, is_correct, "order")
-VALUES ('c_q_n3_word_ordering_88_1', 'q_n3_word_ordering_88', '社会に / 大きな影響を / 新方針は / 与えた', 0, 0);
+VALUES ('c_q_n3_word_ordering_88_1', 'q_n3_word_ordering_88', '新方針は', 1, 0);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_88_2', 'q_n3_word_ordering_88', '社会に', 1, 1);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_88_3', 'q_n3_word_ordering_88', '大きな影響を', 1, 2);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_88_4', 'q_n3_word_ordering_88', '与えた', 1, 3);
 
 INSERT INTO questions (id, level, category, format, prompt, prompt_ja, accepted_answers, explanation, is_active, created_at)
 VALUES (
@@ -1706,7 +1840,7 @@ VALUES (
     'Choose the correct option.',
     '「傾向」の正しい読み方はどれですか。',
     NULL,
-    '傾向 is read as けいこう (tendency/trend).',
+    'LY_LEAB',
     1,
     strftime('%s', 'now')
 );
@@ -1729,7 +1863,7 @@ VALUES (
     'Fill in the blank.',
     '「環境を（保護＝ほご）する」の「保護」の意味は？',
     NULL,
-    '保護 means to protect or preserve.',
+    'LY_LEAB',
     1,
     strftime('%s', 'now')
 );
@@ -1752,7 +1886,7 @@ VALUES (
     'Type the correct answer.',
     '「謙虚」の読み方をひらがなで書いてください。',
     '["けんきょ","謙虚","ケンキョ","kenkyo"]',
-    '謙虚 is read as けんきょ (modest/humble).',
+    'LY_LEAB',
     1,
     strftime('%s', 'now')
 );
@@ -1766,13 +1900,19 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (Natural resources must be used carefully.)',
     NULL,
-    '天然資源 means natural resources; 消費 means consumption.',
+    'LY_LEAB',
     1,
     strftime('%s', 'now')
 );
 
 INSERT INTO choices (id, question_id, text, is_correct, "order")
-VALUES ('c_q_n3_word_ordering_92_1', 'q_n3_word_ordering_92', '天然資源を / 大切に / 消費しなければ / ならない', 0, 0);
+VALUES ('c_q_n3_word_ordering_92_1', 'q_n3_word_ordering_92', '天然資源を', 1, 0);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_92_2', 'q_n3_word_ordering_92', '大切に', 1, 1);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_92_3', 'q_n3_word_ordering_92', '消費しなければ', 1, 2);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_92_4', 'q_n3_word_ordering_92', 'ならない', 1, 3);
 
 INSERT INTO questions (id, level, category, format, prompt, prompt_ja, accepted_answers, explanation, is_active, created_at)
 VALUES (
@@ -1783,7 +1923,7 @@ VALUES (
     'Choose the correct option.',
     '「曖昧」の正しい読み方はどれですか。',
     NULL,
-    '曖昧 is read as あいまい (vague/ambiguous).',
+    'LY_LEAB',
     1,
     strftime('%s', 'now')
 );
@@ -1806,7 +1946,7 @@ VALUES (
     'Fill in the blank.',
     '「（具体的＝ぐたいてき）」の反対語はどれですか。',
     NULL,
-    '具体的 (concrete) opposes 抽象的 (abstract).',
+    'LY_LEAB',
     1,
     strftime('%s', 'now')
 );
@@ -1829,7 +1969,7 @@ VALUES (
     'Type the correct answer.',
     '「柔軟」の読み方をひらがなで書いてください。',
     '["じゅうなん","柔軟","ジュウナン","juunan","jyunan","junan"]',
-    '柔軟 is read as じゅうなん (flexible).',
+    'LY_LEAB',
     1,
     strftime('%s', 'now')
 );
@@ -1843,13 +1983,19 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (Traffic restrictions were enforced downtown.)',
     NULL,
-    '実施される means to be enforced or put into practice.',
+    'LY_LEAB',
     1,
     strftime('%s', 'now')
 );
 
 INSERT INTO choices (id, question_id, text, is_correct, "order")
-VALUES ('c_q_n3_word_ordering_96_1', 'q_n3_word_ordering_96', '都心で / 交通規制が / 実施された / 今日から', 0, 0);
+VALUES ('c_q_n3_word_ordering_96_1', 'q_n3_word_ordering_96', '今日から', 1, 0);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_96_2', 'q_n3_word_ordering_96', '都心で', 1, 1);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_96_3', 'q_n3_word_ordering_96', '交通規制が', 1, 2);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_96_4', 'q_n3_word_ordering_96', '実施された', 1, 3);
 
 INSERT INTO questions (id, level, category, format, prompt, prompt_ja, accepted_answers, explanation, is_active, created_at)
 VALUES (
@@ -1860,7 +2006,7 @@ VALUES (
     'Choose the correct option.',
     '「妥協」の正しい読み方はどれですか。',
     NULL,
-    '妥協 is read as だきょう (compromise).',
+    'LY_LEAB',
     1,
     strftime('%s', 'now')
 );
@@ -1883,7 +2029,7 @@ VALUES (
     'Fill in the blank.',
     '「（莫大＝ばくだい）」な費用の意味は？',
     NULL,
-    '莫大 means enormous or immense.',
+    'LY_LEAB',
     1,
     strftime('%s', 'now')
 );
@@ -1906,7 +2052,7 @@ VALUES (
     'Type the correct answer.',
     '「把握」の読み方をひらがなで書いてください。',
     '["はあく","把握","ハアク","haaku","haku"]',
-    '把握 is read as はあく (grasping/comprehending).',
+    'LY_LEAB',
     1,
     strftime('%s', 'now')
 );
@@ -1920,13 +2066,17 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (The experiment produced unexpected results.)',
     NULL,
-    'もたらされる means to be brought about.',
+    'LY_LEAB',
     1,
     strftime('%s', 'now')
 );
 
 INSERT INTO choices (id, question_id, text, is_correct, "order")
-VALUES ('c_q_n3_word_ordering_100_1', 'q_n3_word_ordering_100', '予期せぬ結果が / 実験によって / もたらされた', 0, 0);
+VALUES ('c_q_n3_word_ordering_100_1', 'q_n3_word_ordering_100', '実験によって', 1, 0);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_100_2', 'q_n3_word_ordering_100', '予期せぬ結果が', 1, 1);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_100_3', 'q_n3_word_ordering_100', 'もたらされた', 1, 2);
 
 INSERT INTO questions (id, level, category, format, prompt, prompt_ja, accepted_answers, explanation, is_active, created_at)
 VALUES (
@@ -1937,7 +2087,7 @@ VALUES (
     'Choose the correct option.',
     '忙しい（ ）、手伝ってくれてありがとう。',
     NULL,
-    '〜ところを expresses polite gratitude despite an inconvenience.',
+    'Thaikarona',
     1,
     strftime('%s', 'now')
 );
@@ -1960,7 +2110,7 @@ VALUES (
     'Fill in the blank.',
     '彼はお金持ちだが、必ずしも幸せな（ ）。',
     NULL,
-    '必ずしも〜わけではない means ''does not necessarily mean...''.',
+    'Thaikarona',
     1,
     strftime('%s', 'now')
 );
@@ -1983,7 +2133,7 @@ VALUES (
     'Type the correct answer.',
     '「この薬を飲めば飲む（ ）効き目が弱くなる。」の平仮名2文字を入れなさい。',
     '["ほど","hodo"]',
-    '〜ば〜ほど expresses proportional change (''the more... the more...'').',
+    'Thaikarona',
     1,
     strftime('%s', 'now')
 );
@@ -1997,13 +2147,19 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (Finish it while the coffee is hot.)',
     NULL,
-    '〜うちに means ''while/before the situation changes''.',
+    'Thaikarona',
     1,
     strftime('%s', 'now')
 );
 
 INSERT INTO choices (id, question_id, text, is_correct, "order")
-VALUES ('c_q_n3_word_ordering_104_1', 'q_n3_word_ordering_104', 'コーヒーが / 温かいうちに / 飲んで / ください', 0, 0);
+VALUES ('c_q_n3_word_ordering_104_1', 'q_n3_word_ordering_104', 'コーヒーが', 1, 0);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_104_2', 'q_n3_word_ordering_104', '温かいうちに', 1, 1);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_104_3', 'q_n3_word_ordering_104', '飲んで', 1, 2);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_104_4', 'q_n3_word_ordering_104', 'ください', 1, 3);
 
 INSERT INTO questions (id, level, category, format, prompt, prompt_ja, accepted_answers, explanation, is_active, created_at)
 VALUES (
@@ -2014,7 +2170,7 @@ VALUES (
     'Choose the correct option.',
     '祖父は80歳である（ ）、足腰がとても丈夫だ。',
     NULL,
-    '〜にもかかわらず means ''in spite of / despite''.',
+    'Thaikarona',
     1,
     strftime('%s', 'now')
 );
@@ -2037,7 +2193,7 @@ VALUES (
     'Fill in the blank.',
     '会議の資料は事前に目を通して（ ）べきだ。',
     NULL,
-    '〜ておく means doing something in advance preparation.',
+    'Thaikarona',
     1,
     strftime('%s', 'now')
 );
@@ -2060,7 +2216,7 @@ VALUES (
     'Type the correct answer.',
     '「日本に滞在してい（ ）間に、富士山に登りたい。」の平仮名1文字を入れなさい。',
     '["る","ru"]',
-    '〜ている間に means ''while doing / during the time that...''.',
+    'Thaikarona',
     1,
     strftime('%s', 'now')
 );
@@ -2074,13 +2230,19 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (The price is cheap relative to its high quality.)',
     NULL,
-    '〜わりに means ''considering that / relative to''.',
+    'Thaikarona',
     1,
     strftime('%s', 'now')
 );
 
 INSERT INTO choices (id, question_id, text, is_correct, "order")
-VALUES ('c_q_n3_word_ordering_108_1', 'q_n3_word_ordering_108', '品質が / わりに / 高い / 値段が安い', 0, 0);
+VALUES ('c_q_n3_word_ordering_108_1', 'q_n3_word_ordering_108', '品質が', 1, 0);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_108_2', 'q_n3_word_ordering_108', '高い', 1, 1);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_108_3', 'q_n3_word_ordering_108', 'わりに', 1, 2);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_108_4', 'q_n3_word_ordering_108', '値段が安い', 1, 3);
 
 INSERT INTO questions (id, level, category, format, prompt, prompt_ja, accepted_answers, explanation, is_active, created_at)
 VALUES (
@@ -2091,7 +2253,7 @@ VALUES (
     'Choose the correct option.',
     '彼の説明は初心者（ ）わかりやすかった。',
     NULL,
-    '〜にしては indicates unexpectedness given the situation (''for a...'').',
+    'Thaikarona',
     1,
     strftime('%s', 'now')
 );
@@ -2114,7 +2276,7 @@ VALUES (
     'Fill in the blank.',
     '先生のアドバイスの（ ）勉強したら成績が伸びた。',
     NULL,
-    '〜とおりに means ''in accordance with / just as''.',
+    'Thaikarona',
     1,
     strftime('%s', 'now')
 );
@@ -2137,7 +2299,7 @@ VALUES (
     'Type the correct answer.',
     '「山田さんに（ ）は、明日の会議で報告します。」の平仮名3文字を入れなさい。',
     '["ついて","tsuite"]',
-    '〜について means ''regarding / about''.',
+    'Thaikarona',
     1,
     strftime('%s', 'now')
 );
@@ -2151,13 +2313,21 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (He acts as if he knows everything.)',
     NULL,
-    '〜かのように means ''as if...''.',
+    'Thaikarona',
     1,
     strftime('%s', 'now')
 );
 
 INSERT INTO choices (id, question_id, text, is_correct, "order")
-VALUES ('c_q_n3_word_ordering_112_1', 'q_n3_word_ordering_112', '彼は / 何でも / 知っている / かのように / 話す', 0, 0);
+VALUES ('c_q_n3_word_ordering_112_1', 'q_n3_word_ordering_112', '彼は', 1, 0);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_112_2', 'q_n3_word_ordering_112', '何でも', 1, 1);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_112_3', 'q_n3_word_ordering_112', '知っている', 1, 2);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_112_4', 'q_n3_word_ordering_112', 'かのように', 1, 3);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_112_5', 'q_n3_word_ordering_112', '話す', 1, 4);
 
 INSERT INTO questions (id, level, category, format, prompt, prompt_ja, accepted_answers, explanation, is_active, created_at)
 VALUES (
@@ -2168,7 +2338,7 @@ VALUES (
     'Choose the correct option.',
     '子供（ ）公園で静かに遊ぶのは難しい。',
     NULL,
-    '〜にとって means ''for / from the perspective of''.',
+    'Thaikarona',
     1,
     strftime('%s', 'now')
 );
@@ -2191,7 +2361,7 @@ VALUES (
     'Fill in the blank.',
     'この靴はデザインが素敵な（ ）、歩きやすい。',
     NULL,
-    '〜うえに means ''on top of that / in addition to''.',
+    'Thaikarona',
     1,
     strftime('%s', 'now')
 );
@@ -2214,7 +2384,7 @@ VALUES (
     'Type the correct answer.',
     '「台風の影響（ ）、電車が止まりました。」の助詞・接続平仮名2文字を入れなさい。',
     '["で","により","de","niyori"]',
-    '〜の影響で denotes the cause of an adverse result.',
+    'Thaikarona',
     1,
     strftime('%s', 'now')
 );
@@ -2228,13 +2398,19 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (Don''t decide until you consult your family.)',
     NULL,
-    '〜た上で means ''after doing [first action], then decide''.',
+    'Thaikarona',
     1,
     strftime('%s', 'now')
 );
 
 INSERT INTO choices (id, question_id, text, is_correct, "order")
-VALUES ('c_q_n3_word_ordering_116_1', 'q_n3_word_ordering_116', '家族と / 相談した / 上で / 決めてください', 0, 0);
+VALUES ('c_q_n3_word_ordering_116_1', 'q_n3_word_ordering_116', '家族と', 1, 0);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_116_2', 'q_n3_word_ordering_116', '相談した', 1, 1);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_116_3', 'q_n3_word_ordering_116', '上で', 1, 2);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_116_4', 'q_n3_word_ordering_116', '決めてください', 1, 3);
 
 INSERT INTO questions (id, level, category, format, prompt, prompt_ja, accepted_answers, explanation, is_active, created_at)
 VALUES (
@@ -2245,7 +2421,7 @@ VALUES (
     'Choose the correct option.',
     '練習を重ねる（ ）、次第に上達してきた。',
     NULL,
-    '〜につれて expresses simultaneous progression (''as X happens, Y evolves'').',
+    'Thaikarona',
     1,
     strftime('%s', 'now')
 );
@@ -2268,7 +2444,7 @@ VALUES (
     'Fill in the blank.',
     '熱がある（ ）、無理をして出勤した。',
     NULL,
-    '〜のに expresses contradiction / frustration (''even though'').',
+    'Thaikarona',
     1,
     strftime('%s', 'now')
 );
@@ -2291,7 +2467,7 @@ VALUES (
     'Type the correct answer.',
     '「一度決めた（ ）は、最後までやり抜くべきだ。」の平仮名2文字を入れなさい。',
     '["から","kara"]',
-    '〜からには means ''now that / since (one must...)''.',
+    'Thaikarona',
     1,
     strftime('%s', 'now')
 );
@@ -2305,11 +2481,16 @@ VALUES (
     'Arrange the words in the correct order.',
     'Put in order: (Whether we go depends on tomorrow''s weather.)',
     NULL,
-    '〜次第で means ''depending on...''.',
+    'Thaikarona',
     1,
     strftime('%s', 'now')
 );
 
 INSERT INTO choices (id, question_id, text, is_correct, "order")
-VALUES ('c_q_n3_word_ordering_120_1', 'q_n3_word_ordering_120', '明日の / 天気 / 次第で / 決めましょう', 0, 0);
-
+VALUES ('c_q_n3_word_ordering_120_1', 'q_n3_word_ordering_120', '明日の', 1, 0);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_120_2', 'q_n3_word_ordering_120', '天気', 1, 1);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_120_3', 'q_n3_word_ordering_120', '次第で', 1, 2);
+INSERT INTO choices (id, question_id, text, is_correct, "order")
+VALUES ('c_q_n3_word_ordering_120_4', 'q_n3_word_ordering_120', '決めましょう', 1, 3);

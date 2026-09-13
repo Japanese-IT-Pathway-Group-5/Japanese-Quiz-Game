@@ -6,7 +6,7 @@
 	let selectedChoiceId: string | null = $state(null);
 	let typedAnswer = $state('');
 
-	const blankMarker = '_____' as const;
+	const blankMarker = '\u00A0\u00A0\u00A0\u00A0\u00A0' as const;
 	const normalizedAnswer = $derived(normalizeTypedAnswer(typedAnswer));
 
 	function renderGapFillSentence(text: string) {
@@ -34,9 +34,9 @@
 
 	{#if question.format === 'gap_fill'}
 		<p class="prompt prompt-gap">
-			{#each renderGapFillSentence(getQuestionText()) as part, index (part.type + '-' + index + '-' + part.value)}
+			{#each renderGapFillSentence(getQuestionText()) as part, index (part.type + '-' + index)}
 				{#if part.type === 'blank'}
-					<span class="gap-blank">{part.value}</span>
+					<span class="gap-blank" aria-label="blank">{part.value}</span>
 				{:else}
 					<span>{part.value}</span>
 				{/if}
@@ -127,39 +127,58 @@
 		align-items: center;
 		gap: 0.75rem;
 		width: 100%;
-		padding: 0.9rem 1rem;
-		border: 2px solid var(--color-border);
+		padding: 0.95rem 1.15rem;
+		border: 1px solid var(--theme-border, var(--color-border));
 		border-radius: var(--radius-md);
-		background: var(--color-surface);
-		color: var(--color-text);
+		background: var(--theme-paper, var(--color-surface));
+		color: var(--theme-text-main, var(--color-text));
 		cursor: pointer;
-		transition:
-			border-color 0.15s ease,
-			background-color 0.15s ease,
-			transform 0.15s ease;
+		position: relative;
+		overflow: hidden;
+		transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+		user-select: none;
+		box-shadow: 0 4px 14px rgba(0, 15, 45, 0.25);
 	}
 
-	.option:hover {
-		border-color: var(--color-primary);
-		background: var(--color-primary-soft);
-	}
-
-	.option:has(input:focus-visible) {
-		outline: 3px solid var(--color-primary);
-		outline-offset: 3px;
+	.option:hover:not(.selected) {
+		background: color-mix(in srgb, var(--theme-paper, #05367b) 75%, #1952a8 25%);
+		border-color: rgba(255, 188, 13, 0.45);
+		color: #ffffff;
+		transform: translateY(-2px);
+		box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
 	}
 
 	.option.selected {
-		border-color: var(--color-primary);
-		background: var(--color-primary-soft);
+		background: var(--theme-gold-shimmer, #ffbc0d);
+		border-color: var(--theme-gold, #ffbc0d);
+		color: #022659;
+		font-weight: 800;
+		box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+		transform: translateY(-2px);
+	}
+
+	.option.selected:hover {
+		filter: brightness(1.05);
+	}
+
+	.option:active {
+		transform: translateY(1px) scale(0.98);
+		filter: brightness(0.96);
+	}
+
+	.option:has(input:focus-visible) {
+		outline: 2px solid var(--theme-gold, #ffbc0d);
+		outline-offset: 3px;
 	}
 
 	.option input {
 		width: 1.2rem;
 		height: 1.2rem;
 		margin: 0;
-		accent-color: var(--color-primary);
+		accent-color: var(--theme-gold, #ffbc0d);
 		flex-shrink: 0;
+		position: relative;
+		z-index: 1;
 	}
 
 	.option-text {

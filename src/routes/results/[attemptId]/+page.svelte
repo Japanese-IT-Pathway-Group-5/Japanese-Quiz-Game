@@ -1,11 +1,17 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import type { PageData } from './$types';
+	import { Button } from '$lib/components/ui';
 
 	let { data }: { data: PageData } = $props();
-
 	const attempt = $derived(data.attempt);
-	const questionResults = $derived(data.questionResults);
+	const questionResults = $derived(data.questionResults ?? []);
+
+	const totalQuestions = $derived(questionResults.length || (attempt.chosenQuestions ?? []).length);
+	const accuracy = $derived(
+		totalQuestions > 0 ? Math.round((attempt.correctCount / totalQuestions) * 100) : 0
+	);
+	const finalScore = $derived(attempt.finalScore ?? attempt.correctCount);
 
 	const formatTime = (seconds: number) => {
 		const minutes = Math.floor(seconds / 60);
@@ -16,71 +22,87 @@
 </script>
 
 <svelte:head>
-	<title>Quiz Results</title>
+	<title>Results · 結果 · Japanese Quiz Game</title>
 </svelte:head>
 
-<main class="page-shell">
-	<div class="results-card">
-		<header class="results-header">
-			<h1>Quiz Results</h1>
-			<p>Review your answers and see where you can improve.</p>
+<div class="page-shell">
+	<div class="results-canvas">
+		<header class="header">
+			<h1 class="title font-brush text-gold-gradient">結果発表</h1>
 		</header>
 
-		<section class="summary" aria-label="Quiz summary">
-			<div class="summary-item">
-				<span>Final Score</span>
-				<strong>{attempt.finalScore ?? 0}</strong>
+		<!-- Main Score Display -->
+		<div class="score-showcase">
+			<div class="score-badge-container">
+				<span class="score-label font-mono">FINAL SCORE</span>
+				<div class="score-number font-brush text-gold-gradient">{finalScore}</div>
+				<span class="score-pts font-mono">/ 100 PTS</span>
 			</div>
 
-			<div class="summary-item">
-				<span>Correct</span>
-				<strong>{attempt.correctCount} / {attempt.chosenQuestions.length}</strong>
-			</div>
-
-			<div class="summary-item">
-				<span>Time</span>
-				<strong>{formatTime(data.timeTaken)}</strong>
-			</div>
-		</section>
-
-		<section class="questions" aria-labelledby="review-title">
-			<div class="section-heading">
-				<h2 id="review-title">Question Review</h2>
-				<p>{questionResults.length} questions</p>
-			</div>
-
-			{#if questionResults.length === 0}
-				<div class="empty-state">
-					<p>No question results are available.</p>
+			<div class="stats-grid">
+				<div class="stat-item">
+					<span class="stat-label">Correct</span>
+					<span class="stat-value font-mono">
+						{attempt.correctCount} <span class="stat-sub">/ {totalQuestions}</span>
+					</span>
 				</div>
-			{:else}
-				<div class="question-list">
+
+				<div class="stat-item">
+					<span class="stat-label">Accuracy</span>
+					<span class="stat-value font-mono">{accuracy}%</span>
+				</div>
+
+				<div class="stat-item">
+					<span class="stat-label">Time</span>
+					<span class="stat-value font-mono">{formatTime(data.timeTaken ?? 0)}</span>
+				</div>
+
+				<div class="stat-item">
+					<span class="stat-label">Level</span>
+					<span class="stat-value font-japanese">{attempt.level}</span>
+				</div>
+			</div>
+		</div>
+
+		<!-- Question Review -->
+		{#if questionResults.length > 0}
+			<section class="questions-section">
+				<h2 class="questions-title">Question Review</h2>
+
+				<div class="questions-list">
 					{#each questionResults as question, index (question.questionId)}
 						<article
+							class="question-card"
 							class:correct={question.isCorrect}
 							class:wrong={!question.isCorrect}
-							class="question-result"
 						>
 							<div class="question-header">
-								<h3>Question {index + 1}</h3>
-
-								<span class="result-badge">
-									{question.isCorrect ? 'Correct' : 'Wrong'}
+								<span class="q-badge font-mono">Q{index + 1}</span>
+								<span class="result-badge" class:is-correct={question.isCorrect}>
+									{#if question.isCorrect}
+										<i class="fa-solid fa-check"></i> Correct
+									{:else}
+										<i class="fa-solid fa-xmark"></i> Incorrect
+									{/if}
 								</span>
 							</div>
 
 							<p class="prompt">{question.prompt}</p>
 
-							<div class="answer-section">
-								<p>
-									<strong>Your answer</strong>
-									<span>{question.answer || 'No answer'}</span>
+							<div class="answer-details">
+								<p class="ans-row">
+									<span class="ans-label">Your answer:</span>
+									<span class="ans-text" class:ans-wrong={!question.isCorrect}
+										>{question.answer || 'No answer'}</span
+									>
 								</p>
 
 								{#if !question.isCorrect}
-									<p class="correct-answer">
-										<strong>Correct answer</strong>
-										<span>{question.correctAnswers.join(', ') || 'Not available'}</span>
+									<p class="ans-row">
+										<span class="ans-label">Correct answer:</span>
+										<span class="ans-text ans-correct"
+											>{question.correctAnswers.join(', ') || 'Not available'}</span
+										>
 									</p>
 								{/if}
 							</div>
@@ -92,280 +114,264 @@
 								</div>
 							{/if}
 
-							<p class="duration">Time: {formatTime(question.durationSeconds)}</p>
+							<div class="duration font-mono">
+								Time: {formatTime(question.durationSeconds)}
+							</div>
 						</article>
 					{/each}
 				</div>
-			{/if}
-		</section>
+			</section>
+		{/if}
 
-		<div class="actions">
-			<a href={resolve('/')} class="primary-link">Play Again</a>
-			<a href={resolve('/leaderboard')} class="secondary-link">Leaderboard</a>
+		<!-- Actions -->
+		<div class="results-actions">
+			<Button href={resolve('/')} variant="primary" size="lg" fullWidth>
+				<span>Play Again</span>
+			</Button>
+
+			<Button href={resolve('/leaderboard')} variant="gold" size="md" fullWidth>
+				<span>View Leaderboard</span>
+			</Button>
 		</div>
 	</div>
-</main>
+</div>
 
 <style>
-	:global(*) {
-		box-sizing: border-box;
-	}
-	:global(body) {
-		margin: 0;
-		font-family: Arial, sans-serif;
-		background: linear-gradient(180deg, #f8fafc 0%, #e0f2fe 100%);
-	}
-
 	.page-shell {
 		min-height: 100vh;
-		width: 100%;
-		max-width: 100%;
-		overflow-x: hidden;
-		padding: 2rem 1rem;
-	}
-
-	.results-card {
-		width: 100%;
-		max-width: 800px;
-		box-sizing: border-box;
-		margin: 0 auto;
-		background: white;
-		border-radius: 1rem;
-		box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08);
-		padding: 2rem;
-	}
-
-	.results-header {
-		margin-bottom: var(--space-lg);
-	}
-
-	.results-header h1 {
-		margin: 0;
-		font-size: clamp(1.8rem, 5vw, 2.5rem);
-	}
-
-	.results-header p {
-		margin: 0.5rem 0 0;
-		color: var(--color-text-muted);
-	}
-
-	.summary {
-		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		gap: var(--space-md);
-		margin-bottom: var(--space-xl);
-	}
-
-	.summary-item {
-		padding: var(--space-md);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-md);
-		background: var(--color-surface-muted);
-		text-align: center;
-	}
-
-	.summary-item span {
-		display: block;
-		color: var(--color-text-muted);
-		font-size: 0.9rem;
-		font-weight: 600;
-	}
-
-	.summary-item strong {
-		display: block;
-		margin-top: 0.35rem;
-		font-size: 1.5rem;
-	}
-
-	.section-heading {
+		padding: 2.5rem 1rem;
 		display: flex;
-		align-items: baseline;
-		justify-content: space-between;
-		gap: var(--space-md);
-		margin-bottom: var(--space-md);
+		justify-content: center;
 	}
 
-	.section-heading h2 {
+	.results-canvas {
+		width: min(100%, 640px);
+		margin: 0 auto;
+		display: flex;
+		flex-direction: column;
+		gap: 1.75rem;
+	}
+
+	.header {
+		text-align: center;
+		padding: 0.5rem 0;
+	}
+
+	.title {
 		margin: 0;
+		font-size: clamp(2.4rem, 6vw, 3.2rem);
+		font-weight: 900;
+		letter-spacing: 0.06em;
+		filter: drop-shadow(0 4px 18px rgba(0, 15, 45, 0.45));
 	}
 
-	.section-heading p {
-		margin: 0;
-		color: var(--color-text-muted);
-		font-size: 0.9rem;
-	}
-
-	.question-list {
+	.score-showcase {
+		padding: 1.5rem;
 		display: grid;
-		gap: var(--space-md);
+		gap: 1.5rem;
+		text-align: center;
+		border-radius: var(--radius-lg, 1rem);
+		background: rgba(0, 15, 45, 0.6);
+		backdrop-filter: blur(12px);
+		border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.1));
+		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 	}
 
-	.question-result {
-		padding: var(--space-lg);
-		border: 1px solid var(--color-border);
-		border-left: 5px solid var(--color-border);
-		border-radius: var(--radius-md);
-		background: var(--color-surface);
+	.score-badge-container {
+		display: grid;
+		gap: 0.2rem;
+		justify-items: center;
 	}
 
-	.question-result.correct {
-		border-left-color: #16a34a;
+	.score-label {
+		font-size: 0.75rem;
+		letter-spacing: 0.12em;
+		color: var(--theme-gold, #ffbc0d);
+		font-weight: 700;
 	}
 
-	.question-result.wrong {
-		border-left-color: #dc2626;
+	.score-number {
+		font-size: 3.8rem;
+		font-weight: 900;
+		line-height: 1;
+		filter: drop-shadow(0 2px 10px rgba(255, 188, 13, 0.35));
+	}
+
+	.score-pts {
+		font-size: 0.8rem;
+		letter-spacing: 0.08em;
+		color: var(--theme-text-muted, #94a3b8);
+	}
+
+	.stats-grid {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 0.75rem;
+		padding-top: 0.5rem;
+		border-top: 1px solid var(--theme-border, rgba(255, 255, 255, 0.08));
+	}
+
+	.stat-item {
+		display: grid;
+		gap: 0.2rem;
+	}
+
+	.stat-label {
+		font-size: 0.75rem;
+		color: var(--theme-text-muted, #94a3b8);
+	}
+
+	.stat-value {
+		font-size: 1.15rem;
+		font-weight: 700;
+		color: var(--theme-text-main, #ffffff);
+	}
+
+	.stat-sub {
+		font-size: 0.8rem;
+		font-weight: normal;
+		color: var(--theme-text-muted, #94a3b8);
+	}
+
+	/* Question Review */
+	.questions-section {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.questions-title {
+		margin: 0;
+		font-size: 1.25rem;
+		color: var(--theme-text-main, #ffffff);
+		font-weight: 700;
+	}
+
+	.questions-list {
+		display: flex;
+		flex-direction: column;
+		gap: 0.85rem;
+	}
+
+	.question-card {
+		padding: 1.25rem;
+		border-radius: var(--radius-md, 0.75rem);
+		background: rgba(0, 15, 45, 0.5);
+		backdrop-filter: blur(8px);
+		border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.1));
+		border-left-width: 4px;
+	}
+
+	.question-card.correct {
+		border-left-color: #22c55e;
+	}
+
+	.question-card.wrong {
+		border-left-color: #ef4444;
 	}
 
 	.question-header {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		gap: var(--space-md);
+		margin-bottom: 0.75rem;
 	}
 
-	.question-header h3 {
-		margin: 0;
-		font-size: 1.1rem;
+	.q-badge {
+		font-size: 0.8rem;
+		font-weight: 800;
+		color: var(--theme-text-muted, #94a3b8);
 	}
 
 	.result-badge {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		padding: 0.35rem 0.7rem;
-		border-radius: 999px;
-		font-size: 0.85rem;
+		font-size: 0.8rem;
 		font-weight: 700;
-		white-space: nowrap;
+		display: flex;
+		align-items: center;
+		gap: 0.35rem;
+		color: #ef4444;
 	}
 
-	.correct .result-badge {
-		background: #dcfce7;
-		color: #166534;
-	}
-
-	.wrong .result-badge {
-		background: var(--color-danger-background);
-		color: var(--color-danger);
+	.result-badge.is-correct {
+		color: #22c55e;
 	}
 
 	.prompt {
-		margin: var(--space-md) 0;
-		font-size: 1.1rem;
-		font-weight: 700;
-		line-height: 1.7;
-		overflow-wrap: anywhere;
+		margin: 0 0 0.85rem;
+		font-size: 1.05rem;
+		font-weight: 600;
+		color: var(--theme-text-main, #ffffff);
+		line-height: 1.4;
 	}
 
-	.answer-section {
+	.answer-details {
 		display: grid;
-		gap: 0.75rem;
+		gap: 0.35rem;
+		font-size: 0.95rem;
 	}
 
-	.answer-section p {
-		display: grid;
-		gap: 0.25rem;
+	.ans-row {
 		margin: 0;
+		display: flex;
+		gap: 0.5rem;
+		flex-wrap: wrap;
 	}
 
-	.answer-section span {
-		overflow-wrap: anywhere;
+	.ans-label {
+		color: var(--theme-text-muted, #94a3b8);
 	}
 
-	.correct-answer {
-		color: var(--color-text);
+	.ans-text {
+		color: var(--theme-text-main, #ffffff);
+		font-weight: 600;
+	}
+
+	.ans-wrong {
+		color: #fca5a5;
+		text-decoration: line-through;
+	}
+
+	.ans-correct {
+		color: #86efac;
 	}
 
 	.explanation {
-		margin-top: var(--space-md);
-		padding: var(--space-md);
-		border-radius: var(--radius-sm);
-		background: var(--color-primary-soft);
-		border: 1px solid var(--color-border-soft);
+		margin-top: 0.75rem;
+		padding: 0.75rem 1rem;
+		border-radius: var(--radius-sm, 0.5rem);
+		background: rgba(255, 255, 255, 0.04);
+		border-left: 2px solid var(--theme-gold, #ffbc0d);
+		font-size: 0.88rem;
+		color: var(--theme-text-muted, #cbd5e1);
+	}
+
+	.explanation strong {
+		display: block;
+		margin-bottom: 0.25rem;
+		color: var(--theme-gold, #ffbc0d);
 	}
 
 	.explanation p {
-		margin: 0.4rem 0 0;
-		overflow-wrap: anywhere;
+		margin: 0;
+		line-height: 1.4;
 	}
 
 	.duration {
-		margin: var(--space-md) 0 0;
-		color: var(--color-text-muted);
-		font-size: 0.9rem;
+		margin-top: 0.75rem;
+		font-size: 0.78rem;
+		color: var(--theme-text-muted, #94a3b8);
 	}
 
-	.actions {
-		display: flex;
-		gap: var(--space-md);
-		margin-top: var(--space-xl);
-	}
-
-	.actions a {
-		flex: 1;
-	}
-
-	.secondary-link {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		min-height: 2.75rem;
-		padding: 0.8rem 1rem;
-		border-radius: var(--radius-md);
-		background: var(--color-surface-muted);
-		border: 1px solid var(--color-border);
-		color: var(--color-text);
-		text-decoration: none;
-		font-weight: 700;
-	}
-
-	.secondary-link:hover {
-		background: var(--color-border);
-	}
-	.questions,
-	article,
-	.question-header,
-	.prompt {
-		min-width: 0;
-		max-width: 100%;
-		overflow-wrap: anywhere;
+	.results-actions {
+		display: grid;
+		gap: 0.75rem;
+		margin-top: 0.5rem;
 	}
 
 	@media (max-width: 600px) {
-		.page-shell {
-			padding: 1rem 0.75rem;
-		}
-
-		.results-card {
-			padding: var(--space-md);
-		}
-
-		.summary {
-			grid-template-columns: 1fr;
-		}
-
-		.section-heading {
-			align-items: flex-start;
-			flex-direction: column;
-			gap: 0.25rem;
-		}
-
-		.question-result {
-			padding: var(--space-md);
-		}
-
-		.question-header {
-			align-items: flex-start;
-			flex-direction: column;
-			gap: 0.5rem;
-		}
-
-		.actions {
-			flex-direction: column;
-		}
-
-		.actions a {
-			width: 100%;
+		.stats-grid {
+			grid-template-columns: repeat(2, 1fr);
+			gap: 1rem;
 		}
 	}
 </style>
