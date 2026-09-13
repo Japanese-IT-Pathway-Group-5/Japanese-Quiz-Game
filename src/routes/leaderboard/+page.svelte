@@ -20,6 +20,9 @@
 <div class="leaderboard-page">
 	<div class="leaderboard-container">
 		<header class="leaderboard-header">
+			<nav class="top-nav">
+				<a href={resolve('/')} class="back-link">Back to start</a>
+			</nav>
 			<h1>Leaderboard</h1>
 			<p>See the best quiz scores and find your ranking.</p>
 		</header>
@@ -91,6 +94,16 @@
 </div>
 
 <style>
+	a {
+		display: inline-block;
+		margin-top: 1rem;
+		padding: 0.8rem 1rem;
+		background: #2563eb;
+		color: white;
+		border-radius: 0.75rem;
+		text-decoration: none;
+		font-weight: 700;
+	}
 	.leaderboard-page {
 		min-height: 100vh;
 		padding: 32px 16px;
