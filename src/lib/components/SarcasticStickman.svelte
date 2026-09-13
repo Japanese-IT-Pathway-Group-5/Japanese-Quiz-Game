@@ -5,21 +5,21 @@
 <div class="stickman-anim {className}" aria-hidden="true">
 	<div class="stickman-stack">
 		<img
-			src="/images/stickman-open.png"
+			src="/images/stickman-open.webp"
 			alt="Sarcastic stickman"
 			class="stickman-frame frame-open"
 			draggable="false"
 			loading="eager"
 		/>
 		<img
-			src="/images/stickman-half.png"
+			src="/images/stickman-half.webp"
 			alt=""
 			class="stickman-frame frame-half"
 			draggable="false"
 			loading="eager"
 		/>
 		<img
-			src="/images/stickman-closed.png"
+			src="/images/stickman-closed.webp"
 			alt=""
 			class="stickman-frame frame-closed"
 			draggable="false"
@@ -58,43 +58,30 @@
 		pointer-events: none;
 	}
 
+	/* Base open frame remains continuously solid (no blank/white flashes) */
 	.frame-open {
 		opacity: 1;
-		animation: blink-open 2.6s infinite step-end;
 	}
 
+	/* Eyelid overlay frames step on top smoothly */
 	.frame-half {
 		opacity: 0;
-		animation: blink-half 2.6s infinite step-end;
+		animation: blink-half 3.2s infinite step-end;
 	}
 
 	.frame-closed {
 		opacity: 0;
-		animation: blink-closed 2.6s infinite step-end;
-	}
-
-	@keyframes blink-open {
-		0%,
-		86%,
-		100% {
-			opacity: 1;
-		}
-		87%,
-		95% {
-			opacity: 0;
-		}
+		animation: blink-closed 3.2s infinite step-end;
 	}
 
 	@keyframes blink-half {
 		0%,
-		86%,
+		89%,
 		96%,
 		100% {
 			opacity: 0;
 		}
-		87%,
-		88%,
-		93%,
+		90%,
 		95% {
 			opacity: 1;
 		}
@@ -102,13 +89,15 @@
 
 	@keyframes blink-closed {
 		0%,
-		88%,
-		94%,
+		90%,
+		95%,
 		100% {
 			opacity: 0;
 		}
-		89%,
-		93% {
+		91%,
+		92%,
+		93%,
+		94% {
 			opacity: 1;
 		}
 	}

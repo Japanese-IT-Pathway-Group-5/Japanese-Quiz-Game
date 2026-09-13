@@ -218,7 +218,7 @@
 		>
 			<!-- Base team illustration with background -->
 			<image
-				href="/images/team/team-with-background.png"
+				href="/images/team/team-with-background.webp"
 				x="0"
 				y="0"
 				width="1280"

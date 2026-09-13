@@ -68,7 +68,7 @@
 			{/if}
 
 			<button type="submit" class="start-btn" aria-label="Start Quiz">
-				<img src="/images/start-button.png" alt="Start Quiz" class="start-btn-img" />
+				<img src="/images/start-button.webp" alt="Start Quiz" class="start-btn-img" />
 			</button>
 		</form>
 
@@ -265,7 +265,7 @@
 	.start-btn {
 		background: transparent;
 		border: none;
-		padding: 0.35rem 0;
+		padding: 0.25rem 0;
 		cursor: pointer;
 		display: flex;
 		justify-content: center;
@@ -279,12 +279,12 @@
 	}
 
 	.start-btn:hover {
-		transform: translateY(-1.5px);
-		filter: brightness(1.06);
+		transform: translateY(-2px) scale(1.02);
+		filter: brightness(1.08);
 	}
 
 	.start-btn:active {
-		transform: translateY(0.5px);
+		transform: translateY(0.5px) scale(0.99);
 		filter: brightness(0.98);
 	}
 
@@ -295,9 +295,10 @@
 
 	.start-btn-img {
 		display: block;
-		width: 100%;
-		max-width: 180px;
+		width: min(100%, 250px);
 		height: auto;
+		aspect-ratio: 1744 / 502;
+		object-fit: contain;
 		user-select: none;
 		pointer-events: none;
 	}

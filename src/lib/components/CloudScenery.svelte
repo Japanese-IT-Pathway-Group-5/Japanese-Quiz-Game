@@ -9,8 +9,8 @@
 
 	<!-- Top-Center: Japanese Celestial Disk (Sun in Light Mode / Moon in Dark Mode) -->
 	<div class="art-layer sun-layer">
-		<img src="/images/sun.png" alt="" class="art-img sun-img" loading="eager" decoding="async" />
-		<img src="/images/moon.png" alt="" class="art-img moon-img" loading="eager" decoding="async" />
+		<img src="/images/sun.webp" alt="" class="art-img sun-img" loading="eager" decoding="async" />
+		<img src="/images/moon.webp" alt="" class="art-img moon-img" loading="eager" decoding="async" />
 	</div>
 
 	<div class="art-layer sfx-layer sun-sfx" aria-hidden="true">
@@ -58,7 +58,7 @@
 	<!-- Bottom-Left: Wind-Blown Leaf Breeze -->
 	<div class="art-layer leaf-breeze-bottom">
 		<img
-			src="/images/leaf-blow-with-wind.png"
+			src="/images/leaf-blow-with-wind.webp"
 			alt=""
 			class="art-img"
 			loading="eager"
@@ -297,9 +297,10 @@
 
 	/* 5. Bottom-Left Leaf Breeze */
 	.leaf-breeze-bottom {
-		bottom: 4%;
+		bottom: 3.5%;
 		left: 2%;
 		width: clamp(220px, 30vw, 420px);
+		aspect-ratio: 1694 / 668;
 		opacity: 0.88;
 		z-index: 2;
 		animation: breeze-sway 17s ease-in-out infinite alternate;
