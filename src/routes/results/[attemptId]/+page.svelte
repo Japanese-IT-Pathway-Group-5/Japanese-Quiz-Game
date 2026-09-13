@@ -107,37 +107,8 @@
 </main>
 
 <style>
-<<<<<<< HEAD
-	:global(*) {
-		box-sizing: border-box;
-	}
-	:global(body) {
-		margin: 0;
-		font-family: Arial, sans-serif;
-		background: linear-gradient(180deg, #f8fafc 0%, #e0f2fe 100%);
-	}
-
-	.page-shell {
-		min-height: 100vh;
-		width: 100%;
-		max-width: 100%;
-		overflow-x: hidden;
-		padding: 2rem 1rem;
-	}
-
-	.results-card {
-		width: 100%;
-		max-width: 800px;
-		box-sizing: border-box;
-		margin: 0 auto;
-		background: white;
-		border-radius: 1rem;
-		box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08);
-		padding: 2rem;
-=======
 	.results-card {
 		max-width: 800px;
->>>>>>> origin/main
 	}
 
 	.results-header {
