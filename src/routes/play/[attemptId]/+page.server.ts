@@ -3,7 +3,7 @@ import type { Actions, PageServerLoad } from './$types';
 import { getDb } from '$lib/server/db';
 import { getQuizAttempt, submitAttemptAnswer } from '$lib/server/quiz';
 
-export const load: PageServerLoad = async ({ params, locals, platform, setHeaders }) => {
+export const load: PageServerLoad = async ({ params, locals, platform, setHeaders, url }) => {
 	setHeaders({
 		'cache-control': 'no-store'
 	});
@@ -42,7 +42,8 @@ export const load: PageServerLoad = async ({ params, locals, platform, setHeader
 	return {
 		attempt: quizResult.attempt,
 		question: quizResult.currentQuestion,
-		totalQuestions: quizResult.totalQuestions
+		totalQuestions: quizResult.totalQuestions,
+		answerResult: url.searchParams.get('result')
 	};
 };
 
@@ -135,7 +136,7 @@ export const actions: Actions = {
 		if (outcome.isFinished) {
 			throw redirect(303, `/results/${params.attemptId}`);
 		}
-
-		throw redirect(303, `/play/${params.attemptId}`);
+		const result = outcome.isCorrect ? 'correct' : 'incorrect';
+		throw redirect(303, `/play/${params.attemptId}?result=${result}`);
 	}
 };

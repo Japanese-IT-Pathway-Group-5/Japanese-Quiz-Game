@@ -11,6 +11,24 @@
 		Math.min(attempt.currentQuestionIndex + 1, totalQuestions)
 	);
 
+	let questionHeading: HTMLHeadingElement | undefined = $state();
+	let questionPrompt: HTMLParagraphElement | undefined = $state();
+
+	const answerResult = $derived(data.answerResult);
+
+	const answerAnnouncement = $derived(
+		answerResult === 'correct'
+			? `Correct. Moving to question ${currentQuestionNumber} of ${totalQuestions}.`
+			: answerResult === 'incorrect'
+				? `Incorrect. Moving to question ${currentQuestionNumber} of ${totalQuestions}.`
+				: ''
+	);
+
+	$effect(() => {
+		void question.id;
+		questionPrompt?.focus();
+	});
+
 	function renderGapFillSentence(text: string) {
 		if (!text.includes('___')) {
 			return [{ type: 'text', value: text }];
@@ -38,13 +56,19 @@
 			<p class="meta">Score: {attempt.correctCount}</p>
 		</div>
 
-		<h1 class="title">Quiz</h1>
+		{#if answerAnnouncement}
+			<p class="sr-only" aria-live="polite" aria-atomic="true">
+				{answerAnnouncement}
+			</p>
+		{/if}
+
+		<h1 class="title" tabindex="-1" bind:this={questionHeading}>Quiz</h1>
 
 		<form method="POST" class="answer-form">
 			<input type="hidden" name="questionId" value={question.id} />
 
 			{#if question.format === 'gap_fill'}
-				<p class="prompt prompt-gap">
+				<p class="prompt prompt-gap" tabindex="-1" bind:this={questionPrompt}>
 					{#each renderGapFillSentence(question.promptJa ?? question.prompt) as part, index (part.type + '-' + index + '-' + part.value)}
 						{#if part.type === 'blank'}
 							<span class="gap-blank">{part.value}</span>
@@ -54,7 +78,9 @@
 					{/each}
 				</p>
 			{:else}
-				<p class="prompt">{question.promptJa ?? question.prompt}</p>
+				<p class="prompt" tabindex="-1" bind:this={questionPrompt}>
+					{question.promptJa ?? question.prompt}
+				</p>
 			{/if}
 
 			{#if question.format === 'multiple_choice' || question.format === 'gap_fill'}
@@ -211,6 +237,34 @@
 		font-size: 1rem;
 		font-weight: 700;
 		cursor: pointer;
+	}
+	.choice-option:has(input:focus-visible),
+	select:focus-visible,
+	.submit-button:focus-visible {
+		outline: 3px solid #1d4ed8;
+		outline-offset: 3px;
+	}
+
+	.choice-option:focus-within {
+		border-color: #1d4ed8;
+	}
+
+	.title:focus-visible {
+		outline: 3px solid #1d4ed8;
+		outline-offset: 4px;
+		border-radius: 0.25rem;
+	}
+
+	.sr-only {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border: 0;
 	}
 
 	@media (max-width: 480px) {
