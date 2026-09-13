@@ -3,14 +3,19 @@
 declare global {
 	namespace App {
 		interface Platform {
-			env: Env;
+			env: Env & {
+				AUTH_SECRET: string;
+				ADMIN_PASSWORD: string;
+			};
 			ctx: ExecutionContext;
 			caches: CacheStorage;
 			cf?: IncomingRequestCfProperties;
 		}
-
 		// interface Error {}
-		// interface Locals {}
+		interface Locals {
+			/** The current visitor's player id, set once per request in hooks.server.ts. */
+			playerId: string;
+		}
 		// interface PageData {}
 		// interface PageState {}
 	}

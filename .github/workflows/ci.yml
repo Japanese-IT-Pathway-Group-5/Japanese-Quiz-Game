@@ -29,6 +29,15 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # wrangler types infers AUTH_SECRET/ADMIN_PASSWORD from .env's keys, not their
+      # values — CI has no real .env (secrets live in GitHub Actions secrets / Wrangler
+      # secrets per CONTRIBUTING.md), so a placeholder-only .env is written just so the
+      # generated Env type includes both keys. Never used to run the app.
+      - name: Create placeholder .env for type generation
+        run: |
+          echo 'AUTH_SECRET="ci-placeholder-not-a-real-secret"' >> .env
+          echo 'ADMIN_PASSWORD="ci-placeholder-not-a-real-secret"' >> .env
+
       # worker-configuration.d.ts is generated, not committed — see .gitignore.
       - name: Generate Cloudflare types
         run: pnpm run gen
@@ -64,6 +73,15 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      # wrangler types infers AUTH_SECRET/ADMIN_PASSWORD from .env's keys, not their
+      # values — CI has no real .env (secrets live in GitHub Actions secrets / Wrangler
+      # secrets per CONTRIBUTING.md), so a placeholder-only .env is written just so the
+      # generated Env type includes both keys. Never used to run the app.
+      - name: Create placeholder .env for type generation
+        run: |
+          echo 'AUTH_SECRET="ci-placeholder-not-a-real-secret"' >> .env
+          echo 'ADMIN_PASSWORD="ci-placeholder-not-a-real-secret"' >> .env
 
       # worker-configuration.d.ts is generated, not committed — see .gitignore.
       - name: Generate Cloudflare types
