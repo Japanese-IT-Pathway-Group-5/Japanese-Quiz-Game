@@ -1,4 +1,5 @@
-import { normalizeTypedAnswer } from './normalizeTypedAnswer';
+import { gradeMultipleChoiceAnswer } from './gradeMultipleChoiceAnswer';
+import { gradeTypedAnswer } from './gradeTypedAnswer';
 import type { GradingResult, StoredQuestion, StoredChoice } from './types';
 
 export type StoredQuestionForGrading = StoredQuestion & {
@@ -29,52 +30,14 @@ export function gradeAnswer(
 			if (typeof answer !== 'string') {
 				return { isCorrect: false, explanation };
 			}
-
-			const choices = question.choices ?? [];
-			const selected = choices.find((c) => c.id === answer);
-
-			if (!selected) {
-				// Option belongs to another question or does not exist
-				return { isCorrect: false, explanation };
-			}
-
-			const isCorrect = Boolean(selected.isCorrect);
-			const correctChoice = choices.find((c) => Boolean(c.isCorrect));
-
-			return {
-				isCorrect,
-				explanation,
-				correctAnswer: correctChoice?.text ?? correctChoice?.id
-			};
+			return gradeMultipleChoiceAnswer(question, answer);
 		}
 
 		case 'typing': {
 			if (typeof answer !== 'string') {
 				return { isCorrect: false, explanation };
 			}
-
-			const normalizedInput = normalizeTypedAnswer(answer);
-			let acceptedList: string[] = [];
-
-			if (Array.isArray(question.acceptedAnswers)) {
-				acceptedList = question.acceptedAnswers;
-			} else if (typeof question.acceptedAnswers === 'string') {
-				try {
-					acceptedList = JSON.parse(question.acceptedAnswers);
-				} catch {
-					acceptedList = [question.acceptedAnswers];
-				}
-			}
-
-			const isCorrect = acceptedList.some(
-				(accepted) => normalizeTypedAnswer(accepted) === normalizedInput
-			);
-
-			return {
-				isCorrect,
-				explanation,
-				correctAnswer: acceptedList[0]
-			};
+			return gradeTypedAnswer(answer, question);
 		}
 
 		case 'word_ordering': {
