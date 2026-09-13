@@ -1,5 +1,6 @@
 import { gradeMultipleChoiceAnswer } from './gradeMultipleChoiceAnswer';
 import { gradeTypedAnswer } from './gradeTypedAnswer';
+import { gradeWordOrderingAnswer } from './gradeWordOrderingAnswer';
 import type { GradingResult, StoredQuestion, StoredChoice } from './types';
 
 export type StoredQuestionForGrading = StoredQuestion & {
@@ -41,40 +42,7 @@ export function gradeAnswer(
 		}
 
 		case 'word_ordering': {
-			const choices = question.choices ?? [];
-			const sortedChoices = [...choices].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-			const correctWords = sortedChoices.map((c) => c.text);
-			const correctIds = sortedChoices.map((c) => c.id);
-
-			let submittedItems: readonly string[] = [];
-			if (Array.isArray(answer)) {
-				submittedItems = answer;
-			} else if (typeof answer === 'string') {
-				try {
-					const parsed = JSON.parse(answer);
-					if (Array.isArray(parsed)) {
-						submittedItems = parsed;
-					} else {
-						submittedItems = [answer];
-					}
-				} catch {
-					submittedItems = answer.split(',').map((s) => s.trim());
-				}
-			}
-
-			if (submittedItems.length !== choices.length) {
-				return { isCorrect: false, explanation, correctAnswer: correctWords.join(' ') };
-			}
-
-			const matchesWords = submittedItems.every((item, i) => item === correctWords[i]);
-			const matchesIds = submittedItems.every((item, i) => item === correctIds[i]);
-			const isCorrect = matchesWords || matchesIds;
-
-			return {
-				isCorrect,
-				explanation,
-				correctAnswer: correctWords.join(' ')
-			};
+			return gradeWordOrderingAnswer(question, answer);
 		}
 
 		default:
