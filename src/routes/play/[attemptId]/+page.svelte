@@ -1,6 +1,8 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import TypingQuestion from '$lib/components/TypingQuestion.svelte';
+	import ProgressBar from '$lib/components/ProgressBar.svelte';
+	import Timer from '$lib/components/Timer.svelte';
 
 	let { data }: { data: PageData } = $props();
 
@@ -10,6 +12,12 @@
 	const currentQuestionNumber = $derived(
 		Math.min(attempt.currentQuestionIndex + 1, totalQuestions)
 	);
+
+	let questionStartTime = $state(Date.now());
+	$effect(() => {
+		void question.id; // Subscribe to question id changes
+		questionStartTime = Date.now();
+	});
 
 	function renderGapFillSentence(text: string) {
 		if (!text.includes('___')) {
@@ -34,14 +42,29 @@
 <main class="page-shell">
 	<div class="quiz-card">
 		<div class="top-bar">
-			<p class="meta">Question {currentQuestionNumber} of {totalQuestions}</p>
-			<p class="meta">Score: {attempt.correctCount}</p>
+			<ProgressBar current={currentQuestionNumber} total={totalQuestions} />
+			<div class="right-stats">
+				<Timer startedAt={new Date(attempt.startedAt)} />
+				<div class="score-badge">
+					<span class="score-label">Score</span>
+					<span class="score-value">{attempt.correctCount}</span>
+				</div>
+			</div>
 		</div>
 
 		<h1 class="title">Quiz</h1>
 
-		<form method="POST" class="answer-form">
+		<form
+			method="POST"
+			class="answer-form"
+			onsubmit={() => {
+				const ds = document.getElementById('durationSeconds') as HTMLInputElement;
+				if (ds)
+					ds.value = Math.max(0, Math.floor((Date.now() - questionStartTime) / 1000)).toString();
+			}}
+		>
 			<input type="hidden" name="questionId" value={question.id} />
+			<input type="hidden" id="durationSeconds" name="durationSeconds" value="0" />
 
 			{#if question.format === 'gap_fill'}
 				<p class="prompt prompt-gap">
@@ -100,17 +123,44 @@
 
 	.top-bar {
 		display: flex;
+		flex-wrap: wrap;
 		justify-content: space-between;
-		gap: 1rem;
-		margin-bottom: 1rem;
-		padding-bottom: 0.75rem;
+		align-items: center;
+		gap: 1.5rem;
+		margin-bottom: 1.5rem;
+		padding-bottom: 1.25rem;
 		border-bottom: 1px solid var(--color-border);
 	}
 
-	.meta {
-		margin: 0;
-		font-size: 0.95rem;
+	.right-stats {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		flex-wrap: wrap;
+	}
+
+	.score-badge {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		background: var(--color-surface-muted);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
+		padding: 0.35rem 0.85rem;
+	}
+
+	.score-label {
+		font-size: 0.75rem;
+		text-transform: uppercase;
+		font-weight: 700;
 		color: var(--color-text-muted);
+		letter-spacing: 0.05em;
+	}
+
+	.score-value {
+		font-size: 1.1rem;
+		font-weight: 700;
+		color: var(--color-text);
 	}
 
 	.title {
