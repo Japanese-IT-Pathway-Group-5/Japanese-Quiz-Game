@@ -17,7 +17,7 @@ export const teamMembers: TeamMember[] = [
 		katakanaName: 'レイ・ソパンハ',
 		japaneseRole: 'チームリーダー・DevOps・UI/UXリーダー',
 		role: 'Team Lead · DevOps · UX/UI Lead',
-		imageUrl: '/images/team/panha.png',
+		imageUrl: '/images/team/avatar-panha.png',
 		cutoutUrl: '/images/team/panha.png',
 		box: { x: 340, y: 285, width: 286, height: 372 },
 		contributions: [
@@ -35,7 +35,7 @@ export const teamMembers: TeamMember[] = [
 		katakanaName: 'チア・ヴィラクボット',
 		japaneseRole: 'フロントエンド・ゲームプレイ開発',
 		role: 'Frontend & Gameplay Developer',
-		imageUrl: '/images/team/virakbot.png',
+		imageUrl: '/images/team/avatar-virakbot.png',
 		cutoutUrl: '/images/team/virakbot.png',
 		box: { x: 134, y: 328, width: 247, height: 269 },
 		contributions: [
@@ -50,7 +50,7 @@ export const teamMembers: TeamMember[] = [
 		katakanaName: 'ハス・セレイヴァタナ',
 		japaneseRole: 'テキスト解析・入力判定開発',
 		role: 'Frontend & NLP/Grading Developer',
-		imageUrl: '/images/team/vathana.png',
+		imageUrl: '/images/team/avatar-vathana.png',
 		cutoutUrl: '/images/team/vathana.png',
 		box: { x: 0, y: 578, width: 344, height: 345 },
 		contributions: [
@@ -64,7 +64,7 @@ export const teamMembers: TeamMember[] = [
 		katakanaName: 'チン・メンホー',
 		japaneseRole: 'アクセシビリティ・UI開発',
 		role: 'Frontend & Accessibility Engineer',
-		imageUrl: '/images/team/menghour.png',
+		imageUrl: '/images/team/avatar-menghour.png',
 		cutoutUrl: '/images/team/menghour.png',
 		box: { x: 971, y: 284, width: 309, height: 508 },
 		contributions: [
@@ -80,7 +80,7 @@ export const teamMembers: TeamMember[] = [
 		katakanaName: 'リー・リアップ',
 		japaneseRole: 'コンテンツ制作・QAエンジニア',
 		role: 'Content Specialist & QA Engineer',
-		imageUrl: '/images/team/lyleab.png',
+		imageUrl: '/images/team/avatar-lyleab.png',
 		cutoutUrl: '/images/team/lyleab.png',
 		box: { x: 0, y: 313, width: 375, height: 609 },
 		contributions: [
@@ -97,7 +97,7 @@ export const teamMembers: TeamMember[] = [
 		katakanaName: 'タイカロナ',
 		japaneseRole: 'セキュリティ・E2Eテスト開発',
 		role: 'Security & QA/Testing Engineer',
-		imageUrl: '/images/team/karona.png',
+		imageUrl: '/images/team/avatar-karona.png',
 		cutoutUrl: '/images/team/karona.png',
 		box: { x: 606, y: 304, width: 308, height: 412 },
 		contributions: [
