@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { PageData } from './$types';
+	import TypingQuestion from '$lib/components/TypingQuestion.svelte';
 
 	let { data }: { data: PageData } = $props();
 
@@ -68,15 +69,7 @@
 			{/if}
 
 			{#if question.format === 'typing'}
-				<label class="field-label" for="answer">Your answer</label>
-				<input
-					id="answer"
-					class="text-input"
-					type="text"
-					name="answer"
-					autocomplete="off"
-					required
-				/>
+				<TypingQuestion questionId={question.id} />
 			{/if}
 
 			{#if question.format === 'word_ordering'}
@@ -195,7 +188,6 @@
 		color: #1e293b;
 	}
 
-	.text-input,
 	select {
 		width: 100%;
 		padding: 0.85rem 1rem;
