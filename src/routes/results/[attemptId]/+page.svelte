@@ -107,7 +107,6 @@
 </main>
 
 <style>
-<<<<<<< HEAD
 	:global(*) {
 		box-sizing: border-box;
 	}
@@ -134,10 +133,6 @@
 		border-radius: 1rem;
 		box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08);
 		padding: 2rem;
-=======
-	.results-card {
-		max-width: 800px;
->>>>>>> origin/main
 	}
 
 	.results-header {
