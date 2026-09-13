@@ -94,7 +94,26 @@
 							{#each data.leaderboard as entry (entry.playerId)}
 								<tr class:current-player={entry.isCurrentPlayer}>
 									<td class="position">
-										#{entry.position}
+										{#if entry.position === 1}
+											<span class="rank-badge rank-1 font-mono">
+												<i class="fa-solid fa-crown"></i>
+												<span>1</span>
+											</span>
+										{:else if entry.position === 2}
+											<span class="rank-badge rank-2 font-mono">
+												<i class="fa-solid fa-medal"></i>
+												<span>2</span>
+											</span>
+										{:else if entry.position === 3}
+											<span class="rank-badge rank-3 font-mono">
+												<i class="fa-solid fa-medal"></i>
+												<span>3</span>
+											</span>
+										{:else}
+											<span class="rank-number font-mono">
+												#{entry.position}
+											</span>
+										{/if}
 									</td>
 
 									<td class="nickname">
@@ -262,7 +281,47 @@
 	.position {
 		font-family: var(--font-mono, monospace);
 		font-weight: 700;
-		color: var(--theme-gold, #ffbc0d);
+	}
+
+	.rank-badge {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.35rem;
+		padding: 0.22rem 0.65rem;
+		border-radius: var(--radius-pill, 9999px);
+		font-weight: 900;
+		font-size: 0.82rem;
+		letter-spacing: 0.02em;
+		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+		line-height: 1;
+	}
+
+	/* Top 1: Solid Yellow */
+	.rank-1 {
+		background: var(--theme-gold, #ffbc0d);
+		color: #022659;
+		border: 1px solid #ffd043;
+	}
+
+	/* Top 2: Solid Silver */
+	.rank-2 {
+		background: #cbd5e1;
+		color: #0f172a;
+		border: 1px solid #e2e8f0;
+	}
+
+	/* Top 3: Solid Bronze */
+	.rank-3 {
+		background: #cd7f32;
+		color: #ffffff;
+		border: 1px solid #df954d;
+	}
+
+	.rank-number {
+		font-weight: 700;
+		color: var(--theme-text-muted, #94a3b8);
+		padding-left: 0.25rem;
 	}
 
 	.nickname {

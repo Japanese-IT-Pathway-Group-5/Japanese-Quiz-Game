@@ -3,14 +3,12 @@ import type { PageServerLoad } from './$types';
 import { getDb } from '$lib/server/db';
 import { quizAttempts, attemptAnswers, questions, choices } from '$lib/server/db/schema';
 import { eq, inArray } from 'drizzle-orm';
-import { calculateScore } from '$lib/quiz/calculateScore';
 
 export const load: PageServerLoad = async ({ params, locals, platform, setHeaders }) => {
 	setHeaders({
 		'cache-control': 'no-store'
 	});
 
-	// Only the player who owns the attempt can view its results.
 	if (!locals.playerId) {
 		throw redirect(303, '/');
 	}
@@ -32,70 +30,15 @@ export const load: PageServerLoad = async ({ params, locals, platform, setHeader
 		throw redirect(303, '/');
 	}
 
-	// Prevent players from opening another player's results.
 	if (attempt.playerId !== locals.playerId) {
 		throw redirect(303, '/');
 	}
 
-	// Correct answers must only be available after the quiz is finished.
-	// If the attempt is active but all questions are answered, auto-finalize it here to avoid any redirect loops.
 	if (attempt.status !== 'finished') {
-		const totalQuestions = attempt.chosenQuestions.length;
-		const existingAnswers = await db
-			.select()
-			.from(attemptAnswers)
-			.where(eq(attemptAnswers.attemptId, attempt.id));
-
-		if (
-			existingAnswers.length >= totalQuestions ||
-			attempt.currentQuestionIndex >= totalQuestions
-		) {
-			const finishedAt = new Date();
-			const correctCount = existingAnswers.filter((a) => a.isCorrect).length;
-			const started = attempt.startedAt ? new Date(attempt.startedAt) : new Date();
-			const timeTaken = Math.max(0, Math.floor((finishedAt.getTime() - started.getTime()) / 1000));
-			const finalScore = calculateScore(correctCount, totalQuestions, timeTaken);
-
-			await db
-				.update(quizAttempts)
-				.set({
-					status: 'finished',
-					finishedAt,
-					correctCount,
-					finalScore,
-					currentQuestionIndex: totalQuestions
-				})
-				.where(eq(quizAttempts.id, attempt.id));
-
-			attempt.status = 'finished';
-			attempt.finishedAt = finishedAt;
-			attempt.correctCount = correctCount;
-			attempt.finalScore = finalScore;
-		} else {
-			throw redirect(303, `/play/${attempt.id}`);
-		}
+		throw redirect(303, `/play/${attempt.id}`);
 	}
 
-	// Calculate and save the final score if it has not already been calculated.
-	if (attempt.finalScore === null) {
-		const totalQuestions = attempt.chosenQuestions.length;
-
-		const timeTaken =
-			attempt.finishedAt && attempt.startedAt
-				? Math.max(
-						0,
-						Math.round((attempt.finishedAt.getTime() - attempt.startedAt.getTime()) / 1000)
-					)
-				: 0;
-
-		const finalScore = calculateScore(attempt.correctCount, totalQuestions, timeTaken);
-
-		await db.update(quizAttempts).set({ finalScore }).where(eq(quizAttempts.id, attempt.id));
-
-		attempt.finalScore = finalScore;
-	}
-
-	// Load all answers submitted by the player.
+	// Load all submitted answers
 	const answers = await db
 		.select({
 			questionId: attemptAnswers.questionId,
@@ -114,21 +57,6 @@ export const load: PageServerLoad = async ({ params, locals, platform, setHeader
 
 	const questionIds = answers.map((answer) => answer.questionId);
 
-	/*
-	 * Load all choices used by these questions.
-	 *
-	 * We need:
-	 *
-	 * 1. choiceMap
-	 *    Converts a stored choice ID into readable text.
-	 *
-	 * 2. correctChoiceMap
-	 *    Gets the correct answer for multiple-choice/gap-fill.
-	 *
-	 * 3. orderedChoiceMap
-	 *    Reconstructs the correct word-ordering sentence using
-	 *    the choice "order" value.
-	 */
 	const allChoices =
 		questionIds.length > 0
 			? await db
@@ -144,34 +72,26 @@ export const load: PageServerLoad = async ({ params, locals, platform, setHeader
 			: [];
 
 	const choiceMap = new Map<string, string>();
-
 	const correctChoiceMap = new Map<string, string[]>();
-
 	const orderedChoiceMap = new Map<string, { text: string; order: number }[]>();
 
 	for (const choice of allChoices) {
-		// Convert choice ID -> readable choice text.
 		choiceMap.set(choice.id, choice.text);
 
-		// Store correct choices for multiple-choice/gap-fill.
 		if (choice.isCorrect) {
 			const existing = correctChoiceMap.get(choice.questionId) ?? [];
 			existing.push(choice.text);
 			correctChoiceMap.set(choice.questionId, existing);
 		}
 
-		// Store choices for reconstructing word-ordering answers.
 		const orderedChoices = orderedChoiceMap.get(choice.questionId) ?? [];
-
 		orderedChoices.push({
 			text: choice.text,
 			order: choice.order
 		});
-
 		orderedChoiceMap.set(choice.questionId, orderedChoices);
 	}
 
-	// Sort each question's choices using the database order.
 	for (const [questionId, orderedChoices] of orderedChoiceMap) {
 		orderedChoices.sort((a, b) => a.order - b.order);
 		orderedChoiceMap.set(questionId, orderedChoices);
@@ -179,59 +99,31 @@ export const load: PageServerLoad = async ({ params, locals, platform, setHeader
 
 	const questionResults = answers.map((answer) => {
 		const isChoiceQuestion = answer.format === 'multiple_choice' || answer.format === 'gap_fill';
-
 		const isWordOrdering = answer.format === 'word_ordering';
 
 		let playerAnswer = answer.answer;
 		let correctAnswers: string[] = [];
 
-		/*
-		 * Multiple-choice / gap-fill:
-		 *
-		 * The database stores the selected choice ID.
-		 * Convert it to the actual choice text.
-		 */
 		if (isChoiceQuestion) {
 			playerAnswer = choiceMap.get(answer.answer) ?? answer.answer;
-
 			correctAnswers = correctChoiceMap.get(answer.questionId) ?? [];
 		}
 
-		/*
-		 * Word ordering:
-		 *
-		 * The player's answer is stored as JSON, for example:
-		 *
-		 * ["日本語を","上手に","話せるように","なります。"]
-		 *
-		 * Convert it to readable text.
-		 *
-		 * The correct answer is reconstructed from choices.order.
-		 */
 		if (isWordOrdering) {
 			try {
 				const playerWords = JSON.parse(answer.answer);
-
 				if (Array.isArray(playerWords)) {
 					playerAnswer = playerWords.join(' ');
 				}
 			} catch {
-				// Keep the original answer if it is not valid JSON.
 				playerAnswer = answer.answer;
 			}
 
 			const orderedChoices = orderedChoiceMap.get(answer.questionId) ?? [];
-
 			correctAnswers =
 				orderedChoices.length > 0 ? [orderedChoices.map((choice) => choice.text).join(' ')] : [];
 		}
 
-		/*
-		 * Typing:
-		 *
-		 * Keep the player's typed answer as-is.
-		 * acceptedAnswers contains the valid answers.
-		 */
 		if (answer.format === 'typing') {
 			correctAnswers = answer.acceptedAnswers ?? [];
 		}
@@ -249,7 +141,6 @@ export const load: PageServerLoad = async ({ params, locals, platform, setHeader
 		};
 	});
 
-	// Sort question results by the attempt's chosen questions order
 	if (Array.isArray(attempt.chosenQuestions)) {
 		questionResults.sort((a, b) => {
 			const idxA = attempt.chosenQuestions.indexOf(a.questionId);
@@ -258,14 +149,8 @@ export const load: PageServerLoad = async ({ params, locals, platform, setHeader
 		});
 	}
 
-	const timeTaken =
-		attempt.finishedAt && attempt.startedAt
-			? Math.max(0, Math.round((attempt.finishedAt.getTime() - attempt.startedAt.getTime()) / 1000))
-			: 0;
-
 	return {
 		attempt,
-		timeTaken,
 		questionResults
 	};
 };

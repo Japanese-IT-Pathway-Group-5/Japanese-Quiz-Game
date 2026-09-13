@@ -37,13 +37,6 @@
 				{#if activeMember}
 					<div class="panel-content active-view">
 						<div class="panel-header">
-							{#if activeMember.imageUrl}
-								<img
-									src={activeMember.imageUrl}
-									alt="{activeMember.name} avatar"
-									class="panel-avatar"
-								/>
-							{/if}
 							<div class="panel-identity">
 								<span class="panel-jp-tag font-japanese"
 									>{activeMember.katakanaName || activeMember.name}</span
@@ -162,17 +155,6 @@
 	.panel-header {
 		display: flex;
 		align-items: center;
-		gap: 1.15rem;
-	}
-
-	.panel-avatar {
-		width: 68px;
-		height: 68px;
-		border-radius: 50%;
-		object-fit: cover;
-		border: 2px solid var(--theme-gold, #ffbc0d);
-		box-shadow: 0 0 20px rgba(255, 188, 13, 0.45);
-		flex-shrink: 0;
 	}
 
 	.panel-identity {

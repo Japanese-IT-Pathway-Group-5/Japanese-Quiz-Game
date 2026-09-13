@@ -609,12 +609,12 @@
 								</button>
 
 								<button
-									type="submit"
+									type="button"
 									class="nav-btn next-btn font-mono"
-									disabled={!isCurrentQuestionDone}
+									disabled={activeIndex === totalQuestions - 1 || !isCurrentQuestionDone}
 									onclick={goNext}
 								>
-									<span>{activeIndex === totalQuestions - 1 ? 'Save' : 'Next'}</span>
+									<span>Next</span>
 									<i class="fa-solid fa-arrow-right"></i>
 								</button>
 							</div>

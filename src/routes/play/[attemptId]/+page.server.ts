@@ -12,7 +12,7 @@ export const load: PageServerLoad = async ({ params, locals, platform, setHeader
 	});
 
 	if (!locals.playerId) {
-		throw error(403, 'This game does not belong to this player.');
+		throw redirect(303, '/');
 	}
 
 	if (!platform?.env?.DB) {
@@ -29,12 +29,8 @@ export const load: PageServerLoad = async ({ params, locals, platform, setHeader
 			attemptId: params.attemptId,
 			playerId: locals.playerId
 		});
-	} catch (e: unknown) {
-		const message = e instanceof Error ? e.message : 'Game not found.';
-		if (message.includes('Unauthorized')) {
-			throw error(403, 'This game does not belong to this player.');
-		}
-		throw error(404, 'Game not found.');
+	} catch {
+		throw redirect(303, '/');
 	}
 
 	if (quizResult.isFinished || quizResult.attempt.status === 'finished') {
@@ -42,7 +38,7 @@ export const load: PageServerLoad = async ({ params, locals, platform, setHeader
 	}
 
 	if (quizResult.attempt.status === 'abandoned') {
-		throw error(403, 'This game is no longer active.');
+		throw redirect(303, '/');
 	}
 
 	if (!quizResult.currentQuestion) {
@@ -62,7 +58,7 @@ export const load: PageServerLoad = async ({ params, locals, platform, setHeader
 export const actions: Actions = {
 	default: async ({ request, params, locals, platform }) => {
 		if (!locals.playerId) {
-			throw error(403, 'This game does not belong to this player.');
+			throw redirect(303, '/');
 		}
 
 		if (!platform?.env?.DB) {
@@ -83,12 +79,8 @@ export const actions: Actions = {
 				attemptId: params.attemptId,
 				playerId: locals.playerId
 			});
-		} catch (e: unknown) {
-			const message = e instanceof Error ? e.message : 'Game not found.';
-			if (message.includes('Unauthorized')) {
-				throw error(403, 'This game does not belong to this player.');
-			}
-			throw error(404, 'Game not found.');
+		} catch {
+			throw redirect(303, '/');
 		}
 
 		if (quizResult.isFinished || quizResult.attempt.status === 'finished') {
@@ -96,7 +88,7 @@ export const actions: Actions = {
 		}
 
 		if (quizResult.attempt.status === 'abandoned') {
-			throw error(403, 'This game is no longer active.');
+			throw redirect(303, '/');
 		}
 
 		const rawAllAnswers = formData.get('allAnswers')?.toString();
