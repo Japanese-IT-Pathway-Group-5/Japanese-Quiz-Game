@@ -31,9 +31,7 @@
 		color: var(--color-text);
 	}
 
-	.text-input {
-		width: 100%;
-	}
+
 
 	.text-input:focus-visible {
 		outline: 3px solid var(--color-primary);
