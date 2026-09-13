@@ -14,5 +14,26 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	event.locals.playerId = await getOrCreatePlayerId(event.cookies, authSecret);
 
-	return resolve(event);
+	const response = await resolve(event);
+
+	// Cloudflare Edge & Static Asset Caching Optimization
+	const path = event.url.pathname;
+	if (
+		path.startsWith('/images/') ||
+		path.startsWith('/animations/') ||
+		path.startsWith('/_app/immutable/') ||
+		path.endsWith('.png') ||
+		path.endsWith('.svg') ||
+		path.endsWith('.lottie') ||
+		path.endsWith('.webp')
+	) {
+		response.headers.set('Cache-Control', 'public, max-age=31536000, immutable');
+	} else if (!response.headers.has('Cache-Control')) {
+		// Fast revalidation for dynamic SSR pages with edge caching
+		response.headers.set('Cache-Control', 'public, max-age=0, must-revalidate');
+	}
+
+	response.headers.set('X-Content-Type-Options', 'nosniff');
+
+	return response;
 };
