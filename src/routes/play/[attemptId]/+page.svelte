@@ -10,7 +10,11 @@
 
 	const allQuestions = $derived(data.allQuestions ?? (data.question ? [data.question] : []));
 	const attempt = $derived(data.attempt);
-	const totalQuestions = $derived(allQuestions.length || (attempt.chosenQuestions ?? []).length);
+	// attempt.chosenQuestions.length is the authoritative total (set once when
+	// the attempt was created); allQuestions is a derived enrichment that should
+	// always match it in length. Trusting allQuestions.length here previously
+	// let a short fetch silently under-report the total. See issue #31.
+	const totalQuestions = $derived((attempt.chosenQuestions ?? []).length);
 
 	// Active question navigation index
 	let activeIndex = $state(0);
@@ -351,6 +355,11 @@
 						class="question-body"
 						use:enhance={() => {
 							isSubmitting = true;
+							// SvelteKit has already snapshotted this form's data by the time this
+							// factory function runs, so advancing activeIndex here (rather than in
+							// the submit button's onclick) can't race the submission and silently
+							// attribute the answer to the wrong question. See issue #31.
+							goNext();
 							return async ({ update }) => {
 								await update();
 								isSubmitting = false;

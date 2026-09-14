@@ -1,4 +1,4 @@
-import { and, eq } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 import * as schema from '$lib/server/db/schema';
 import type { AppDb } from '$lib/server/db';
 import { toClientQuestion, shuffleArray } from '$lib/quiz/toClientQuestion';
@@ -140,23 +140,43 @@ export async function getQuizAttempt(
 	const isFinished =
 		attempt.status === 'finished' || attempt.currentQuestionIndex >= totalQuestions;
 
+	// Batch-fetch every chosen question and its choices in two queries instead
+	// of one-at-a-time (previously ~20 sequential round trips for a 10-question
+	// attempt). That loop was fragile under local D1 lock contention and could
+	// silently come back one question short, desyncing the client's totalQuestions
+	// from the authoritative attempt.chosenQuestions.length. See issue #31.
+	const rawQuestions =
+		attempt.chosenQuestions.length > 0
+			? await db
+					.select()
+					.from(schema.questions)
+					.where(inArray(schema.questions.id, attempt.chosenQuestions))
+			: [];
+
+	const rawChoices =
+		attempt.chosenQuestions.length > 0
+			? await db
+					.select()
+					.from(schema.choices)
+					.where(inArray(schema.choices.questionId, attempt.chosenQuestions))
+			: [];
+
+	const questionById = new Map(rawQuestions.map((q) => [q.id, q]));
+	const choicesByQuestionId = new Map<string, typeof rawChoices>();
+	for (const choice of rawChoices) {
+		const existing = choicesByQuestionId.get(choice.questionId) ?? [];
+		existing.push(choice);
+		choicesByQuestionId.set(choice.questionId, existing);
+	}
+
 	const allQuestions: ClientQuestion[] = [];
 	for (const qId of attempt.chosenQuestions) {
-		const [rawQuestion] = await db
-			.select()
-			.from(schema.questions)
-			.where(eq(schema.questions.id, qId));
-
+		const rawQuestion = questionById.get(qId);
 		if (rawQuestion) {
-			const rawChoices = await db
-				.select()
-				.from(schema.choices)
-				.where(eq(schema.choices.questionId, qId));
-
 			allQuestions.push(
 				toClientQuestion({
 					...rawQuestion,
-					choices: rawChoices
+					choices: choicesByQuestionId.get(qId) ?? []
 				})
 			);
 		}
@@ -307,10 +327,12 @@ export async function submitAttemptAnswer(
 		currentIndex >= 0
 			? Math.min(currentIndex + 1, attempt.chosenQuestions.length)
 			: attempt.currentQuestionIndex + 1;
-	const isFinished =
-		isFinishRequested ||
-		(nextIndex >= attempt.chosenQuestions.length &&
-			allAnswers.length >= attempt.chosenQuestions.length);
+	// Reaching the end of the question list always finishes the attempt.
+	// (Previously this also required allAnswers.length to have caught up,
+	// which could desync currentQuestionIndex from status if an answer
+	// write raced or failed to land — causing an infinite redirect loop
+	// between /play and /results. See issue #31.)
+	const isFinished = isFinishRequested || nextIndex >= attempt.chosenQuestions.length;
 
 	const updateValues: Partial<typeof schema.quizAttempts.$inferInsert> = {
 		currentQuestionIndex: isFinished ? attempt.chosenQuestions.length : nextIndex,
