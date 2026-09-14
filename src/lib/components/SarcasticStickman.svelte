@@ -1,41 +1,61 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 
-	let { class: className = '' }: { class?: string } = $props();
+	let {
+		class: className = '',
+		blinkIntervalMs = 3000,
+		blinkImmediately = false
+	}: {
+		class?: string;
+		blinkIntervalMs?: number;
+		blinkImmediately?: boolean;
+	} = $props();
 
 	type Frame = 'open' | 'half' | 'closed';
 	let currentFrame = $state<Frame>('open');
-	let timer: ReturnType<typeof setTimeout> | null = null;
+	const timers = new Set<ReturnType<typeof setTimeout>>();
 	let isDestroyed = false;
 
-	function scheduleBlink() {
+	function schedule(callback: () => void, delay: number) {
+		const timer = setTimeout(() => {
+			timers.delete(timer);
+			callback();
+		}, delay);
+		timers.add(timer);
+	}
+
+	function blink() {
 		if (isDestroyed) return;
-		timer = setTimeout(() => {
+		currentFrame = 'half';
+		schedule(() => {
 			if (isDestroyed) return;
-			currentFrame = 'half';
-			setTimeout(() => {
+			currentFrame = 'closed';
+			schedule(() => {
 				if (isDestroyed) return;
-				currentFrame = 'closed';
-				setTimeout(() => {
-					if (isDestroyed) return;
-					currentFrame = 'half';
-					setTimeout(() => {
-						if (isDestroyed) return;
-						currentFrame = 'open';
-						scheduleBlink();
-					}, 80);
-				}, 130);
-			}, 80);
-		}, 3000);
+				currentFrame = 'half';
+				schedule(() => {
+					if (!isDestroyed) currentFrame = 'open';
+				}, 80);
+			}, 130);
+		}, 80);
+	}
+
+	function scheduleBlink() {
+		schedule(() => {
+			blink();
+			scheduleBlink();
+		}, blinkIntervalMs);
 	}
 
 	onMount(() => {
+		if (blinkImmediately) blink();
 		scheduleBlink();
 	});
 
 	onDestroy(() => {
 		isDestroyed = true;
-		if (timer) clearTimeout(timer);
+		for (const timer of timers) clearTimeout(timer);
+		timers.clear();
 	});
 </script>
 
