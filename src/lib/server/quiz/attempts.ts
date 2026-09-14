@@ -1,4 +1,4 @@
-import { and, eq } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 import * as schema from '$lib/server/db/schema';
 import type { AppDb } from '$lib/server/db';
 import { toClientQuestion, shuffleArray } from '$lib/quiz/toClientQuestion';
@@ -38,6 +38,12 @@ export type SubmitAttemptAnswerResult = {
 	explanation: string | null;
 	correctAnswer?: string | string[];
 	attempt: schema.QuizAttempt;
+};
+
+export type FinishQuizAttemptParams = {
+	attempt: schema.QuizAttempt;
+	answers: Record<string, string>;
+	durationSeconds: number;
 };
 
 export type GetQuizAttemptResult = {
@@ -140,27 +146,29 @@ export async function getQuizAttempt(
 	const isFinished =
 		attempt.status === 'finished' || attempt.currentQuestionIndex >= totalQuestions;
 
-	const allQuestions: ClientQuestion[] = [];
-	for (const qId of attempt.chosenQuestions) {
-		const [rawQuestion] = await db
-			.select()
-			.from(schema.questions)
-			.where(eq(schema.questions.id, qId));
+	const rawQuestions = await db
+		.select()
+		.from(schema.questions)
+		.where(inArray(schema.questions.id, attempt.chosenQuestions));
+	const rawChoices = await db
+		.select()
+		.from(schema.choices)
+		.where(inArray(schema.choices.questionId, attempt.chosenQuestions));
+	const choicesByQuestion = new Map<string, schema.Choice[]>();
 
-		if (rawQuestion) {
-			const rawChoices = await db
-				.select()
-				.from(schema.choices)
-				.where(eq(schema.choices.questionId, qId));
-
-			allQuestions.push(
-				toClientQuestion({
-					...rawQuestion,
-					choices: rawChoices
-				})
-			);
-		}
+	for (const choice of rawChoices) {
+		const choices = choicesByQuestion.get(choice.questionId) ?? [];
+		choices.push(choice);
+		choicesByQuestion.set(choice.questionId, choices);
 	}
+
+	const questionsById = new Map(rawQuestions.map((question) => [question.id, question]));
+	const allQuestions = attempt.chosenQuestions.flatMap((questionId) => {
+		const question = questionsById.get(questionId);
+		return question
+			? [toClientQuestion({ ...question, choices: choicesByQuestion.get(questionId) ?? [] })]
+			: [];
+	});
 
 	const answeredRows = await db
 		.select()
@@ -189,6 +197,97 @@ export async function getQuizAttempt(
 		allQuestions,
 		answeredMap
 	};
+}
+
+/**
+ * Grades and saves every answer at quiz completion without reloading the attempt for each question.
+ */
+export async function finishQuizAttempt(db: AppDb, params: FinishQuizAttemptParams): Promise<void> {
+	const { attempt, answers, durationSeconds } = params;
+	const [questions, choices, existingAnswers] = await Promise.all([
+		db.select().from(schema.questions).where(inArray(schema.questions.id, attempt.chosenQuestions)),
+		db
+			.select()
+			.from(schema.choices)
+			.where(inArray(schema.choices.questionId, attempt.chosenQuestions)),
+		db.select().from(schema.attemptAnswers).where(eq(schema.attemptAnswers.attemptId, attempt.id))
+	]);
+
+	const questionsById = new Map(questions.map((question) => [question.id, question]));
+	const choicesByQuestion = new Map<string, schema.Choice[]>();
+	for (const choice of choices) {
+		const questionChoices = choicesByQuestion.get(choice.questionId) ?? [];
+		questionChoices.push(choice);
+		choicesByQuestion.set(choice.questionId, questionChoices);
+	}
+
+	const existingByQuestion = new Map(existingAnswers.map((answer) => [answer.questionId, answer]));
+	const writes: Promise<unknown>[] = [];
+	let correctCount = 0;
+
+	for (const questionId of attempt.chosenQuestions) {
+		const question = questionsById.get(questionId);
+		if (!question) continue;
+
+		const rawAnswer = answers[questionId] ?? '';
+		let answer: string | string[] = rawAnswer;
+		if (question.format === 'word_ordering') {
+			try {
+				const parsed = JSON.parse(rawAnswer);
+				if (Array.isArray(parsed)) answer = parsed;
+			} catch {
+				// An invalid stored word-order answer is graded as its raw value.
+			}
+		}
+
+		const isCorrect = gradeAnswer(
+			{ ...question, choices: choicesByQuestion.get(questionId) ?? [] },
+			answer
+		).isCorrect;
+		if (isCorrect) correctCount++;
+
+		const answerString = typeof answer === 'string' ? answer : JSON.stringify(answer);
+		const existing = existingByQuestion.get(questionId);
+		if (existing) {
+			writes.push(
+				db
+					.update(schema.attemptAnswers)
+					.set({ answer: answerString, isCorrect, durationSeconds, answeredAt: new Date() })
+					.where(eq(schema.attemptAnswers.id, existing.id))
+			);
+		} else {
+			writes.push(
+				db.insert(schema.attemptAnswers).values({
+					id: crypto.randomUUID(),
+					attemptId: attempt.id,
+					questionId,
+					answer: answerString,
+					isCorrect,
+					durationSeconds
+				})
+			);
+		}
+	}
+
+	await Promise.all(writes);
+
+	const finishedAt = new Date();
+	const totalSeconds = Math.max(
+		0,
+		Math.floor((finishedAt.getTime() - attempt.startedAt.getTime()) / 1000)
+	);
+	const finalScore = calculateScore(correctCount, attempt.chosenQuestions.length, totalSeconds);
+
+	await db
+		.update(schema.quizAttempts)
+		.set({
+			status: 'finished',
+			finishedAt,
+			correctCount,
+			finalScore,
+			currentQuestionIndex: attempt.chosenQuestions.length
+		})
+		.where(eq(schema.quizAttempts.id, attempt.id));
 }
 
 /**

@@ -1,6 +1,11 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { getTableName } from 'drizzle-orm';
-import { startQuizAttempt, getQuizAttempt, submitAttemptAnswer } from './attempts';
+import {
+	finishQuizAttempt,
+	getQuizAttempt,
+	startQuizAttempt,
+	submitAttemptAnswer
+} from './attempts';
 import type { AppDb } from '$lib/server/db';
 import type * as schema from '$lib/server/db/schema';
 
@@ -316,6 +321,34 @@ describe('Quiz Attempts', () => {
 			expect(outcome.isFinished).toBe(true);
 			expect(attempt.status).toBe('finished');
 			expect(attempt.finishedAt).toBeInstanceOf(Date);
+		});
+	});
+
+	describe('finishQuizAttempt', () => {
+		it('grades every answer and finalizes the attempt with batched reads', async () => {
+			const attempt: schema.QuizAttempt = {
+				id: 'attempt-1',
+				playerId: 'player-1',
+				nickname: 'Kenji',
+				level: 'N4',
+				chosenQuestions: ['q1', 'q2'],
+				currentQuestionIndex: 0,
+				correctCount: 0,
+				finalScore: null,
+				startedAt: new Date(Date.now() - 10_000),
+				finishedAt: null,
+				status: 'active'
+			};
+			mockAttempts.push(attempt);
+
+			await finishQuizAttempt(fakeDb, {
+				attempt,
+				answers: { q1: 'c1_1', q2: 'c2_2' },
+				durationSeconds: 5
+			});
+
+			expect(fakeDb.insert).toHaveBeenCalledTimes(2);
+			expect(fakeDb.update).toHaveBeenCalledTimes(1);
 		});
 	});
 });

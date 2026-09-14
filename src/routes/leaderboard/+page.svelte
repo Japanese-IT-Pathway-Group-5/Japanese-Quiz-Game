@@ -12,6 +12,12 @@
 
 		return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 	};
+
+	const formatCompletedAt = (date: Date | string) =>
+		new Intl.DateTimeFormat(undefined, {
+			dateStyle: 'medium',
+			timeStyle: 'short'
+		}).format(new Date(date));
 </script>
 
 <svelte:head>
@@ -51,6 +57,7 @@
 							<th>Level</th>
 							<th>Score</th>
 							<th>Time</th>
+							<th>Completed</th>
 						</tr>
 					</thead>
 
@@ -87,6 +94,9 @@
 											class="skeleton"
 											style="width: 44px; height: 1.1rem; margin: 0 auto;"
 										></div>
+									</td>
+									<td>
+										<div class="skeleton" style="width: 120px; height: 1.1rem;"></div>
 									</td>
 								</tr>
 							{/each}
@@ -136,6 +146,8 @@
 									<td class="time">
 										{formatTime(entry.timeSeconds)}
 									</td>
+
+									<td class="completed-at">{formatCompletedAt(entry.finishedAt)}</td>
 								</tr>
 							{/each}
 						{/if}
