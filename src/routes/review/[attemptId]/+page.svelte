@@ -665,4 +665,91 @@
 			grid-template-columns: 1fr;
 		}
 	}
+
+	@media (max-width: 640px) {
+		.page-shell {
+			padding: 1.35rem 0.7rem 1.8rem;
+		}
+
+		.review-layout,
+		.review-panels-container {
+			gap: 0.7rem;
+		}
+
+		.review-sidebar {
+			gap: 0.3rem;
+		}
+
+		.tracker-title,
+		.tracker-count {
+			font-size: 0.65rem;
+		}
+
+		.review-grid {
+			gap: 0.3rem;
+		}
+
+		.grid-tile {
+			height: 1.65rem;
+		}
+
+		.tile-number {
+			font-size: 0.65rem;
+		}
+
+		.tile-icon {
+			font-size: 0.42rem;
+			margin-top: 0.08rem;
+		}
+
+		.review-main-card {
+			height: 325px;
+			min-height: 325px;
+			max-height: 325px;
+			padding: 0.8rem;
+		}
+
+		.inspection-header {
+			padding-bottom: 0.4rem;
+		}
+
+		.q-index-tag,
+		.ans-value {
+			font-size: 0.82rem;
+		}
+
+		.format-label,
+		.inspection-status,
+		.ans-heading,
+		.explanation-heading,
+		.inspect-nav-btn,
+		.inspect-counter {
+			font-size: 0.62rem;
+		}
+
+		.inspection-scroll-area {
+			gap: 0.6rem;
+			padding: 0.5rem 0.2rem 0.5rem 0;
+		}
+
+		.japanese-prompt {
+			font-size: 1rem;
+			line-height: 1.35;
+		}
+
+		.english-subprompt,
+		.explanation-body {
+			font-size: 0.7rem;
+			line-height: 1.45;
+		}
+
+		.answers-content {
+			gap: 0.65rem;
+		}
+
+		.inspect-nav-btn {
+			gap: 0.25rem;
+			padding: 0.35rem 0.55rem;
+		}
+	}
 </style>

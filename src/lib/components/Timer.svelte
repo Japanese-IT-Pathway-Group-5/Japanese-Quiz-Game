@@ -68,4 +68,20 @@
 		font-size: 1.05rem;
 		letter-spacing: -0.02em;
 	}
+
+	@media (max-width: 640px) {
+		.timer {
+			gap: 0.3rem;
+			padding: 0.32rem 0.55rem;
+		}
+
+		.timer-icon {
+			width: 14px;
+			height: 14px;
+		}
+
+		.timer-text {
+			font-size: 0.76rem;
+		}
+	}
 </style>

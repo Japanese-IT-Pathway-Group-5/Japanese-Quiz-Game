@@ -445,4 +445,55 @@
 			display: none;
 		}
 	}
+
+	@media (max-width: 640px) {
+		.leaderboard-page {
+			padding: 0.9rem 0.55rem;
+		}
+
+		.leaderboard-container {
+			gap: 0.6rem;
+		}
+
+		.title {
+			font-size: 1.65rem;
+		}
+
+		.subtitle,
+		.level-filter a {
+			font-size: 0.65rem;
+		}
+
+		.level-filter {
+			gap: 0.3rem;
+		}
+
+		.level-filter a {
+			padding: 0.32rem 0.65rem;
+		}
+
+		th,
+		td {
+			padding: 0.55rem 0.4rem;
+			font-size: 0.62rem;
+		}
+
+		th {
+			font-size: 0.52rem;
+		}
+
+		.run-id,
+		.completed-at,
+		.level-badge,
+		.rank-badge,
+		.you {
+			font-size: 0.55rem;
+		}
+
+		.rank-badge,
+		.level-badge,
+		.you {
+			padding: 0.12rem 0.3rem;
+		}
+	}
 </style>

@@ -216,14 +216,32 @@
 		box-shadow: none !important;
 	}
 
-	@media (max-width: 480px) {
+	@media (max-width: 640px) {
 		.word-ordering {
-			padding: 0.75rem;
+			gap: 0.65rem;
+			padding: 0.55rem;
+		}
+
+		.title {
+			font-size: 0.8rem;
+		}
+
+		.prompt {
+			font-size: 1rem;
+			line-height: 1.45;
+		}
+
+		.sentence-box,
+		.word-bank {
+			min-height: 2.8rem;
+			gap: 0.35rem;
+			padding: 0.5rem;
 		}
 
 		.word-chip,
 		.submit-button {
-			font-size: 1.05rem;
+			padding: 0.45rem 0.7rem;
+			font-size: 0.78rem;
 		}
 	}
 </style>

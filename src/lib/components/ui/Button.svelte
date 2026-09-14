@@ -189,4 +189,25 @@
 		transform: none !important;
 		box-shadow: none !important;
 	}
+
+	@media (max-width: 640px) {
+		.ui-btn {
+			gap: 0.35rem;
+		}
+
+		.ui-btn-sm {
+			padding: 0.32rem 0.6rem;
+			font-size: 0.7rem;
+		}
+
+		.ui-btn-md {
+			padding: 0.46rem 0.88rem;
+			font-size: 0.76rem;
+		}
+
+		.ui-btn-lg {
+			padding: 0.56rem 1.05rem;
+			font-size: 0.84rem;
+		}
+	}
 </style>

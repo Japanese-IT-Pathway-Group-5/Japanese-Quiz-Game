@@ -164,8 +164,8 @@
 
 	@media (max-width: 640px) {
 		.lottie-switch {
-			width: 58px;
-			height: 32px;
+			width: 48px;
+			height: 27px;
 		}
 	}
 </style>
