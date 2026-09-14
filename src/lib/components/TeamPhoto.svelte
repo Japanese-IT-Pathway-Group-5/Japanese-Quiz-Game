@@ -23,6 +23,7 @@
 	let switchTimeout: ReturnType<typeof setTimeout> | null = null;
 	let rafId: number | null = null;
 	let lastPointerEvent: { clientX: number; clientY: number } | null = null;
+	let selectedMemberId: string | null = $state(null);
 
 	const CANVAS_WIDTH = 640;
 	const CANVAS_HEIGHT = 476.5;
@@ -133,7 +134,7 @@
 					onhover?.(detectedId);
 				}, 25);
 			}
-		} else {
+		} else if (selectedMemberId === null) {
 			if (switchTimeout) {
 				clearTimeout(switchTimeout);
 				switchTimeout = null;
@@ -173,7 +174,7 @@
 
 		if (leaveTimeout) clearTimeout(leaveTimeout);
 		leaveTimeout = setTimeout(() => {
-			if (activeMemberId !== null) {
+			if (activeMemberId !== null && selectedMemberId === null) {
 				activeMemberId = null;
 				onhover?.(null);
 			}
@@ -186,6 +187,7 @@
 		if (memberId) {
 			if (switchTimeout) clearTimeout(switchTimeout);
 			if (leaveTimeout) clearTimeout(leaveTimeout);
+			selectedMemberId = memberId;
 			activeMemberId = memberId;
 			onselect?.(memberId);
 		}
@@ -194,6 +196,8 @@
 	function handleKeyDown(event: KeyboardEvent, memberId: string) {
 		if (event.key === 'Enter' || event.key === ' ') {
 			event.preventDefault();
+			selectedMemberId = memberId;
+			activeMemberId = memberId;
 			onselect?.(memberId);
 		}
 	}

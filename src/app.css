@@ -161,7 +161,7 @@ html {
 body {
 	margin: 0;
 	padding: 0;
-	min-height: 100vh;
+	min-height: 100dvh;
 	font-family: var(--font-serif);
 	background-color: var(--theme-background);
 	color: var(--theme-text-main);
@@ -499,7 +499,7 @@ html.dark .paper-grain,
 
 /* Page Shell Layout */
 .page-shell {
-	min-height: 100vh;
+	min-height: 100dvh;
 	display: flex;
 	align-items: center;
 	justify-content: center;
