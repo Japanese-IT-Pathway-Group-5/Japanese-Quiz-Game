@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
+	import { SvelteSet } from 'svelte/reactivity';
 
 	let {
 		class: className = '',
@@ -13,7 +14,7 @@
 
 	type Frame = 'open' | 'half' | 'closed';
 	let currentFrame = $state<Frame>('open');
-	const timers = new Set<ReturnType<typeof setTimeout>>();
+	const timers = new SvelteSet<ReturnType<typeof setTimeout>>();
 	let isDestroyed = false;
 
 	function schedule(callback: () => void, delay: number) {
