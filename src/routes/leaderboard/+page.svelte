@@ -281,8 +281,9 @@
 	th {
 		position: sticky;
 		top: 0;
-		z-index: 1;
-		background: rgba(255, 255, 255, 0.03);
+		z-index: 2;
+		background: var(--theme-paper);
+		box-shadow: 0 1px 0 var(--theme-border, rgba(255, 255, 255, 0.08));
 		font-family: var(--font-mono, monospace);
 		font-size: 0.75rem;
 		text-transform: uppercase;
