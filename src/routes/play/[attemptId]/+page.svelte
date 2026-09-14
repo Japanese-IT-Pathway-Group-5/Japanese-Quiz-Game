@@ -694,7 +694,7 @@
 		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 		<div class="exit-modal" onclick={(e) => e.stopPropagation()} role="document">
-			<SarcasticStickman class="modal-stickman" />
+			<SarcasticStickman class="modal-stickman" blinkImmediately={true} blinkIntervalMs={1500} />
 
 			<h2 id="exit-modal-title" class="modal-title font-japanese">クイズを中断しますか？</h2>
 			<p class="modal-desc">
