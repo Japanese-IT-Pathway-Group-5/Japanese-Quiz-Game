@@ -54,6 +54,7 @@
 						<tr>
 							<th>Rank</th>
 							<th>Player</th>
+							<th>Run</th>
 							<th>Level</th>
 							<th>Score</th>
 							<th>Time</th>
@@ -76,6 +77,9 @@
 											class="skeleton"
 											style="width: {80 + (idx % 3) * 20}px; height: 1.1rem;"
 										></div>
+									</td>
+									<td>
+										<div class="skeleton" style="width: 64px; height: 1.1rem;"></div>
 									</td>
 									<td>
 										<div
@@ -101,7 +105,7 @@
 								</tr>
 							{/each}
 						{:else}
-							{#each data.leaderboard as entry (entry.playerId)}
+							{#each data.leaderboard as entry (entry.attemptId)}
 								<tr class:current-player={entry.isCurrentPlayer}>
 									<td class="position">
 										{#if entry.position === 1}
@@ -131,6 +135,10 @@
 										{#if entry.isCurrentPlayer}
 											<span class="you">You</span>
 										{/if}
+									</td>
+
+									<td class="run-id" title={`Run ID: ${entry.attemptId}`}>
+										{entry.attemptId.slice(0, 6).toUpperCase()}
 									</td>
 
 									<td>
@@ -372,6 +380,13 @@
 	.time {
 		font-family: var(--font-mono, monospace);
 		color: var(--theme-text-muted, #94a3b8);
+	}
+
+	.run-id,
+	.completed-at {
+		font-family: var(--font-mono, monospace);
+		color: var(--theme-text-muted, #94a3b8);
+		font-size: 0.8rem;
 	}
 
 	.empty-state {

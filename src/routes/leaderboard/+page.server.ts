@@ -1,11 +1,12 @@
 import { and, eq } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 import { getDb } from '$lib/server/db';
-import { players, quizAttempts } from '$lib/server/db/schema';
+import { quizAttempts } from '$lib/server/db/schema';
 
 type LevelFilter = 'all' | 'N3' | 'N4';
 
 type LeaderboardEntry = {
+	attemptId: string;
 	playerId: string;
 	nickname: string;
 	level: 'N3' | 'N4';
@@ -30,45 +31,36 @@ export const load: PageServerLoad = async ({ url, platform, locals }) => {
 
 	const attempts = await db
 		.select({
+			attemptId: quizAttempts.id,
 			playerId: quizAttempts.playerId,
-			nickname: players.nickname,
+			nickname: quizAttempts.nickname,
 			level: quizAttempts.level,
 			finalScore: quizAttempts.finalScore,
 			startedAt: quizAttempts.startedAt,
 			finishedAt: quizAttempts.finishedAt
 		})
 		.from(quizAttempts)
-		.innerJoin(players, eq(quizAttempts.playerId, players.id))
 		.where(and(...conditions));
 
-	const bestByPlayer = new Map<string, LeaderboardEntry>();
-	for (const attempt of attempts) {
-		if (attempt.finalScore === null || attempt.finishedAt === null) continue;
+	const leaderboard = attempts
+		.flatMap((attempt): LeaderboardEntry[] => {
+			if (attempt.finalScore === null || attempt.finishedAt === null) return [];
 
-		const timeSeconds = Math.max(
-			0,
-			Math.floor((attempt.finishedAt.getTime() - attempt.startedAt.getTime()) / 1000)
-		);
-		const candidate: LeaderboardEntry = {
-			playerId: attempt.playerId,
-			nickname: attempt.nickname,
-			level: attempt.level,
-			score: attempt.finalScore,
-			timeSeconds,
-			finishedAt: attempt.finishedAt
-		};
-		const existing = bestByPlayer.get(attempt.playerId);
-
-		if (
-			!existing ||
-			candidate.score > existing.score ||
-			(candidate.score === existing.score && candidate.timeSeconds < existing.timeSeconds)
-		) {
-			bestByPlayer.set(attempt.playerId, candidate);
-		}
-	}
-
-	const leaderboard = Array.from(bestByPlayer.values())
+			return [
+				{
+					attemptId: attempt.attemptId,
+					playerId: attempt.playerId,
+					nickname: attempt.nickname,
+					level: attempt.level,
+					score: attempt.finalScore,
+					timeSeconds: Math.max(
+						0,
+						Math.floor((attempt.finishedAt.getTime() - attempt.startedAt.getTime()) / 1000)
+					),
+					finishedAt: attempt.finishedAt
+				}
+			];
+		})
 		.sort((a, b) => b.score - a.score || a.timeSeconds - b.timeSeconds)
 		.slice(0, 100)
 		.map((entry, index) => ({
