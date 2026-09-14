@@ -12,7 +12,9 @@
 	const DAY_FRAME = 40;
 
 	onMount(() => {
-		isDark = document.documentElement.classList.contains('dark');
+		isDark =
+			document.documentElement.classList.contains('dark') ||
+			document.documentElement.getAttribute('data-theme') === 'dark';
 	});
 
 	function syncInitialFrame() {
@@ -38,23 +40,42 @@
 		}
 	});
 
+	function applyThemeToDOM(darkMode: boolean) {
+		if (darkMode) {
+			document.documentElement.classList.add('dark');
+			document.documentElement.setAttribute('data-theme', 'dark');
+			try {
+				localStorage.setItem('theme', 'dark');
+			} catch (err) {
+				console.warn('Unable to persist theme to localStorage', err);
+			}
+		} else {
+			document.documentElement.classList.remove('dark');
+			document.documentElement.setAttribute('data-theme', 'light');
+			try {
+				localStorage.setItem('theme', 'light');
+			} catch (err) {
+				console.warn('Unable to persist theme to localStorage', err);
+			}
+		}
+	}
+
 	function toggleTheme() {
 		const willBeDark = !isDark;
 		isDark = willBeDark;
 
-		if (willBeDark) {
-			document.documentElement.classList.add('dark');
-			document.documentElement.setAttribute('data-theme', 'dark');
-			localStorage.setItem('theme', 'dark');
+		// Use View Transitions API if supported for butter-smooth GPU transition
+		if (typeof document !== 'undefined' && 'startViewTransition' in document) {
+			document.startViewTransition(() => {
+				applyThemeToDOM(willBeDark);
+			});
 		} else {
-			document.documentElement.classList.remove('dark');
-			document.documentElement.setAttribute('data-theme', 'light');
-			localStorage.setItem('theme', 'light');
+			applyThemeToDOM(willBeDark);
 		}
 
 		if (dotLottie) {
 			try {
-				dotLottie.setSpeed(1.5);
+				dotLottie.setSpeed(2.0);
 				if (willBeDark) {
 					// Transitioning from Day (40) -> Night (0)
 					dotLottie.setMode('reverse');

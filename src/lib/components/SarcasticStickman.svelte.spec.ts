@@ -9,6 +9,6 @@ describe('SarcasticStickman.svelte', () => {
 
 		const img = page.getByAltText('Sarcastic stickman');
 		await expect.element(img).toBeInTheDocument();
-		await expect.element(img).toHaveAttribute('src', '/images/stickman-open.png');
+		await expect.element(img).toHaveAttribute('src', '/images/stickman-open.webp');
 	});
 });

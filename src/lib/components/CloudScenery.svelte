@@ -4,12 +4,13 @@
 
 <div class="clouds-backdrop" aria-hidden="true">
 	<!-- Top-Center: Soft Radiating Sunbeams / Lunar Rays (Behind Celestial Disk) -->
-	<div class="art-layer sunbeam-layer"></div>
+	<div class="art-layer sunbeam-layer light-beams"></div>
+	<div class="art-layer sunbeam-layer dark-beams"></div>
 
 	<!-- Top-Center: Japanese Celestial Disk (Sun in Light Mode / Moon in Dark Mode) -->
 	<div class="art-layer sun-layer">
-		<img src="/images/sun.png" alt="" class="art-img sun-img" loading="eager" decoding="async" />
-		<img src="/images/moon.png" alt="" class="art-img moon-img" loading="eager" decoding="async" />
+		<img src="/images/sun.webp" alt="" class="art-img sun-img" loading="eager" decoding="async" />
+		<img src="/images/moon.webp" alt="" class="art-img moon-img" loading="eager" decoding="async" />
 	</div>
 
 	<div class="art-layer sfx-layer sun-sfx" aria-hidden="true">
@@ -57,7 +58,7 @@
 	<!-- Bottom-Left: Wind-Blown Leaf Breeze -->
 	<div class="art-layer leaf-breeze-bottom">
 		<img
-			src="/images/leaf-blow-with-wind.png"
+			src="/images/leaf-blow-with-wind.webp"
 			alt=""
 			class="art-img"
 			loading="eager"
@@ -103,12 +104,7 @@
 		border-radius: 50%;
 		pointer-events: none;
 		z-index: 0;
-		opacity: 1;
-		background: repeating-conic-gradient(
-			from 0deg at 50% 50%,
-			rgba(255, 188, 13, 0.18) 0deg 9.5deg,
-			transparent 9.5deg 22.5deg
-		);
+		transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 		mask-image: radial-gradient(
 			circle at 50% 50%,
 			rgba(0, 0, 0, 1) 0px,
@@ -129,6 +125,24 @@
 		);
 	}
 
+	.light-beams {
+		opacity: 1;
+		background: repeating-conic-gradient(
+			from 0deg at 50% 50%,
+			rgba(255, 188, 13, 0.18) 0deg 9.5deg,
+			transparent 9.5deg 22.5deg
+		);
+	}
+
+	.dark-beams {
+		opacity: 0;
+		background: repeating-conic-gradient(
+			from 0deg at 50% 50%,
+			rgba(190, 220, 255, 0.075) 0deg 9.5deg,
+			transparent 9.5deg 22.5deg
+		);
+	}
+
 	/* 0b. Top-Center Japanese Celestial Disk (Sun in Light / Moon in Dark) */
 	.sun-layer {
 		top: 0;
@@ -143,28 +157,32 @@
 		filter: drop-shadow(0 0 45px rgba(225, 111, 65, 0.5))
 			drop-shadow(0 0 90px rgba(255, 188, 13, 0.25));
 		animation: sun-pulse 20s ease-in-out infinite alternate;
+		transition: filter 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+	}
+
+	.sun-img,
+	.moon-img {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center;
+		border-radius: 50%;
+		mask-image: radial-gradient(circle at 50% 50%, black 65%, transparent 98%);
+		-webkit-mask-image: radial-gradient(circle at 50% 50%, black 65%, transparent 98%);
+		transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+		will-change: opacity;
 	}
 
 	.sun-img {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		object-position: center;
-		border-radius: 50%;
-		mask-image: radial-gradient(circle at 50% 50%, black 65%, transparent 98%);
-		-webkit-mask-image: radial-gradient(circle at 50% 50%, black 65%, transparent 98%);
+		opacity: 0.95;
 	}
 
 	.moon-img {
-		display: none;
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		object-position: center;
+		opacity: 0;
 		transform: scale(1.89) translate(-1.1%, 3.4%);
-		border-radius: 50%;
-		mask-image: radial-gradient(circle at 50% 50%, black 65%, transparent 98%);
-		-webkit-mask-image: radial-gradient(circle at 50% 50%, black 65%, transparent 98%);
+		pointer-events: none;
 	}
 
 	/* 0c. Manga sound-effect text radiating from the celestial disk */
@@ -176,6 +194,7 @@
 		z-index: 3;
 		transform: translateX(-50%);
 		filter: drop-shadow(0 6px 14px rgba(0, 15, 45, 0.12));
+		transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 	}
 
 	.sfx-text {
@@ -195,13 +214,18 @@
 		animation: sfx-radiate 6.5s ease-in-out infinite alternate;
 	}
 
+	.sun-sfx {
+		opacity: 1;
+	}
+
 	.sun-sfx .sfx-text {
 		color: var(--theme-secondary);
 		-webkit-text-stroke: 0.5px rgba(218, 41, 28, 0.38);
 	}
 
 	.moon-sfx {
-		display: none;
+		opacity: 0;
+		pointer-events: none;
 	}
 
 	.moon-sfx .sfx-text {
@@ -273,9 +297,10 @@
 
 	/* 5. Bottom-Left Leaf Breeze */
 	.leaf-breeze-bottom {
-		bottom: 4%;
+		bottom: 3.5%;
 		left: 2%;
 		width: clamp(220px, 30vw, 420px);
+		aspect-ratio: 1694 / 668;
 		opacity: 0.88;
 		z-index: 2;
 		animation: breeze-sway 17s ease-in-out infinite alternate;
@@ -283,28 +308,31 @@
 
 	/* Dark Theme Subtlety & Moon Mode */
 	:global([data-theme='dark']) .sun-img {
-		display: none;
+		opacity: 0;
+		pointer-events: none;
 	}
 
 	:global([data-theme='dark']) .moon-img {
-		display: block;
+		opacity: 1;
+		pointer-events: auto;
 	}
 
 	:global([data-theme='dark']) .sun-sfx {
-		display: none;
+		opacity: 0;
+		pointer-events: none;
 	}
 
 	:global([data-theme='dark']) .moon-sfx {
-		display: block;
+		opacity: 1;
+		pointer-events: auto;
 	}
 
-	:global([data-theme='dark']) .sunbeam-layer {
+	:global([data-theme='dark']) .light-beams {
+		opacity: 0;
+	}
+
+	:global([data-theme='dark']) .dark-beams {
 		opacity: 0.45;
-		background: repeating-conic-gradient(
-			from 0deg at 50% 50%,
-			rgba(190, 220, 255, 0.075) 0deg 9.5deg,
-			transparent 9.5deg 22.5deg
-		);
 	}
 
 	:global([data-theme='dark']) .sun-layer {

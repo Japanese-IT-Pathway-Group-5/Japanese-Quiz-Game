@@ -222,12 +222,13 @@
 	}
 
 	function renderGapFillSentence(text: string) {
-		if (!text.includes('___')) {
+		const gapRegex = /(_{3,5}|（\s*）|\(\s*\)|\[\s*\])/g;
+		if (!gapRegex.test(text)) {
 			return [{ type: 'text', value: text }];
 		}
-		const segments = text.split(/(_____|___)/);
+		const segments = text.split(gapRegex);
 		return segments.map((segment) => {
-			if (segment === '___' || segment === '_____') {
+			if (/^(_{3,5}|（\s*）|\(\s*\)|\[\s*\])$/.test(segment)) {
 				return { type: 'blank', value: '' };
 			}
 			return { type: 'text', value: segment };
@@ -297,20 +298,32 @@
 		}
 	}
 
-	function isQuestionAnswered(qId: string) {
+	function isQuestionAnswered(qId: string): boolean {
+		const q = allQuestions.find((item) => item.id === qId);
+		if (!q) return false;
 		const ans = userAnswers[qId];
-		if (!ans) return false;
-		if (ans.startsWith('[')) {
-			try {
-				const parsed = JSON.parse(ans);
-				return Array.isArray(parsed) && parsed.some(Boolean);
-			} catch {
-				return false;
-			}
+		if (!ans || !ans.trim()) return false;
+
+		if (q.format === 'word_ordering') {
+			const totalChoices = (q.choices ?? []).length;
+			const placed = (userWordOrders[qId] ?? []).filter((w) => Boolean(w && w.trim()));
+			return totalChoices > 0 && placed.length === totalChoices;
 		}
+
+		if (q.format === 'multiple_choice' || q.format === 'gap_fill') {
+			return Boolean(ans.trim());
+		}
+
+		if (q.format === 'typing') {
+			return ans.trim().length > 0;
+		}
+
 		return ans.trim().length > 0;
 	}
 
+	const isCurrentQuestionDone = $derived(
+		activeQuestion ? isQuestionAnswered(activeQuestion.id) : false
+	);
 	const answeredCount = $derived(allQuestions.filter((q) => isQuestionAnswered(q.id)).length);
 </script>
 
@@ -428,10 +441,15 @@
 									</h2>
 								{/if}
 							{:else if activeQuestion.format === 'gap_fill'}
+								{@const selectedChoice = activeQuestion.choices?.find(
+									(c) => c.id === userAnswers[activeQuestion.id]
+								)}
 								<h2 class="prompt-japanese prompt-gap font-japanese">
 									{#each renderGapFillSentence(activeQuestion.promptJa ?? activeQuestion.prompt) as part, index (part.type + '-' + index)}
 										{#if part.type === 'blank'}
-											<span class="gap-blank"></span>
+											<span class="gap-blank {selectedChoice ? 'filled font-japanese' : ''}">
+												{selectedChoice ? selectedChoice.text : ''}
+											</span>
 										{:else}
 											<span>{part.value}</span>
 										{/if}
@@ -599,8 +617,13 @@
 									<span>Prev</span>
 								</button>
 
-								<button type="submit" class="nav-btn next-btn font-mono">
-									<span>{activeIndex === totalQuestions - 1 ? 'Save' : 'Next'}</span>
+								<button
+									type="button"
+									class="nav-btn next-btn font-mono"
+									disabled={activeIndex === totalQuestions - 1 || !isCurrentQuestionDone}
+									onclick={goNext}
+								>
+									<span>Next</span>
 									<i class="fa-solid fa-arrow-right"></i>
 								</button>
 							</div>
@@ -647,9 +670,16 @@
 					<input type="hidden" name="finish" value="true" />
 					<input type="hidden" name="questionId" value={activeQuestion?.id ?? ''} />
 					<input type="hidden" name="answer" value={userAnswers[activeQuestion?.id ?? ''] ?? ''} />
+					<input type="hidden" name="allAnswers" value={JSON.stringify(userAnswers)} />
 
-					<Button type="submit" variant="gold" size="md" fullWidth disabled={isSubmitting}>
-						<span>Finish Quiz</span>
+					<Button
+						type="submit"
+						variant="gold"
+						size="md"
+						fullWidth
+						disabled={isSubmitting || answeredCount < totalQuestions}
+					>
+						<span>Finish Quiz ({answeredCount}/{totalQuestions})</span>
 					</Button>
 				</form>
 			</aside>

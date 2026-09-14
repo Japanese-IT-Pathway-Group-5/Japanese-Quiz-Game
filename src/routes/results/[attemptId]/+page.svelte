@@ -2,6 +2,7 @@
 	import { resolve } from '$app/paths';
 	import type { PageData } from './$types';
 	import { Button } from '$lib/components/ui';
+	import SarcasticStickman from '$lib/components/SarcasticStickman.svelte';
 
 	let { data }: { data: PageData } = $props();
 	const attempt = $derived(data.attempt);
@@ -16,9 +17,16 @@
 	const formatTime = (seconds: number) => {
 		const minutes = Math.floor(seconds / 60);
 		const remainingSeconds = seconds % 60;
-
 		return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 	};
+
+	// Dynamic sarcastic commentary based on accuracy (English only)
+	const sarcasticRemark = $derived.by(() => {
+		if (accuracy === 100) return "Perfect score! Are you sure you didn't cheat?";
+		if (accuracy >= 80) return 'Not bad at all. Next time go for perfection!';
+		if (accuracy >= 50) return 'Halfway there! Keep grinding your Japanese study!';
+		return "Wait, were you serious? Let's try that again!";
+	});
 </script>
 
 <svelte:head>
@@ -26,12 +34,17 @@
 </svelte:head>
 
 <div class="page-shell">
-	<div class="results-canvas">
+	<div class="results-layout">
+		<!-- Header Section -->
 		<header class="header">
+			<div class="header-stickman">
+				<SarcasticStickman class="results-stickman" />
+			</div>
 			<h1 class="title font-brush text-gold-gradient">結果発表</h1>
+			<p class="sarcastic-tag font-mono">{sarcasticRemark}</p>
 		</header>
 
-		<!-- Main Score Display -->
+		<!-- Main Score Dashboard (No Box Container) -->
 		<div class="score-showcase">
 			<div class="score-badge-container">
 				<span class="score-label font-mono">FINAL SCORE</span>
@@ -64,73 +77,21 @@
 			</div>
 		</div>
 
-		<!-- Question Review -->
-		{#if questionResults.length > 0}
-			<section class="questions-section">
-				<h2 class="questions-title">Question Review</h2>
-
-				<div class="questions-list">
-					{#each questionResults as question, index (question.questionId)}
-						<article
-							class="question-card"
-							class:correct={question.isCorrect}
-							class:wrong={!question.isCorrect}
-						>
-							<div class="question-header">
-								<span class="q-badge font-mono">Q{index + 1}</span>
-								<span class="result-badge" class:is-correct={question.isCorrect}>
-									{#if question.isCorrect}
-										<i class="fa-solid fa-check"></i> Correct
-									{:else}
-										<i class="fa-solid fa-xmark"></i> Incorrect
-									{/if}
-								</span>
-							</div>
-
-							<p class="prompt">{question.prompt}</p>
-
-							<div class="answer-details">
-								<p class="ans-row">
-									<span class="ans-label">Your answer:</span>
-									<span class="ans-text" class:ans-wrong={!question.isCorrect}
-										>{question.answer || 'No answer'}</span
-									>
-								</p>
-
-								{#if !question.isCorrect}
-									<p class="ans-row">
-										<span class="ans-label">Correct answer:</span>
-										<span class="ans-text ans-correct"
-											>{question.correctAnswers.join(', ') || 'Not available'}</span
-										>
-									</p>
-								{/if}
-							</div>
-
-							{#if question.explanation}
-								<div class="explanation">
-									<strong>Explanation</strong>
-									<p>{question.explanation}</p>
-								</div>
-							{/if}
-
-							<div class="duration font-mono">
-								Time: {formatTime(question.durationSeconds)}
-							</div>
-						</article>
-					{/each}
-				</div>
-			</section>
-		{/if}
-
-		<!-- Actions -->
+		<!-- 3 Action Buttons with Font Awesome Icons in 1 single row -->
 		<div class="results-actions">
-			<Button href={resolve('/')} variant="primary" size="lg" fullWidth>
+			<Button href={resolve('/')} variant="primary" size="md" fullWidth>
+				<i class="fa-solid fa-rotate-right"></i>
 				<span>Play Again</span>
 			</Button>
 
-			<Button href={resolve('/leaderboard')} variant="gold" size="md" fullWidth>
-				<span>View Leaderboard</span>
+			<Button href={resolve(`/review/${attempt.id}`)} variant="gold" size="md" fullWidth>
+				<i class="fa-solid fa-magnifying-glass"></i>
+				<span>Review</span>
+			</Button>
+
+			<Button href={resolve('/leaderboard')} variant="secondary" size="md" fullWidth>
+				<i class="fa-solid fa-trophy"></i>
+				<span>Leaderboard</span>
 			</Button>
 		</div>
 	</div>
@@ -139,42 +100,60 @@
 <style>
 	.page-shell {
 		min-height: 100vh;
-		padding: 2.5rem 1rem;
+		padding: 2.5rem 1rem 4rem;
 		display: flex;
 		justify-content: center;
+		align-items: center;
 	}
 
-	.results-canvas {
-		width: min(100%, 640px);
+	.results-layout {
+		width: min(100%, 680px);
 		margin: 0 auto;
 		display: flex;
 		flex-direction: column;
-		gap: 1.75rem;
+		gap: 2rem;
 	}
 
 	.header {
 		text-align: center;
-		padding: 0.5rem 0;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.header-stickman {
+		margin-bottom: -0.5rem;
+	}
+
+	.header-stickman :global(.results-stickman) {
+		width: 150px;
+		height: 150px;
 	}
 
 	.title {
 		margin: 0;
-		font-size: clamp(2.4rem, 6vw, 3.2rem);
+		font-size: clamp(2.4rem, 6vw, 3.4rem);
 		font-weight: 900;
 		letter-spacing: 0.06em;
 		filter: drop-shadow(0 4px 18px rgba(0, 15, 45, 0.45));
 	}
 
+	.sarcastic-tag {
+		margin: 0;
+		font-size: 1rem;
+		font-weight: 600;
+		color: var(--theme-gold, #ffbc0d);
+		max-width: 500px;
+		line-height: 1.4;
+	}
+
+	/* Score Showcase (No Container) */
 	.score-showcase {
-		padding: 1.5rem;
+		padding: 0.5rem 0;
 		display: grid;
-		gap: 1.5rem;
+		gap: 1.25rem;
 		text-align: center;
-		border-radius: var(--radius-lg, 1rem);
-		background: rgba(0, 15, 45, 0.6);
-		backdrop-filter: blur(12px);
-		border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.1));
-		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 	}
 
 	.score-badge-container {
@@ -184,21 +163,21 @@
 	}
 
 	.score-label {
-		font-size: 0.75rem;
-		letter-spacing: 0.12em;
+		font-size: 0.8rem;
+		letter-spacing: 0.14em;
 		color: var(--theme-gold, #ffbc0d);
 		font-weight: 700;
 	}
 
 	.score-number {
-		font-size: 3.8rem;
+		font-size: 4.6rem;
 		font-weight: 900;
 		line-height: 1;
-		filter: drop-shadow(0 2px 10px rgba(255, 188, 13, 0.35));
+		filter: drop-shadow(0 2px 14px rgba(255, 188, 13, 0.45));
 	}
 
 	.score-pts {
-		font-size: 0.8rem;
+		font-size: 0.85rem;
 		letter-spacing: 0.08em;
 		color: var(--theme-text-muted, #94a3b8);
 	}
@@ -206,172 +185,50 @@
 	.stats-grid {
 		display: grid;
 		grid-template-columns: repeat(4, 1fr);
-		gap: 0.75rem;
-		padding-top: 0.5rem;
+		gap: 1rem;
+		padding: 1.25rem 0;
 		border-top: 1px solid var(--theme-border, rgba(255, 255, 255, 0.08));
+		border-bottom: 1px solid var(--theme-border, rgba(255, 255, 255, 0.08));
 	}
 
 	.stat-item {
 		display: grid;
-		gap: 0.2rem;
+		gap: 0.25rem;
 	}
 
 	.stat-label {
-		font-size: 0.75rem;
+		font-size: 0.78rem;
 		color: var(--theme-text-muted, #94a3b8);
 	}
 
 	.stat-value {
-		font-size: 1.15rem;
+		font-size: 1.25rem;
 		font-weight: 700;
 		color: var(--theme-text-main, #ffffff);
 	}
 
 	.stat-sub {
-		font-size: 0.8rem;
+		font-size: 0.85rem;
 		font-weight: normal;
 		color: var(--theme-text-muted, #94a3b8);
 	}
 
-	/* Question Review */
-	.questions-section {
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
-	}
-
-	.questions-title {
-		margin: 0;
-		font-size: 1.25rem;
-		color: var(--theme-text-main, #ffffff);
-		font-weight: 700;
-	}
-
-	.questions-list {
-		display: flex;
-		flex-direction: column;
-		gap: 0.85rem;
-	}
-
-	.question-card {
-		padding: 1.25rem;
-		border-radius: var(--radius-md, 0.75rem);
-		background: rgba(0, 15, 45, 0.5);
-		backdrop-filter: blur(8px);
-		border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.1));
-		border-left-width: 4px;
-	}
-
-	.question-card.correct {
-		border-left-color: #22c55e;
-	}
-
-	.question-card.wrong {
-		border-left-color: #ef4444;
-	}
-
-	.question-header {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		margin-bottom: 0.75rem;
-	}
-
-	.q-badge {
-		font-size: 0.8rem;
-		font-weight: 800;
-		color: var(--theme-text-muted, #94a3b8);
-	}
-
-	.result-badge {
-		font-size: 0.8rem;
-		font-weight: 700;
-		display: flex;
-		align-items: center;
-		gap: 0.35rem;
-		color: #ef4444;
-	}
-
-	.result-badge.is-correct {
-		color: #22c55e;
-	}
-
-	.prompt {
-		margin: 0 0 0.85rem;
-		font-size: 1.05rem;
-		font-weight: 600;
-		color: var(--theme-text-main, #ffffff);
-		line-height: 1.4;
-	}
-
-	.answer-details {
-		display: grid;
-		gap: 0.35rem;
-		font-size: 0.95rem;
-	}
-
-	.ans-row {
-		margin: 0;
-		display: flex;
-		gap: 0.5rem;
-		flex-wrap: wrap;
-	}
-
-	.ans-label {
-		color: var(--theme-text-muted, #94a3b8);
-	}
-
-	.ans-text {
-		color: var(--theme-text-main, #ffffff);
-		font-weight: 600;
-	}
-
-	.ans-wrong {
-		color: #fca5a5;
-		text-decoration: line-through;
-	}
-
-	.ans-correct {
-		color: #86efac;
-	}
-
-	.explanation {
-		margin-top: 0.75rem;
-		padding: 0.75rem 1rem;
-		border-radius: var(--radius-sm, 0.5rem);
-		background: rgba(255, 255, 255, 0.04);
-		border-left: 2px solid var(--theme-gold, #ffbc0d);
-		font-size: 0.88rem;
-		color: var(--theme-text-muted, #cbd5e1);
-	}
-
-	.explanation strong {
-		display: block;
-		margin-bottom: 0.25rem;
-		color: var(--theme-gold, #ffbc0d);
-	}
-
-	.explanation p {
-		margin: 0;
-		line-height: 1.4;
-	}
-
-	.duration {
-		margin-top: 0.75rem;
-		font-size: 0.78rem;
-		color: var(--theme-text-muted, #94a3b8);
-	}
-
+	/* 3 Action Buttons in 1 single row */
 	.results-actions {
 		display: grid;
-		gap: 0.75rem;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 0.85rem;
 		margin-top: 0.5rem;
 	}
 
 	@media (max-width: 600px) {
 		.stats-grid {
 			grid-template-columns: repeat(2, 1fr);
-			gap: 1rem;
+			gap: 1.25rem;
+		}
+
+		.results-actions {
+			grid-template-columns: 1fr;
 		}
 	}
 </style>

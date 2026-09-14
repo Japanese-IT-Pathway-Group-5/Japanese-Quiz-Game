@@ -2,6 +2,9 @@ import { error, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { getDb } from '$lib/server/db';
 import { getQuizAttempt, submitAttemptAnswer } from '$lib/server/quiz';
+import { quizAttempts, attemptAnswers } from '$lib/server/db/schema';
+import { calculateScore } from '$lib/quiz/calculateScore';
+import { eq } from 'drizzle-orm';
 
 export const load: PageServerLoad = async ({ params, locals, platform, setHeaders, url }) => {
 	setHeaders({
@@ -9,7 +12,7 @@ export const load: PageServerLoad = async ({ params, locals, platform, setHeader
 	});
 
 	if (!locals.playerId) {
-		throw error(403, 'This game does not belong to this player.');
+		throw redirect(303, '/');
 	}
 
 	if (!platform?.env?.DB) {
@@ -26,12 +29,8 @@ export const load: PageServerLoad = async ({ params, locals, platform, setHeader
 			attemptId: params.attemptId,
 			playerId: locals.playerId
 		});
-	} catch (e: unknown) {
-		const message = e instanceof Error ? e.message : 'Game not found.';
-		if (message.includes('Unauthorized')) {
-			throw error(403, 'This game does not belong to this player.');
-		}
-		throw error(404, 'Game not found.');
+	} catch {
+		throw redirect(303, '/');
 	}
 
 	if (quizResult.isFinished || quizResult.attempt.status === 'finished') {
@@ -39,7 +38,7 @@ export const load: PageServerLoad = async ({ params, locals, platform, setHeader
 	}
 
 	if (quizResult.attempt.status === 'abandoned') {
-		throw error(403, 'This game is no longer active.');
+		throw redirect(303, '/');
 	}
 
 	if (!quizResult.currentQuestion) {
@@ -59,7 +58,7 @@ export const load: PageServerLoad = async ({ params, locals, platform, setHeader
 export const actions: Actions = {
 	default: async ({ request, params, locals, platform }) => {
 		if (!locals.playerId) {
-			throw error(403, 'This game does not belong to this player.');
+			throw redirect(303, '/');
 		}
 
 		if (!platform?.env?.DB) {
@@ -80,12 +79,8 @@ export const actions: Actions = {
 				attemptId: params.attemptId,
 				playerId: locals.playerId
 			});
-		} catch (e: unknown) {
-			const message = e instanceof Error ? e.message : 'Game not found.';
-			if (message.includes('Unauthorized')) {
-				throw error(403, 'This game does not belong to this player.');
-			}
-			throw error(404, 'Game not found.');
+		} catch {
+			throw redirect(303, '/');
 		}
 
 		if (quizResult.isFinished || quizResult.attempt.status === 'finished') {
@@ -93,7 +88,83 @@ export const actions: Actions = {
 		}
 
 		if (quizResult.attempt.status === 'abandoned') {
-			throw error(403, 'This game is no longer active.');
+			throw redirect(303, '/');
+		}
+
+		const rawAllAnswers = formData.get('allAnswers')?.toString();
+		let allAnswersMap: Record<string, string> | null = null;
+		if (rawAllAnswers) {
+			try {
+				allAnswersMap = JSON.parse(rawAllAnswers);
+			} catch {
+				allAnswersMap = null;
+			}
+		}
+
+		const rawDuration = formData.get('durationSeconds');
+		const durationSeconds =
+			typeof rawDuration === 'string' ? Math.max(0, parseInt(rawDuration, 10) || 0) : 0;
+
+		if (isFinishAction) {
+			// Save and grade all questions in the attempt
+			if (allAnswersMap) {
+				for (const q of quizResult.allQuestions) {
+					const rawQAns = allAnswersMap[q.id] ?? '';
+					let qAns: string | string[] = rawQAns;
+
+					if (q.format === 'word_ordering') {
+						try {
+							const parsed = JSON.parse(rawQAns);
+							if (Array.isArray(parsed)) qAns = parsed;
+						} catch {
+							// Keep raw answer if JSON parse fails
+						}
+					}
+
+					try {
+						await submitAttemptAnswer(db, {
+							attemptId: params.attemptId,
+							playerId: locals.playerId,
+							questionId: q.id,
+							answer: qAns,
+							durationSeconds,
+							finish: false
+						});
+					} catch {
+						// Ignore intermediate already finished states
+					}
+				}
+			}
+
+			// Ensure attempt is explicitly marked as finished and final score is computed
+			const finishedAt = new Date();
+			const allAnswers = await db
+				.select()
+				.from(attemptAnswers)
+				.where(eq(attemptAnswers.attemptId, params.attemptId));
+			const correctCount = allAnswers.filter((a) => a.isCorrect).length;
+			const totalQuestions = quizResult.allQuestions.length;
+			const started = quizResult.attempt.startedAt
+				? new Date(quizResult.attempt.startedAt)
+				: new Date();
+			const totalSeconds = Math.max(
+				0,
+				Math.floor((finishedAt.getTime() - started.getTime()) / 1000)
+			);
+			const finalScore = calculateScore(correctCount, totalQuestions, totalSeconds);
+
+			await db
+				.update(quizAttempts)
+				.set({
+					status: 'finished',
+					finishedAt,
+					correctCount,
+					finalScore,
+					currentQuestionIndex: totalQuestions
+				})
+				.where(eq(quizAttempts.id, params.attemptId));
+
+			throw redirect(303, `/results/${params.attemptId}`);
 		}
 
 		const targetQuestion = submittedQuestionId
@@ -135,10 +206,6 @@ export const actions: Actions = {
 				answer = rawAnswer.trim();
 			}
 		}
-
-		const rawDuration = formData.get('durationSeconds');
-		const durationSeconds =
-			typeof rawDuration === 'string' ? Math.max(0, parseInt(rawDuration, 10) || 0) : 0;
 
 		const outcome = await submitAttemptAnswer(db, {
 			attemptId: params.attemptId,
