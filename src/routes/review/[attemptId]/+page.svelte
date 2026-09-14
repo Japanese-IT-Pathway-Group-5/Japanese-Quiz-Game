@@ -225,7 +225,7 @@
 
 <style>
 	.page-shell {
-		min-height: 100vh;
+		min-height: 100dvh;
 		padding: 2.5rem 1rem 3.5rem;
 		display: flex;
 		justify-content: center;

@@ -175,7 +175,7 @@
 
 <style>
 	.leaderboard-page {
-		height: 100vh;
+		height: 100dvh;
 		padding: 1.5rem 1rem;
 		display: flex;
 		justify-content: center;

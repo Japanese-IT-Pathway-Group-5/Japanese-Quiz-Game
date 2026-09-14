@@ -341,6 +341,13 @@
 	}
 
 	@media (max-width: 640px) {
+		.page-shell {
+			height: 100dvh;
+			min-height: 0;
+			padding: 0.7rem;
+			overflow: hidden;
+		}
+
 		.start-canvas {
 			gap: 0.7rem;
 		}
