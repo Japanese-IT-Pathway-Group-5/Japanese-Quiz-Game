@@ -1,9 +1,23 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import type { Cookies } from '@sveltejs/kit';
-import { getOrCreatePlayerId, PLAYER_COOKIE_NAME } from './playerSession';
 import { signValue } from './signedValue';
 
 const SECRET = 'test-secret-do-not-use-in-real-life';
+
+// $app/environment's `dev` flag drives whether the session cookie requires
+// HTTPS (see playerSession.ts: `secure: !dev`). It's mocked with a getter so
+// individual tests can flip between simulating local dev and a production
+// build without needing separate module reloads. See issue #31 - this used
+// to be hardcoded `secure: true`, which silently broke cookie persistence
+// over plain HTTP in local dev.
+const envState = { dev: true };
+vi.mock('$app/environment', () => ({
+	get dev() {
+		return envState.dev;
+	}
+}));
+
+const { getOrCreatePlayerId, PLAYER_COOKIE_NAME } = await import('./playerSession');
 
 function fakeCookies(initial?: string): Cookies {
 	let stored: string | undefined = initial;
@@ -19,6 +33,10 @@ function fakeCookies(initial?: string): Cookies {
 }
 
 describe('getOrCreatePlayerId', () => {
+	beforeEach(() => {
+		envState.dev = true;
+	});
+
 	it('issues a new id and sets a cookie for a first-time visitor', async () => {
 		const cookies = fakeCookies();
 
@@ -28,7 +46,27 @@ describe('getOrCreatePlayerId', () => {
 		expect(cookies.set).toHaveBeenCalledOnce();
 		const [name, , options] = (cookies.set as ReturnType<typeof vi.fn>).mock.calls[0];
 		expect(name).toBe(PLAYER_COOKIE_NAME);
-		expect(options).toMatchObject({ httpOnly: true, secure: true, path: '/' });
+		expect(options).toMatchObject({ httpOnly: true, path: '/' });
+	});
+
+	it('does not require HTTPS for the cookie in local dev', async () => {
+		envState.dev = true;
+		const cookies = fakeCookies();
+
+		await getOrCreatePlayerId(cookies, SECRET);
+
+		const [, , options] = (cookies.set as ReturnType<typeof vi.fn>).mock.calls[0];
+		expect(options).toMatchObject({ secure: false });
+	});
+
+	it('requires HTTPS for the cookie outside of dev (production)', async () => {
+		envState.dev = false;
+		const cookies = fakeCookies();
+
+		await getOrCreatePlayerId(cookies, SECRET);
+
+		const [, , options] = (cookies.set as ReturnType<typeof vi.fn>).mock.calls[0];
+		expect(options).toMatchObject({ secure: true });
 	});
 
 	it('returns the same id for a returning visitor with a valid cookie', async () => {

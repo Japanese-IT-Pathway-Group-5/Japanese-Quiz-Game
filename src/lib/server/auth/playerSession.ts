@@ -1,4 +1,5 @@
 import type { Cookies } from '@sveltejs/kit';
+import { dev } from '$app/environment';
 import { signValue, verifySignedValue } from './signedValue';
 
 /**
@@ -31,7 +32,7 @@ export async function getOrCreatePlayerId(cookies: Cookies, secret: string): Pro
 	cookies.set(PLAYER_COOKIE_NAME, signed, {
 		path: '/',
 		httpOnly: true, // not readable by browser JavaScript
-		secure: true, // only sent over HTTPS
+		secure: !dev, // only require HTTPS outside local dev
 		sameSite: 'lax',
 		maxAge: ONE_YEAR_IN_SECONDS
 	});
