@@ -15,6 +15,13 @@
       "when": 1788888496241,
       "tag": "0001_bitter_christian_walker",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1789344000000,
+      "tag": "0002_add_performance_indexes",
+      "breakpoints": true
     }
   ]
 }

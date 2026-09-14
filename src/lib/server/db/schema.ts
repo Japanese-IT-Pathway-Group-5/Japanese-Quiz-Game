@@ -1,4 +1,4 @@
-import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { index, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
 export const players = sqliteTable('players', {
 	id: text('id')
@@ -58,57 +58,69 @@ export const questions = sqliteTable('questions', {
 		.$defaultFn(() => new Date())
 });
 
-export const choices = sqliteTable('choices', {
-	id: text('id')
-		.primaryKey()
-		.$defaultFn(() => crypto.randomUUID()),
-	questionId: text('question_id')
-		.notNull()
-		.references(() => questions.id, { onDelete: 'cascade' }),
-	text: text('text').notNull(),
-	isCorrect: integer('is_correct', { mode: 'boolean' }).notNull().default(false),
-	order: integer('order').notNull().default(0)
-});
+export const choices = sqliteTable(
+	'choices',
+	{
+		id: text('id')
+			.primaryKey()
+			.$defaultFn(() => crypto.randomUUID()),
+		questionId: text('question_id')
+			.notNull()
+			.references(() => questions.id, { onDelete: 'cascade' }),
+		text: text('text').notNull(),
+		isCorrect: integer('is_correct', { mode: 'boolean' }).notNull().default(false),
+		order: integer('order').notNull().default(0)
+	},
+	(table) => [index('choices_question_id_idx').on(table.questionId)]
+);
 
-export const quizAttempts = sqliteTable('quiz_attempts', {
-	id: text('id')
-		.primaryKey()
-		.$defaultFn(() => crypto.randomUUID()),
-	playerId: text('player_id')
-		.notNull()
-		.references(() => players.id, { onDelete: 'cascade' }),
-	nickname: text('nickname').notNull(),
-	level: text('level', { enum: ['N3', 'N4'] }).notNull(),
-	chosenQuestions: text('chosen_questions', { mode: 'json' }).$type<string[]>().notNull(),
-	currentQuestionIndex: integer('current_question_index').notNull().default(0),
-	correctCount: integer('correct_count').notNull().default(0),
-	finalScore: integer('final_score'),
-	startedAt: integer('started_at', { mode: 'timestamp' })
-		.notNull()
-		.$defaultFn(() => new Date()),
-	finishedAt: integer('finished_at', { mode: 'timestamp' }),
-	status: text('status', { enum: ['active', 'finished', 'abandoned'] })
-		.notNull()
-		.default('active')
-});
+export const quizAttempts = sqliteTable(
+	'quiz_attempts',
+	{
+		id: text('id')
+			.primaryKey()
+			.$defaultFn(() => crypto.randomUUID()),
+		playerId: text('player_id')
+			.notNull()
+			.references(() => players.id, { onDelete: 'cascade' }),
+		nickname: text('nickname').notNull(),
+		level: text('level', { enum: ['N3', 'N4'] }).notNull(),
+		chosenQuestions: text('chosen_questions', { mode: 'json' }).$type<string[]>().notNull(),
+		currentQuestionIndex: integer('current_question_index').notNull().default(0),
+		correctCount: integer('correct_count').notNull().default(0),
+		finalScore: integer('final_score'),
+		startedAt: integer('started_at', { mode: 'timestamp' })
+			.notNull()
+			.$defaultFn(() => new Date()),
+		finishedAt: integer('finished_at', { mode: 'timestamp' }),
+		status: text('status', { enum: ['active', 'finished', 'abandoned'] })
+			.notNull()
+			.default('active')
+	},
+	(table) => [index('quiz_attempts_status_level_idx').on(table.status, table.level)]
+);
 
-export const attemptAnswers = sqliteTable('attempt_answers', {
-	id: text('id')
-		.primaryKey()
-		.$defaultFn(() => crypto.randomUUID()),
-	attemptId: text('attempt_id')
-		.notNull()
-		.references(() => quizAttempts.id, { onDelete: 'cascade' }),
-	questionId: text('question_id')
-		.notNull()
-		.references(() => questions.id, { onDelete: 'cascade' }),
-	answer: text('answer').notNull(),
-	isCorrect: integer('is_correct', { mode: 'boolean' }).notNull(),
-	durationSeconds: integer('duration_seconds').notNull(),
-	answeredAt: integer('answered_at', { mode: 'timestamp' })
-		.notNull()
-		.$defaultFn(() => new Date())
-});
+export const attemptAnswers = sqliteTable(
+	'attempt_answers',
+	{
+		id: text('id')
+			.primaryKey()
+			.$defaultFn(() => crypto.randomUUID()),
+		attemptId: text('attempt_id')
+			.notNull()
+			.references(() => quizAttempts.id, { onDelete: 'cascade' }),
+		questionId: text('question_id')
+			.notNull()
+			.references(() => questions.id, { onDelete: 'cascade' }),
+		answer: text('answer').notNull(),
+		isCorrect: integer('is_correct', { mode: 'boolean' }).notNull(),
+		durationSeconds: integer('duration_seconds').notNull(),
+		answeredAt: integer('answered_at', { mode: 'timestamp' })
+			.notNull()
+			.$defaultFn(() => new Date())
+	},
+	(table) => [index('attempt_answers_attempt_question_idx').on(table.attemptId, table.questionId)]
+);
 
 export type Player = typeof players.$inferSelect;
 export type NewPlayer = typeof players.$inferInsert;
