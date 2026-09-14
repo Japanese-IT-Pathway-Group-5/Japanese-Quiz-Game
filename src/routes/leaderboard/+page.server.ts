@@ -1,7 +1,7 @@
 import { and, eq } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 import { getDb } from '$lib/server/db';
-import { quizAttempts } from '$lib/server/db/schema';
+import { players, quizAttempts } from '$lib/server/db/schema';
 
 type LevelFilter = 'all' | 'N3' | 'N4';
 
@@ -29,8 +29,16 @@ export const load: PageServerLoad = async ({ url, platform, locals }) => {
 	}
 
 	const attempts = await db
-		.select()
+		.select({
+			playerId: quizAttempts.playerId,
+			nickname: players.nickname,
+			level: quizAttempts.level,
+			finalScore: quizAttempts.finalScore,
+			startedAt: quizAttempts.startedAt,
+			finishedAt: quizAttempts.finishedAt
+		})
 		.from(quizAttempts)
+		.innerJoin(players, eq(quizAttempts.playerId, players.id))
 		.where(and(...conditions));
 
 	const bestByPlayer = new Map<string, LeaderboardEntry>();
