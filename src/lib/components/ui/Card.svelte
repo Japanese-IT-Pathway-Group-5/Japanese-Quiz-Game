@@ -46,7 +46,7 @@
 
 	@media (max-width: 640px) {
 		.ui-card {
-			padding: 1.35rem;
+			padding: 0.9rem;
 			border-radius: var(--radius-md);
 		}
 	}

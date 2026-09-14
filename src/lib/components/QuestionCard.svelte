@@ -209,13 +209,35 @@
 		font-weight: 600;
 	}
 
-	@media (max-width: 480px) {
+	@media (max-width: 640px) {
 		.question-card {
-			padding: 0.75rem;
+			padding: 0.55rem;
+		}
+
+		.question-title {
+			margin-bottom: 0.45rem;
+			font-size: 0.8rem;
+		}
+
+		.prompt {
+			margin-bottom: 0.65rem;
+			font-size: 1rem;
+			line-height: 1.45;
 		}
 
 		.option {
-			padding: 0.8rem 0.85rem;
+			gap: 0.5rem;
+			padding: 0.58rem 0.65rem;
+		}
+
+		.option input {
+			width: 1rem;
+			height: 1rem;
+		}
+
+		.option-text {
+			font-size: 0.82rem;
+			line-height: 1.35;
 		}
 	}
 </style>

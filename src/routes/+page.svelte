@@ -341,8 +341,45 @@
 	}
 
 	@media (max-width: 640px) {
+		.start-canvas {
+			gap: 0.7rem;
+		}
+
+		.title {
+			font-size: 1.85rem;
+		}
+
+		.field-label {
+			font-size: 0.7rem;
+		}
+
 		.level-segmented {
 			grid-template-columns: 1fr;
+			gap: 0.45rem;
+		}
+
+		.level-segment {
+			gap: 0.15rem;
+			padding: 0.58rem 0.7rem;
+		}
+
+		.segment-title {
+			font-size: 0.78rem;
+		}
+
+		.segment-desc,
+		.error-banner,
+		.nav-item {
+			font-size: 0.62rem;
+		}
+
+		.start-btn-img {
+			width: min(100%, 175px);
+		}
+
+		.footer-nav {
+			gap: 0.35rem;
+			padding-top: 0.2rem;
 		}
 	}
 </style>

@@ -222,9 +222,50 @@
 	}
 
 	@media (max-width: 600px) {
+		.page-shell {
+			padding: 1.35rem 0.75rem 2rem;
+		}
+
+		.results-layout {
+			gap: 1rem;
+		}
+
+		.header-stickman :global(.results-stickman) {
+			width: 100px;
+			height: 100px;
+		}
+
+		.title {
+			font-size: 1.7rem;
+		}
+
+		.sarcastic-tag {
+			font-size: 0.72rem;
+		}
+
+		.score-showcase {
+			gap: 0.65rem;
+		}
+
+		.score-number {
+			font-size: 3rem;
+		}
+
+		.score-label,
+		.score-pts,
+		.stat-label,
+		.stat-sub {
+			font-size: 0.62rem;
+		}
+
+		.stat-value {
+			font-size: 0.88rem;
+		}
+
 		.stats-grid {
 			grid-template-columns: repeat(2, 1fr);
-			gap: 1.25rem;
+			gap: 0.75rem;
+			padding: 0.75rem 0;
 		}
 
 		.results-actions {

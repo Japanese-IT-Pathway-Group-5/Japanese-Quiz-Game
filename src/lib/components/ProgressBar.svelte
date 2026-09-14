@@ -54,4 +54,18 @@
 		background-color: #2563eb;
 		transition: width 0.3s ease;
 	}
+
+	@media (max-width: 640px) {
+		.progress-container {
+			gap: 0.2rem;
+		}
+
+		.progress-text {
+			font-size: 0.7rem;
+		}
+
+		.progress-bar {
+			height: 0.5rem;
+		}
+	}
 </style>

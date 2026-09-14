@@ -1431,6 +1431,68 @@
 		}
 	}
 
+	@media (max-width: 640px) {
+		.quiz-container {
+			margin: 4.25rem auto 1.25rem;
+			gap: 0.85rem;
+		}
+
+		.level-indicator,
+		.question-number,
+		.format-text,
+		.tracker-title,
+		.tracker-count {
+			font-size: 0.62rem;
+		}
+
+		.prompt-japanese {
+			font-size: 1rem;
+			line-height: 1.35;
+		}
+
+		.sidebar-tracker {
+			padding: 0.7rem;
+		}
+
+		.dots-grid {
+			gap: 0.35rem;
+		}
+
+		.dot-btn {
+			height: 1.55rem;
+			font-size: 0.62rem;
+		}
+
+		.nav-btn {
+			min-height: 2.2rem;
+			padding: 0.42rem 0.65rem;
+			font-size: 0.68rem;
+		}
+
+		.modal-backdrop {
+			padding: 0.85rem;
+		}
+
+		.exit-modal {
+			width: min(100%, 270px);
+			gap: 0.55rem;
+			padding: 1.1rem 0.9rem;
+		}
+
+		.modal-title {
+			font-size: 0.9rem;
+		}
+
+		.modal-desc,
+		.modal-btn {
+			font-size: 0.66rem;
+		}
+
+		.modal-btn {
+			padding: 0.45rem 0.55rem;
+		}
+	}
+
 	@media (max-width: 480px) {
 		.dots-grid {
 			grid-template-columns: repeat(5, 1fr);

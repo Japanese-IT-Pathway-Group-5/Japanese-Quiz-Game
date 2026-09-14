@@ -94,4 +94,12 @@
 		image-rendering: -webkit-optimize-contrast;
 		image-rendering: crisp-edges;
 	}
+
+	@media (max-width: 640px) {
+		.stickman-anim {
+			width: 105px;
+			height: 105px;
+			padding: 0.65rem;
+		}
+	}
 </style>
