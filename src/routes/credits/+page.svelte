@@ -28,7 +28,6 @@
 					members={teamMembers}
 					bind:activeMemberId
 					onselect={(id) => (activeMemberId = id)}
-					onhover={(id) => (activeMemberId = id)}
 				/>
 			</div>
 

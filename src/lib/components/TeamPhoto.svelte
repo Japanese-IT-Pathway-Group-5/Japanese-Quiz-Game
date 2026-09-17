@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount } from 'svelte';
 	import { SvelteMap } from 'svelte/reactivity';
 	import type { TeamMember } from '$lib/credits';
 
@@ -7,10 +7,9 @@
 		members: TeamMember[];
 		activeMemberId?: string | null;
 		onselect?: (memberId: string) => void;
-		onhover?: (memberId: string | null) => void;
 	}
 
-	let { members = [], activeMemberId = $bindable(null), onselect, onhover }: Props = $props();
+	let { members = [], activeMemberId = $bindable(null), onselect }: Props = $props();
 
 	let containerEl: HTMLDivElement | null = $state(null);
 	let hitCanvases: SvelteMap<
@@ -19,23 +18,16 @@
 	> = new SvelteMap();
 	let isHitmapReady = $state(false);
 
-	let leaveTimeout: ReturnType<typeof setTimeout> | null = null;
-	let switchTimeout: ReturnType<typeof setTimeout> | null = null;
-	let rafId: number | null = null;
-	let lastPointerEvent: { clientX: number; clientY: number } | null = null;
-	let selectedMemberId: string | null = $state(null);
-
 	const CANVAS_WIDTH = 640;
 	const CANVAS_HEIGHT = 476.5;
 
-	// Priority order for hit testing (foreground members first)
 	const hitTestOrder = ['vathana', 'lyleab', 'panha', 'karona', 'menghour', 'virakbot'];
 
-	// Pre-sort members once
 	let sortedMembers = $derived(
 		[...members].sort((a, b) => {
 			const indexA = hitTestOrder.indexOf(a.id);
 			const indexB = hitTestOrder.indexOf(b.id);
+
 			return (indexA === -1 ? 99 : indexA) - (indexB === -1 ? 99 : indexB);
 		})
 	);
@@ -44,40 +36,74 @@
 		let loadedCount = 0;
 		const totalMembers = members.length;
 
+		if (totalMembers === 0) {
+			isHitmapReady = true;
+			return;
+		}
+
 		members.forEach((member) => {
-			if (!member.cutoutUrl) return;
+			if (!member.cutoutUrl) {
+				loadedCount++;
+
+				if (loadedCount >= totalMembers) {
+					isHitmapReady = true;
+				}
+
+				return;
+			}
 
 			const canvas = document.createElement('canvas');
 			canvas.width = CANVAS_WIDTH;
 			canvas.height = CANVAS_HEIGHT;
+
 			const ctx = canvas.getContext('2d', { willReadFrequently: true });
 
-			if (!ctx) return;
+			if (!ctx) {
+				loadedCount++;
+
+				if (loadedCount >= totalMembers) {
+					isHitmapReady = true;
+				}
+
+				return;
+			}
 
 			const img = new Image();
 			img.crossOrigin = 'anonymous';
+
 			img.onload = () => {
 				ctx.drawImage(img, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-				hitCanvases.set(member.id, { ctx, width: CANVAS_WIDTH, height: CANVAS_HEIGHT });
+
+				hitCanvases.set(member.id, {
+					ctx,
+					width: CANVAS_WIDTH,
+					height: CANVAS_HEIGHT
+				});
+
 				loadedCount++;
+
 				if (loadedCount >= totalMembers) {
 					isHitmapReady = true;
 				}
 			};
+
+			img.onerror = () => {
+				loadedCount++;
+
+				if (loadedCount >= totalMembers) {
+					isHitmapReady = true;
+				}
+			};
+
 			img.src = member.cutoutUrl;
 		});
-	});
-
-	onDestroy(() => {
-		if (leaveTimeout) clearTimeout(leaveTimeout);
-		if (switchTimeout) clearTimeout(switchTimeout);
-		if (rafId !== null) cancelAnimationFrame(rafId);
 	});
 
 	function getMemberAtPoint(clientX: number, clientY: number): string | null {
 		if (!containerEl) return null;
 
 		const rect = containerEl.getBoundingClientRect();
+
 		const scaleX = 1280 / rect.width;
 		const scaleY = 953 / rect.height;
 
@@ -93,6 +119,7 @@
 
 		for (const member of sortedMembers) {
 			const box = member.box;
+
 			if (
 				svgX >= box.x &&
 				svgX <= box.x + box.width &&
@@ -100,9 +127,11 @@
 				svgY <= box.y + box.height
 			) {
 				const hitData = hitCanvases.get(member.id);
+
 				if (hitData && isHitmapReady) {
 					try {
 						const pixel = hitData.ctx.getImageData(canvasX, canvasY, 1, 1).data;
+
 						if (pixel[3] > 40) {
 							return member.id;
 						}
@@ -118,98 +147,70 @@
 		return null;
 	}
 
-	function processPointer(clientX: number, clientY: number) {
-		const detectedId = getMemberAtPoint(clientX, clientY);
+	/**
+	 * Members are navigated in the order they were passed in (the credits list
+	 * order), not hitTestOrder. hitTestOrder is only used to resolve overlapping
+	 * silhouettes when clicking.
+	 */
+	const activeIndex = $derived(members.findIndex((member) => member.id === activeMemberId));
 
-		if (detectedId) {
-			if (leaveTimeout) {
-				clearTimeout(leaveTimeout);
-				leaveTimeout = null;
-			}
-
-			if (detectedId !== activeMemberId) {
-				if (switchTimeout) clearTimeout(switchTimeout);
-				switchTimeout = setTimeout(() => {
-					activeMemberId = detectedId;
-					onhover?.(detectedId);
-				}, 25);
-			}
-		} else if (selectedMemberId === null) {
-			if (switchTimeout) {
-				clearTimeout(switchTimeout);
-				switchTimeout = null;
-			}
-
-			if (activeMemberId !== null && !leaveTimeout) {
-				leaveTimeout = setTimeout(() => {
-					activeMemberId = null;
-					onhover?.(null);
-					leaveTimeout = null;
-				}, 120);
-			}
-		}
+	function selectMember(memberId: string) {
+		activeMemberId = memberId;
+		onselect?.(memberId);
 	}
 
-	function handlePointerMove(event: PointerEvent) {
-		lastPointerEvent = { clientX: event.clientX, clientY: event.clientY };
-		if (rafId === null) {
-			rafId = requestAnimationFrame(() => {
-				rafId = null;
-				if (lastPointerEvent) {
-					processPointer(lastPointerEvent.clientX, lastPointerEvent.clientY);
-				}
-			});
-		}
+	function selectByOffset(offset: number) {
+		if (members.length === 0) return;
+
+		const nextIndex =
+			activeIndex === -1
+				? offset > 0
+					? 0
+					: members.length - 1
+				: (activeIndex + offset + members.length) % members.length;
+
+		selectMember(members[nextIndex].id);
 	}
 
-	function handlePointerLeave() {
-		if (rafId !== null) {
-			cancelAnimationFrame(rafId);
-			rafId = null;
-		}
-		if (switchTimeout) {
-			clearTimeout(switchTimeout);
-			switchTimeout = null;
+	function handleWindowKeyDown(event: KeyboardEvent) {
+		if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+
+		const target = event.target as HTMLElement | null;
+
+		if (
+			target &&
+			(target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)
+		) {
+			return;
 		}
 
-		if (leaveTimeout) clearTimeout(leaveTimeout);
-		leaveTimeout = setTimeout(() => {
-			if (activeMemberId !== null && selectedMemberId === null) {
-				activeMemberId = null;
-				onhover?.(null);
-			}
-			leaveTimeout = null;
-		}, 120);
+		event.preventDefault();
+
+		selectByOffset(event.key === 'ArrowRight' ? 1 : -1);
 	}
 
 	function handlePointerDown(event: PointerEvent) {
 		const memberId = getMemberAtPoint(event.clientX, event.clientY);
+
 		if (memberId) {
-			if (switchTimeout) clearTimeout(switchTimeout);
-			if (leaveTimeout) clearTimeout(leaveTimeout);
-			selectedMemberId = memberId;
-			activeMemberId = memberId;
-			onselect?.(memberId);
+			selectMember(memberId);
 		}
 	}
 
 	function handleKeyDown(event: KeyboardEvent, memberId: string) {
 		if (event.key === 'Enter' || event.key === ' ') {
 			event.preventDefault();
-			selectedMemberId = memberId;
-			activeMemberId = memberId;
-			onselect?.(memberId);
+			selectMember(memberId);
 		}
 	}
 </script>
 
+<svelte:window onkeydown={handleWindowKeyDown} />
+
 <div class="team-photo-wrapper">
-	<!-- Interactive SVG canvas container -->
 	<div
 		class="photo-frame"
 		bind:this={containerEl}
-		onpointermove={handlePointerMove}
-		onpointerleave={handlePointerLeave}
 		onpointerdown={handlePointerDown}
 		role="region"
 		aria-label="Interactive Team Portrait"
@@ -220,7 +221,6 @@
 			preserveAspectRatio="xMidYMid meet"
 			aria-label="Japanese Quiz Game Development Team Photo"
 		>
-			<!-- Base team illustration with background -->
 			<image
 				href="/images/team/team-with-background.webp"
 				x="0"
@@ -231,7 +231,6 @@
 				class:dimmed={activeMemberId !== null}
 			/>
 
-			<!-- Overlay cutout layers for each member -->
 			{#each members as member (member.id)}
 				<g
 					class="member-layer"
@@ -240,15 +239,7 @@
 					tabindex="0"
 					role="button"
 					aria-label="{member.name} - {member.role}"
-					onfocus={() => {
-						activeMemberId = member.id;
-						onhover?.(member.id);
-					}}
-					onblur={() => {
-						activeMemberId = null;
-						onhover?.(null);
-					}}
-					onkeydown={(e) => handleKeyDown(e, member.id)}
+					onkeydown={(event) => handleKeyDown(event, member.id)}
 				>
 					{#if member.cutoutUrl}
 						<image
@@ -263,6 +254,26 @@
 				</g>
 			{/each}
 		</svg>
+	</div>
+
+	<div class="member-nav">
+		<button
+			type="button"
+			class="nav-arrow"
+			onclick={() => selectByOffset(-1)}
+			aria-label="Previous team member"
+		>
+			<i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+		</button>
+
+		<button
+			type="button"
+			class="nav-arrow"
+			onclick={() => selectByOffset(1)}
+			aria-label="Next team member"
+		>
+			<i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+		</button>
 	</div>
 </div>
 
@@ -331,7 +342,6 @@
 		transform-origin: center bottom;
 	}
 
-	/* Exact contour glow on the cutout silhouette when hovered */
 	.member-layer.active .member-cutout {
 		opacity: 1;
 		filter: drop-shadow(0 0 14px var(--theme-gold, #ffbc0d))
@@ -342,7 +352,47 @@
 		opacity: 0;
 	}
 
+	.member-nav {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 1rem;
+		margin-top: 1rem;
+	}
+
+	.nav-arrow {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.75rem;
+		height: 2.75rem;
+		border-radius: 50%;
+		cursor: pointer;
+		color: var(--theme-gold, #ffbc0d);
+		background: rgba(0, 15, 45, 0.7);
+		border: 1px solid rgba(255, 188, 13, 0.35);
+		transition:
+			background 0.25s ease,
+			border-color 0.25s ease,
+			transform 0.25s ease;
+	}
+
+	.nav-arrow:hover {
+		background: rgba(255, 188, 13, 0.16);
+		border-color: rgba(255, 188, 13, 0.7);
+		transform: scale(1.06);
+	}
+
+	.nav-arrow:focus-visible {
+		outline: 2px solid var(--theme-gold, #ffbc0d);
+		outline-offset: 2px;
+	}
+
 	@media (prefers-reduced-motion: reduce) {
+		.nav-arrow {
+			transition: none !important;
+		}
+
 		.base-image,
 		.member-cutout {
 			transition: none !important;
