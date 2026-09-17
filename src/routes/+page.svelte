@@ -95,12 +95,12 @@
 		gap: 1.75rem;
 	}
 
-        .hero {
-                position: relative;
-                z-index: 4;
-                text-align: center;
-                padding: clamp(3.5rem, 10vw, 5rem) 0 0.5rem;
-        }
+	.hero {
+		position: relative;
+		z-index: 4;
+		text-align: center;
+		padding: clamp(3.5rem, 10vw, 5rem) 0 0.5rem;
+	}
 	.title {
 		margin: 0;
 		font-size: clamp(2.6rem, 7vw, 3.6rem);
