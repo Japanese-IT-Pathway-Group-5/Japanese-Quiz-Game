@@ -3,10 +3,20 @@
 	import { teamMembers } from '$lib/credits';
 	import TeamPhoto from '$lib/components/TeamPhoto.svelte';
 	import { Button } from '$lib/components/ui';
+	import { replayHoverClip, stopHoverClip } from '$lib/audio/hoverClip';
 
 	let activeMemberId: string | null = $state(null);
 
 	let activeMember = $derived(teamMembers.find((m) => m.id === activeMemberId) || null);
+
+	function handleHover(id: string | null) {
+		activeMemberId = id;
+		if (id) {
+			replayHoverClip();
+		} else {
+			stopHoverClip();
+		}
+	}
 </script>
 
 <svelte:head>
@@ -28,7 +38,7 @@
 					members={teamMembers}
 					bind:activeMemberId
 					onselect={(id) => (activeMemberId = id)}
-					onhover={(id) => (activeMemberId = id)}
+					onhover={handleHover}
 				/>
 			</div>
 
