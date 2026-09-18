@@ -39,5 +39,32 @@ export async function getOrCreatePlayerId(cookies: Cookies, secret: string): Pro
 	return playerId;
 }
 
+/**
+ * Sets a specific player id cookie with a signature.
+ * Used when a user logs in with Google to tie their browser session to their account.
+ */
+export async function setPlayerIdCookie(
+	cookies: Cookies,
+	playerId: string,
+	secret: string
+): Promise<void> {
+	const signed = await signValue(playerId, secret);
+
+	cookies.set(PLAYER_COOKIE_NAME, signed, {
+		path: '/',
+		httpOnly: true,
+		secure: true,
+		sameSite: 'lax',
+		maxAge: ONE_YEAR_IN_SECONDS
+	});
+}
+
+/**
+ * Clears the player id cookie on logout.
+ */
+export function clearPlayerCookie(cookies: Cookies): void {
+	cookies.delete(PLAYER_COOKIE_NAME, { path: '/' });
+}
+
 export const PLAYER_COOKIE_NAME = 'player_id';
 const ONE_YEAR_IN_SECONDS = 60 * 60 * 24 * 365;

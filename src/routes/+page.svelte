@@ -1,11 +1,13 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import type { PageData, ActionData } from './$types';
+	import { Button } from '$lib/components/ui';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
 
 	const nickname = $derived(form?.nickname ?? data.nickname ?? '');
 	let selectedLevel = $state('N4');
+	let avatarFailed = $state(false);
 
 	$effect(() => {
 		if (form?.level) {
@@ -25,22 +27,70 @@
 		</header>
 
 		<form method="POST" class="quiz-form">
-			<div class="field">
-				<label class="field-label" for="nickname">
-					<span>Nickname <span class="label-ja font-japanese">名前</span></span>
-				</label>
-				<input
-					id="nickname"
-					name="nickname"
-					type="text"
-					class="input-text nickname-input"
-					maxlength="30"
-					value={nickname}
-					autocomplete="nickname"
-					placeholder="Enter your name (e.g. Kenji, さくら)"
-					required
-				/>
-			</div>
+			{#if data.player?.googleId}
+				<!-- Signed-In Player Banner -->
+				<div class="field">
+					<div class="field-label">
+						<span>Player <span class="label-ja font-japanese">プレイヤー</span></span>
+					</div>
+
+					<div class="signed-in-banner">
+						<div class="banner-player-info">
+							{#if data.player.avatarUrl && !avatarFailed}
+								<img
+									src={data.player.avatarUrl}
+									alt={data.player.nickname}
+									class="banner-avatar"
+									referrerpolicy="no-referrer"
+									onerror={() => (avatarFailed = true)}
+								/>
+							{:else}
+								<div class="banner-avatar-fallback font-japanese">
+									{data.player.nickname?.[0] ?? '学'}
+								</div>
+							{/if}
+
+							<div class="banner-text">
+								<div class="banner-name-row">
+									<span class="banner-name">{data.player.nickname}</span>
+									<span class="banner-tag font-mono">
+										<i class="fa-brands fa-google"></i>
+										<span>GOOGLE</span>
+									</span>
+								</div>
+								{#if data.player.email}
+									<span class="banner-email font-mono">{data.player.email}</span>
+								{/if}
+							</div>
+						</div>
+
+						<Button href={resolve('/auth/logout')} variant="primary" size="sm">
+							<i class="fa-solid fa-arrow-right-from-bracket"></i>
+							<span>Sign out</span>
+						</Button>
+
+						<input type="hidden" name="nickname" value={nickname} />
+					</div>
+				</div>
+			{:else}
+				<!-- Guest / Anonymous Nickname Input -->
+				<div class="field">
+					<label class="field-label" for="nickname">
+						<span>Nickname <span class="label-ja font-japanese">名前</span></span>
+					</label>
+					<input
+						id="nickname"
+						name="nickname"
+						type="text"
+						class="input-text nickname-input"
+						maxlength="30"
+						value={nickname}
+						autocomplete="nickname"
+						placeholder="Enter your name (e.g. Kenji, さくら)"
+						required
+					/>
+				</div>
+			{/if}
 
 			<div class="field">
 				<span class="field-label">
@@ -76,6 +126,11 @@
 			<a href={resolve('/leaderboard')} class="nav-item font-mono">
 				<i class="fa-solid fa-ranking-star"></i>
 				<span>LEADERBOARD</span>
+			</a>
+			<span class="nav-dot">/</span>
+			<a href={resolve('/my-run')} class="nav-item font-mono">
+				<i class="fa-solid fa-user"></i>
+				<span>MY RUNS</span>
 			</a>
 			<span class="nav-dot">/</span>
 			<a href={resolve('/credits')} class="nav-item font-mono">
@@ -135,6 +190,87 @@
 		font-weight: normal;
 		color: var(--theme-text-muted);
 		margin-left: 0.35rem;
+	}
+
+	/* Signed-In Player Info (Containerless) */
+	.signed-in-banner {
+		background: transparent;
+		border: none;
+		padding: 0.15rem 0;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.85rem;
+	}
+
+	.banner-player-info {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		min-width: 0;
+	}
+
+	.banner-avatar {
+		width: 42px;
+		height: 42px;
+		border-radius: 50%;
+		object-fit: cover;
+		background: #1f2937;
+		flex-shrink: 0;
+	}
+
+	.banner-avatar-fallback {
+		width: 42px;
+		height: 42px;
+		border-radius: 50%;
+		background: var(--theme-gold, #ffbc0d);
+		color: #0b0f19;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 1.25rem;
+		font-weight: 900;
+		flex-shrink: 0;
+	}
+
+	.banner-text {
+		display: flex;
+		flex-direction: column;
+		gap: 0.1rem;
+		min-width: 0;
+	}
+
+	.banner-name-row {
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+	}
+
+	.banner-name {
+		font-size: 1rem;
+		font-weight: 800;
+		color: var(--theme-text-main, #ffffff);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.banner-tag {
+		font-size: 0.65rem;
+		font-weight: 700;
+		color: var(--theme-gold, #ffbc0d);
+		display: inline-flex;
+		align-items: center;
+		gap: 0.25rem;
+		letter-spacing: 0.04em;
+	}
+
+	.banner-email {
+		font-size: 0.7rem;
+		color: var(--theme-text-muted, #94a3b8);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	.nickname-input {

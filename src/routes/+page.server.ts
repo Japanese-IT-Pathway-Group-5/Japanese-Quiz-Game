@@ -9,14 +9,15 @@ const MAX_NICKNAME_LENGTH = 30;
 
 export const load: PageServerLoad = async ({ locals, platform }) => {
 	if (!locals.playerId || !platform?.env?.DB) {
-		return { nickname: '' };
+		return { nickname: '', player: null };
 	}
 
 	const db = getDb(platform.env.DB);
 	const [player] = await db.select().from(players).where(eq(players.id, locals.playerId));
 
 	return {
-		nickname: player?.nickname ?? ''
+		nickname: player?.nickname ?? '',
+		player: player ?? null
 	};
 };
 
