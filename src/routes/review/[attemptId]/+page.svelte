@@ -31,11 +31,38 @@
 		}
 	}
 
+	function handleReviewKeydown(event: KeyboardEvent) {
+		const target = event.target as HTMLElement | null;
+
+		if (
+			target instanceof HTMLInputElement ||
+			target instanceof HTMLTextAreaElement ||
+			target instanceof HTMLSelectElement ||
+			target?.isContentEditable
+		) {
+			return;
+		}
+
+		if (event.key === 'ArrowLeft') {
+			event.preventDefault();
+			goPrevReview();
+		} else if (event.key === 'ArrowRight') {
+			event.preventDefault();
+			goNextReview();
+		}
+	}
+
 	$effect(() => {
 		// Reset inner scroll position when switching questions
 		if (selectedIndex !== undefined && scrollContainer) {
 			scrollContainer.scrollTop = 0;
 		}
+
+		window.addEventListener('keydown', handleReviewKeydown);
+
+		return () => {
+			window.removeEventListener('keydown', handleReviewKeydown);
+		};
 	});
 </script>
 

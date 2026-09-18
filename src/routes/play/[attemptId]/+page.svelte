@@ -608,17 +608,33 @@
 									<span>Prev</span>
 								</button>
 
-								<button
-									type="button"
-									class="nav-btn next-btn font-mono"
-									disabled={activeIndex === totalQuestions - 1 || !isCurrentQuestionDone}
-									onclick={goNext}
-								>
-									<span>Next</span>
-									<i class="fa-solid fa-arrow-right"></i>
-								</button>
+								{#if activeIndex === totalQuestions - 1}
+									<Button
+										type="submit"
+										variant="gold"
+										size="md"
+										class="finish-btn"
+										name="finish"
+										value="true"
+										disabled={isSubmitting || answeredCount < totalQuestions}
+									>
+										<span>Finish Quiz ({answeredCount}/{totalQuestions})</span>
+									</Button>
+								{:else}
+									<button
+										type="button"
+										class="nav-btn next-btn font-mono"
+										disabled={!isCurrentQuestionDone}
+										onclick={goNext}
+									>
+										<span>Next</span>
+										<i class="fa-solid fa-arrow-right"></i>
+									</button>
+								{/if}
 							</div>
+						</div>
 
+						<div class="exit-action">
 							<button
 								type="button"
 								class="nav-btn exit-btn font-mono"
@@ -655,24 +671,6 @@
 						</button>
 					{/each}
 				</div>
-
-				<!-- Finish Action Button -->
-				<form method="POST" class="finish-form">
-					<input type="hidden" name="finish" value="true" />
-					<input type="hidden" name="questionId" value={activeQuestion?.id ?? ''} />
-					<input type="hidden" name="answer" value={userAnswers[activeQuestion?.id ?? ''] ?? ''} />
-					<input type="hidden" name="allAnswers" value={JSON.stringify(userAnswers)} />
-
-					<Button
-						type="submit"
-						variant="gold"
-						size="md"
-						fullWidth
-						disabled={isSubmitting || answeredCount < totalQuestions}
-					>
-						<span>Finish Quiz ({answeredCount}/{totalQuestions})</span>
-					</Button>
-				</form>
 			</aside>
 		</div>
 	{/if}
@@ -1403,10 +1401,6 @@
 	.dot-btn.current {
 		outline: 2px solid var(--theme-gold);
 		outline-offset: 1px;
-	}
-
-	.finish-form {
-		margin-top: 0.25rem;
 	}
 
 	/* Responsive */
