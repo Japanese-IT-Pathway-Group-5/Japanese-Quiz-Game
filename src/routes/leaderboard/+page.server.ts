@@ -1,7 +1,7 @@
 import { and, eq } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 import { getDb } from '$lib/server/db';
-import { quizAttempts } from '$lib/server/db/schema';
+import { quizAttempts, players } from '$lib/server/db/schema';
 
 type LevelFilter = 'all' | 'N3' | 'N4';
 
@@ -9,6 +9,8 @@ type LeaderboardEntry = {
 	attemptId: string;
 	playerId: string;
 	nickname: string;
+	avatarUrl?: string | null;
+	isSavedAccount?: boolean;
 	level: 'N3' | 'N4';
 	score: number;
 	timeSeconds: number;
@@ -37,9 +39,13 @@ export const load: PageServerLoad = async ({ url, platform, locals }) => {
 			level: quizAttempts.level,
 			finalScore: quizAttempts.finalScore,
 			startedAt: quizAttempts.startedAt,
-			finishedAt: quizAttempts.finishedAt
+			finishedAt: quizAttempts.finishedAt,
+			avatarUrl: players.avatarUrl,
+			googleId: players.googleId,
+			isAnonymous: players.isAnonymous
 		})
 		.from(quizAttempts)
+		.leftJoin(players, eq(quizAttempts.playerId, players.id))
 		.where(and(...conditions));
 
 	const leaderboard = attempts
@@ -51,6 +57,8 @@ export const load: PageServerLoad = async ({ url, platform, locals }) => {
 					attemptId: attempt.attemptId,
 					playerId: attempt.playerId,
 					nickname: attempt.nickname,
+					avatarUrl: attempt.avatarUrl,
+					isSavedAccount: Boolean(attempt.googleId && !attempt.isAnonymous),
 					level: attempt.level,
 					score: attempt.finalScore,
 					timeSeconds: Math.max(

@@ -1,7 +1,7 @@
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { getDb } from '$lib/server/db';
-import { quizAttempts, attemptAnswers, questions, choices } from '$lib/server/db/schema';
+import { quizAttempts, attemptAnswers, questions, choices, players } from '$lib/server/db/schema';
 import { eq, inArray } from 'drizzle-orm';
 import { calculateScore } from '$lib/quiz/calculateScore';
 
@@ -263,9 +263,14 @@ export const load: PageServerLoad = async ({ params, locals, platform, setHeader
 			? Math.max(0, Math.round((attempt.finishedAt.getTime() - attempt.startedAt.getTime()) / 1000))
 			: 0;
 
+	const [player] = await db.select().from(players).where(eq(players.id, attempt.playerId));
+	const isSavedToAccount = Boolean(player?.googleId && !player?.isAnonymous);
+
 	return {
 		attempt,
 		timeTaken,
-		questionResults
+		questionResults,
+		player: player ?? null,
+		isSavedToAccount
 	};
 };

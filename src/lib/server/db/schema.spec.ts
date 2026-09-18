@@ -7,6 +7,10 @@ describe('Database Schema', () => {
 		const cols = getTableColumns(players);
 		expect(cols.id).toBeDefined();
 		expect(cols.nickname).toBeDefined();
+		expect(cols.email).toBeDefined();
+		expect(cols.googleId).toBeDefined();
+		expect(cols.avatarUrl).toBeDefined();
+		expect(cols.isAnonymous).toBeDefined();
 		expect(cols.createdAt).toBeDefined();
 	});
 
