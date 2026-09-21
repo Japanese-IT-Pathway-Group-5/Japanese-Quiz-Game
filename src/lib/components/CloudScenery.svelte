@@ -536,12 +536,19 @@
 		opacity: 0.15;
 	}
 
-	.clouds-backdrop.is-quiz-page {
-		display: none !important;
+	/* Keep leaf breeze tucked deep in corner on quiz so it never touches bottom buttons */
+	:global(body:has(.quiz-page-shell)) .leaf-breeze-bottom,
+	.clouds-backdrop.is-quiz-page .leaf-breeze-bottom {
+		bottom: -15px;
+		left: -20px;
+		width: clamp(130px, 12vw, 195px);
+		opacity: 0.65;
 	}
 
+	/* On mobile viewports, keep quiz backdrop clean to avoid visual clutter */
 	@media (max-width: 768px) {
-		:global(body:has(.quiz-page-shell)) .clouds-backdrop {
+		:global(body:has(.quiz-page-shell)) .clouds-backdrop,
+		.clouds-backdrop.is-quiz-page {
 			display: none !important;
 		}
 	}

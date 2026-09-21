@@ -850,10 +850,9 @@
 {/if}
 
 <style>
-	/* Anchors top position with clean solid background */
+	/* Anchors top position */
 	:global(.page-shell.quiz-page-shell) {
 		align-items: flex-start !important;
-		background: var(--theme-background) !important;
 	}
 
 	/* 2-Column Layout */
