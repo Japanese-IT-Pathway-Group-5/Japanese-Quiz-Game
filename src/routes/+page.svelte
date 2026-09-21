@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import type { PageData, ActionData } from './$types';
+	import { scrollIntoViewOnKeyboard } from '$lib/actions/scrollIntoViewOnKeyboard.svelte';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
 
@@ -30,6 +31,7 @@
 					<span>Nickname <span class="label-ja font-japanese">名前</span></span>
 				</label>
 				<input
+					use:scrollIntoViewOnKeyboard
 					id="nickname"
 					name="nickname"
 					type="text"

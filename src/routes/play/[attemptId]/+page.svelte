@@ -5,7 +5,7 @@
 	import { Button, QuestionSkeleton } from '$lib/components/ui';
 	import Timer from '$lib/components/Timer.svelte';
 	import SarcasticStickman from '$lib/components/SarcasticStickman.svelte';
-
+	import { scrollIntoViewOnKeyboard } from '$lib/actions/scrollIntoViewOnKeyboard.svelte';
 	let { data }: { data: PageData } = $props();
 
 	const allQuestions = $derived(data.allQuestions ?? (data.question ? [data.question] : []));
@@ -482,6 +482,7 @@
 									<span class="typing-hint">Type in Japanese (Romaji / Hiragana / Kanji)</span>
 								</label>
 								<input
+									use:scrollIntoViewOnKeyboard
 									id="typing-input"
 									name="answer"
 									type="text"
