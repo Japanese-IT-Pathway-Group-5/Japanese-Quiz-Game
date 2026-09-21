@@ -2,7 +2,7 @@
 	import { enhance } from '$app/forms';
 	import { resolve } from '$app/paths';
 	import type { PageData } from './$types';
-	import { Button, QuestionSkeleton } from '$lib/components/ui';
+	import { QuestionSkeleton } from '$lib/components/ui';
 	import Timer from '$lib/components/Timer.svelte';
 	import SarcasticStickman from '$lib/components/SarcasticStickman.svelte';
 
@@ -21,6 +21,7 @@
 	let userWordOrders = $state<Record<string, string[]>>({});
 	let isSubmitting = $state(false);
 	let showExitModal = $state(false);
+	let showQuestionSelector = $state(false);
 
 	// Drag & drop state for word ordering
 	let draggedItem = $state<{ type: 'bank' | 'sentence'; word: string; index?: number } | null>(
@@ -336,13 +337,39 @@
 			<div class="quiz-content">
 				<!-- Clean Minimal Header -->
 				<div class="quiz-header">
-					<div class="header-left">
-						<span class="level-indicator font-mono">LEVEL {attempt.level}</span>
+					<button
+						type="button"
+						class="header-exit-btn font-mono"
+						onclick={() => (showExitModal = true)}
+						title="Exit quiz"
+						aria-label="Exit quiz"
+					>
+						<i class="fa-solid fa-right-from-bracket"></i>
+						<span class="exit-btn-label">Exit</span>
+					</button>
+
+					<div class="header-center font-mono">
+						<span class="level-indicator">LEVEL {attempt.level}</span>
+						<span class="header-dot" aria-hidden="true">•</span>
 						<Timer startedAt={new Date(attempt.startedAt)} />
 					</div>
-					<span class="question-number font-mono">
-						{activeIndex + 1} <span class="dim">/ {totalQuestions}</span>
-					</span>
+
+					<div class="header-right-spacer" aria-hidden="true"></div>
+				</div>
+
+				<!-- Slim Progress Line -->
+				<div
+					class="quiz-progress-line"
+					role="progressbar"
+					aria-valuenow={answeredCount}
+					aria-valuemin={0}
+					aria-valuemax={totalQuestions}
+					aria-label="Quiz completion progress"
+				>
+					<div
+						class="quiz-progress-fill"
+						style="width: {(answeredCount / totalQuestions) * 100}%"
+					></div>
 				</div>
 
 				{#if activeQuestion}
@@ -359,8 +386,8 @@
 					>
 						<input type="hidden" name="questionId" value={activeQuestion.id} />
 
-						<!-- Format Tag & Prompt -->
-						<div class="prompt-group">
+						<!-- Upper Zone: Format Tag & Prompt -->
+						<div class="prompt-zone">
 							<span class="format-text font-mono">
 								{#if activeQuestion.format === 'multiple_choice'}
 									<i class="fa-solid fa-list-check"></i>
@@ -453,196 +480,204 @@
 							{/if}
 						</div>
 
-						<!-- Interactive Answer Input Area -->
-						{#if activeQuestion.format === 'multiple_choice' || activeQuestion.format === 'gap_fill'}
-							<div class="choices-list" role="radiogroup" aria-label="Choices">
-								{#each activeQuestion.choices ?? [] as choice, idx (choice.id)}
-									{@const isSelected = userAnswers[activeQuestion.id] === choice.id}
-									{@const letter = String.fromCharCode(65 + idx)}
-									<label class="choice-item {isSelected ? 'selected' : ''}">
-										<input
-											type="radio"
-											name="answer"
-											value={choice.id}
-											checked={isSelected}
-											onchange={() => selectChoice(choice.id)}
-										/>
-										<span class="choice-letter font-mono">{letter}</span>
-										<span class="choice-text font-japanese">{choice.text}</span>
-									</label>
-								{/each}
-							</div>
-						{/if}
-
-						<!-- Typing Format -->
-						{#if activeQuestion.format === 'typing'}
-							<div class="typing-group">
-								<label class="typing-label" for="typing-input">
-									<span>Your Answer</span>
-									<span class="typing-hint">Type in Japanese (Romaji / Hiragana / Kanji)</span>
-								</label>
-								<input
-									id="typing-input"
-									name="answer"
-									type="text"
-									class="input-text typing-input font-japanese"
-									placeholder="答えを入力してください..."
-									value={userAnswers[activeQuestion.id] ?? ''}
-									oninput={handleTypeInput}
-									autocomplete="off"
-									autocapitalize="off"
-									spellcheck="false"
-								/>
-							</div>
-						{/if}
-
-						<!-- Word Ordering (Bank & Builder) -->
-						{#if activeQuestion.format === 'word_ordering'}
-							{@const totalSlots = (activeQuestion.choices ?? []).length}
-							{@const placedWords = getSlots(activeQuestion.id, totalSlots)}
-							{@const availableWords = getAvailableWords(activeQuestion)}
-							{@const parsedSentence = renderWordOrderingSentence(
-								activeQuestion.promptJa ?? activeQuestion.prompt,
-								totalSlots
-							)}
-
-							<div class="word-ordering-group">
-								<!-- If prompt didn't have embedded bracket slots, render the sentence builder line here -->
-								{#if !parsedSentence.hasEmbeddedSlots}
-									<div class="standalone-sentence-line font-japanese">
-										{#each Array.from({ length: totalSlots }, (_, i) => i) as slotIdx (slotIdx)}
-											{@const placedWord = placedWords[slotIdx]}
-											<span
-												class="inline-slot {placedWord ? 'filled' : 'empty'} {dragOverIndex ===
-												slotIdx
-													? 'slot-hover'
-													: ''}"
-												ondragover={(e) => handleDragOverSlot(e, slotIdx)}
-												ondragleave={() => handleDragLeaveSlot(slotIdx)}
-												ondrop={(e) => handleDropOnSlot(e, slotIdx)}
-												role="region"
-												aria-label={`Slot ${slotIdx + 1}`}
-											>
-												{#if placedWord}
-													<button
-														type="button"
-														class="inline-placed-chip font-japanese"
-														draggable="true"
-														ondragstart={(e) => handleDragStartSentence(e, placedWord, slotIdx)}
-														ondragend={handleDragEnd}
-														onclick={() => removeWordFromSentence(slotIdx)}
-														title="Click to remove or drag to swap"
-													>
-														<span>{placedWord}</span>
-														<span class="remove-x" aria-hidden="true">&times;</span>
-													</button>
-												{:else}
-													<span class="inline-placeholder font-mono">{slotIdx + 1}</span>
-												{/if}
-											</span>
-										{/each}
-									</div>
-								{/if}
-
-								<div class="wo-header">
-									<span class="typing-hint">Drag words into the sentence, or tap to place</span>
-									{#if placedWords.some(Boolean)}
-										<button type="button" class="reset-order-btn font-mono" onclick={resetSentence}>
-											Reset
-										</button>
-									{/if}
+						<!-- Lower Zone: Interactive Answer Input -->
+						<div class="answer-zone">
+							{#if activeQuestion.format === 'multiple_choice' || activeQuestion.format === 'gap_fill'}
+								<div class="choices-list" role="radiogroup" aria-label="Choices">
+									{#each activeQuestion.choices ?? [] as choice, idx (choice.id)}
+										{@const isSelected = userAnswers[activeQuestion.id] === choice.id}
+										{@const letter = String.fromCharCode(65 + idx)}
+										<label class="choice-item {isSelected ? 'selected' : ''}">
+											<input
+												type="radio"
+												name="answer"
+												value={choice.id}
+												checked={isSelected}
+												onchange={() => selectChoice(choice.id)}
+											/>
+											<span class="choice-letter font-mono">{letter}</span>
+											<span class="choice-text font-japanese">{choice.text}</span>
+										</label>
+									{/each}
 								</div>
+							{/if}
 
-								<!-- Word Bank (Available words) -->
-								<div
-									class="word-bank-area {isDragOverBank ? 'bank-hover' : ''}"
-									ondragover={handleDragOverBank}
-									ondragleave={handleDragLeaveBank}
-									ondrop={handleDropOnBank}
-									role="region"
-									aria-label="Available words bank"
-								>
-									{#if availableWords.length === 0}
-										<span class="bank-empty-text">All words placed in sentence</span>
-									{:else}
-										<div class="bank-chips">
-											{#each availableWords as word, idx (word + '-' + idx)}
-												<button
-													type="button"
-													class="word-chip bank-chip font-japanese"
-													draggable="true"
-													ondragstart={(e) => handleDragStartBank(e, word)}
-													ondragend={handleDragEnd}
-													onclick={() => addWordToSentence(word)}
-													title="Drag into sentence or tap to place"
+							<!-- Typing Format -->
+							{#if activeQuestion.format === 'typing'}
+								<div class="typing-group">
+									<label class="typing-label" for="typing-input">
+										<span>Your Answer</span>
+										<span class="typing-hint">Type in Japanese (Romaji / Hiragana / Kanji)</span>
+									</label>
+									<input
+										id="typing-input"
+										name="answer"
+										type="text"
+										class="input-text typing-input font-japanese"
+										placeholder="答えを入力してください..."
+										value={userAnswers[activeQuestion.id] ?? ''}
+										oninput={handleTypeInput}
+										autocomplete="off"
+										autocapitalize="off"
+										spellcheck="false"
+									/>
+								</div>
+							{/if}
+
+							<!-- Word Ordering (Bank & Builder) -->
+							{#if activeQuestion.format === 'word_ordering'}
+								{@const totalSlots = (activeQuestion.choices ?? []).length}
+								{@const placedWords = getSlots(activeQuestion.id, totalSlots)}
+								{@const availableWords = getAvailableWords(activeQuestion)}
+								{@const parsedSentence = renderWordOrderingSentence(
+									activeQuestion.promptJa ?? activeQuestion.prompt,
+									totalSlots
+								)}
+
+								<div class="word-ordering-group">
+									<!-- If prompt didn't have embedded bracket slots, render the sentence builder line here -->
+									{#if !parsedSentence.hasEmbeddedSlots}
+										<div class="standalone-sentence-line font-japanese">
+											{#each Array.from({ length: totalSlots }, (_, i) => i) as slotIdx (slotIdx)}
+												{@const placedWord = placedWords[slotIdx]}
+												<span
+													class="inline-slot {placedWord ? 'filled' : 'empty'} {dragOverIndex ===
+													slotIdx
+														? 'slot-hover'
+														: ''}"
+													ondragover={(e) => handleDragOverSlot(e, slotIdx)}
+													ondragleave={() => handleDragLeaveSlot(slotIdx)}
+													ondrop={(e) => handleDropOnSlot(e, slotIdx)}
+													role="region"
+													aria-label={`Slot ${slotIdx + 1}`}
 												>
-													<span class="chip-text">{word}</span>
-												</button>
+													{#if placedWord}
+														<button
+															type="button"
+															class="inline-placed-chip font-japanese"
+															draggable="true"
+															ondragstart={(e) => handleDragStartSentence(e, placedWord, slotIdx)}
+															ondragend={handleDragEnd}
+															onclick={() => removeWordFromSentence(slotIdx)}
+															title="Click to remove or drag to swap"
+														>
+															<span>{placedWord}</span>
+															<span class="remove-x" aria-hidden="true">&times;</span>
+														</button>
+													{:else}
+														<span class="inline-placeholder font-mono">{slotIdx + 1}</span>
+													{/if}
+												</span>
 											{/each}
 										</div>
 									{/if}
-								</div>
 
-								<!-- Hidden inputs for submission -->
-								<input
-									type="hidden"
-									name="answer"
-									value={placedWords.some(Boolean) ? JSON.stringify(placedWords) : ''}
-								/>
-								{#each placedWords as w, i (i)}
-									<input type="hidden" name={`answer-${i}`} value={w} />
-								{/each}
-							</div>
-						{/if}
+									<div class="wo-header">
+										<span class="typing-hint">Drag words into the sentence, or tap to place</span>
+										{#if placedWords.some(Boolean)}
+											<button
+												type="button"
+												class="reset-order-btn font-mono"
+												onclick={resetSentence}
+											>
+												Reset
+											</button>
+										{/if}
+									</div>
+
+									<!-- Word Bank (Available words) -->
+									<div
+										class="word-bank-area {isDragOverBank ? 'bank-hover' : ''}"
+										ondragover={handleDragOverBank}
+										ondragleave={handleDragLeaveBank}
+										ondrop={handleDropOnBank}
+										role="region"
+										aria-label="Available words bank"
+									>
+										{#if availableWords.length === 0}
+											<span class="bank-empty-text">All words placed in sentence</span>
+										{:else}
+											<div class="bank-chips">
+												{#each availableWords as word, idx (word + '-' + idx)}
+													<button
+														type="button"
+														class="word-chip bank-chip font-japanese"
+														draggable="true"
+														ondragstart={(e) => handleDragStartBank(e, word)}
+														ondragend={handleDragEnd}
+														onclick={() => addWordToSentence(word)}
+														title="Drag into sentence or tap to place"
+													>
+														<span class="chip-text">{word}</span>
+													</button>
+												{/each}
+											</div>
+										{/if}
+									</div>
+
+									<!-- Hidden inputs for submission -->
+									<input
+										type="hidden"
+										name="answer"
+										value={placedWords.some(Boolean) ? JSON.stringify(placedWords) : ''}
+									/>
+									{#each placedWords as w, i (i)}
+										<input type="hidden" name={`answer-${i}`} value={w} />
+									{/each}
+								</div>
+							{/if}
+						</div>
 
 						<!-- Bottom Navigation Actions -->
 						<div class="bottom-actions">
-							<div class="nav-left-group">
-								<button
-									type="button"
-									class="nav-btn font-mono"
-									disabled={activeIndex === 0}
-									onclick={goPrevious}
-								>
-									<i class="fa-solid fa-arrow-left"></i>
-									<span>Prev</span>
-								</button>
-
-								{#if activeIndex === totalQuestions - 1}
-									<Button
-										type="submit"
-										variant="gold"
-										size="md"
-										class="finish-btn"
-										name="finish"
-										value="true"
-										disabled={isSubmitting || answeredCount < totalQuestions}
-									>
-										<span>Finish Quiz ({answeredCount}/{totalQuestions})</span>
-									</Button>
-								{:else}
-									<button
-										type="button"
-										class="nav-btn next-btn font-mono"
-										disabled={!isCurrentQuestionDone}
-										onclick={goNext}
-									>
-										<span>Next</span>
-										<i class="fa-solid fa-arrow-right"></i>
-									</button>
-								{/if}
-							</div>
-						</div>
-
-						<div class="exit-action">
 							<button
 								type="button"
-								class="nav-btn exit-btn font-mono"
-								onclick={() => (showExitModal = true)}
+								class="nav-btn prev-btn font-mono"
+								disabled={activeIndex === 0}
+								onclick={goPrevious}
 							>
-								<i class="fa-solid fa-right-from-bracket"></i>
-								<span>Exit</span>
+								<i class="fa-solid fa-arrow-left"></i>
+								<span>Prev</span>
 							</button>
+
+							<button
+								type="button"
+								class="picker-trigger-btn font-mono"
+								onclick={() => (showQuestionSelector = true)}
+								title="Select question"
+								aria-label={`Question ${activeIndex + 1} of ${totalQuestions}. Tap to jump to question.`}
+							>
+								<i class="fa-solid fa-list-ol picker-trigger-icon" aria-hidden="true"></i>
+								<span class="picker-trigger-text">
+									<strong class="q-current">{activeIndex + 1}</strong>
+									<span class="q-slash">/</span>
+									<span class="q-total">{totalQuestions}</span>
+								</span>
+								<i class="fa-solid fa-chevron-up q-caret" aria-hidden="true"></i>
+							</button>
+
+							{#if activeIndex === totalQuestions - 1}
+								<button
+									type="submit"
+									class="nav-btn next-btn finish-btn font-mono"
+									name="finish"
+									value="true"
+									disabled={isSubmitting || answeredCount < totalQuestions}
+								>
+									<span>Finish ({answeredCount}/{totalQuestions})</span>
+									<i class="fa-solid fa-flag-checkered"></i>
+								</button>
+							{:else}
+								<button
+									type="button"
+									class="nav-btn next-btn font-mono"
+									disabled={!isCurrentQuestionDone}
+									onclick={goNext}
+								>
+									<span>Next</span>
+									<i class="fa-solid fa-arrow-right"></i>
+								</button>
+							{/if}
 						</div>
 					</form>
 				{/if}
@@ -717,16 +752,114 @@
 	</div>
 {/if}
 
+<!-- Full-screen / Modal Question Selector -->
+{#if showQuestionSelector}
+	<div
+		class="selector-backdrop"
+		onclick={() => (showQuestionSelector = false)}
+		onkeydown={(e) => {
+			if (e.key === 'Escape') showQuestionSelector = false;
+		}}
+		role="dialog"
+		aria-modal="true"
+		aria-labelledby="selector-modal-title"
+		tabindex="-1"
+	>
+		<!-- svelte-ignore a11y_click_events_have_key_events -->
+		<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+		<div class="selector-modal" onclick={(e) => e.stopPropagation()} role="document">
+			<div class="selector-header">
+				<div class="selector-header-info">
+					<h2 id="selector-modal-title" class="selector-title font-japanese">
+						<span>問題一覧</span>
+						<span class="selector-title-en font-mono">QUESTIONS</span>
+					</h2>
+					<span class="selector-count-badge font-mono">
+						<i class="fa-solid fa-circle-check"></i>
+						<span>{answeredCount} / {totalQuestions}</span>
+					</span>
+				</div>
+
+				<button
+					type="button"
+					class="selector-close-btn"
+					onclick={() => (showQuestionSelector = false)}
+					aria-label="Close question list"
+				>
+					<i class="fa-solid fa-xmark"></i>
+				</button>
+			</div>
+
+			<div class="picker-scroll-container">
+				<div class="picker-rows-list">
+					{#each allQuestions as q, idx (q.id)}
+						{@const isCurrent = activeIndex === idx}
+						{@const isDone = isQuestionAnswered(q.id)}
+						<button
+							type="button"
+							class="picker-row {isCurrent ? 'is-current' : ''} {isDone ? 'is-done' : ''}"
+							onclick={() => {
+								goToQuestion(idx);
+								showQuestionSelector = false;
+							}}
+							aria-current={isCurrent ? 'step' : undefined}
+						>
+							<span class="row-num font-mono">{idx + 1 < 10 ? `0${idx + 1}` : idx + 1}</span>
+
+							<div class="row-content">
+								<span class="row-prompt font-japanese">
+									{q.promptJa ?? q.prompt}
+								</span>
+								<span class="row-format-tag font-mono">
+									{#if q.format === 'multiple_choice'}
+										Multiple Choice
+									{:else if q.format === 'gap_fill'}
+										Gap Fill
+									{:else if q.format === 'word_ordering'}
+										Word Order
+									{:else if q.format === 'typing'}
+										Typing
+									{/if}
+								</span>
+							</div>
+
+							<div class="row-status">
+								{#if isCurrent}
+									{#if isDone}
+										<span class="done-badge font-mono" title="Answered">
+											<i class="fa-solid fa-check done-check-icon" aria-hidden="true"></i>
+										</span>
+									{/if}
+									<span class="current-badge font-mono">NOW</span>
+								{:else if isDone}
+									<span class="done-badge font-mono" title="Answered">
+										<i class="fa-solid fa-check done-check-icon" aria-hidden="true"></i>
+									</span>
+								{:else}
+									<span class="pending-badge font-mono" title="Pending">
+										<i class="fa-regular fa-circle"></i>
+									</span>
+								{/if}
+							</div>
+						</button>
+					{/each}
+				</div>
+			</div>
+		</div>
+	</div>
+{/if}
+
 <style>
-	/* Anchors top position so longer content expands downward only */
+	/* Anchors top position with clean solid background */
 	:global(.page-shell.quiz-page-shell) {
 		align-items: flex-start !important;
+		background: var(--theme-background) !important;
 	}
 
-	/* 2-Column Layout anchored with comfortable clearance below the sun */
+	/* 2-Column Layout */
 	.quiz-container {
 		width: min(100%, 920px);
-		margin: clamp(6.5rem, 20vh, 11.5rem) auto 3rem auto;
+		margin: clamp(2.5rem, 6vh, 4rem) auto 3rem auto;
 		display: grid;
 		grid-template-columns: 1fr 200px;
 		gap: 2.5rem;
@@ -748,10 +881,21 @@
 		padding-bottom: 0.25rem;
 	}
 
-	.header-left {
+	.header-center {
 		display: flex;
 		align-items: center;
-		gap: 1.25rem;
+		gap: 0.85rem;
+	}
+
+	.header-dot {
+		color: var(--theme-border);
+		font-size: 0.75rem;
+		opacity: 0.6;
+		user-select: none;
+	}
+
+	.header-right-spacer {
+		width: 72px; /* balances the exit button */
 	}
 
 	.level-indicator {
@@ -761,30 +905,61 @@
 		color: var(--theme-gold);
 	}
 
-	.question-number {
-		font-size: 1.1rem;
-		font-weight: 800;
-		color: var(--theme-text-main);
+	.header-exit-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.45rem;
+		background: #dc2626;
+		border: 1px solid #dc2626;
+		color: #ffffff;
+		padding: 0.4rem 0.85rem;
+		border-radius: var(--radius-sm);
+		font-size: 0.82rem;
+		font-weight: 700;
+		cursor: pointer;
+		box-shadow: 0 1px 4px rgba(220, 38, 38, 0.3);
+		transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+		user-select: none;
 	}
 
-	.dim {
-		font-weight: 400;
-		color: var(--theme-text-muted);
-		font-size: 0.85rem;
+	.header-exit-btn:hover {
+		background: #b91c1c;
+		border-color: #b91c1c;
+		color: #ffffff;
+		transform: translateY(-1px);
+		box-shadow: 0 2px 8px rgba(220, 38, 38, 0.4);
+	}
+
+	.header-exit-btn:active {
+		transform: scale(0.97);
+	}
+
+	.quiz-progress-line {
+		display: none;
 	}
 
 	/* Question Body */
 	.question-body {
-		display: grid;
-		gap: 1.75rem;
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
 	}
 
-	.prompt-group {
+	.prompt-zone {
 		display: flex;
 		flex-direction: column;
 		gap: 0.6rem;
 		align-items: flex-start;
 		width: 100%;
+		padding-bottom: 1.25rem;
+		border-bottom: 1px solid var(--theme-border);
+	}
+
+	.answer-zone {
+		display: flex;
+		flex-direction: column;
+		gap: 1.25rem;
+		min-height: 14rem;
 	}
 
 	.format-text {
@@ -845,7 +1020,7 @@
 		overflow: hidden;
 		transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 		user-select: none;
-		box-shadow: 0 4px 14px rgba(0, 15, 45, 0.25);
+		box-shadow: none;
 	}
 
 	.choice-item input {
@@ -884,7 +1059,7 @@
 	.choice-item:hover:not(.selected) {
 		background: color-mix(in srgb, var(--theme-paper) 75%, #1952a8 25%);
 		transform: translateY(-2px);
-		box-shadow: 0 6px 18px rgba(0, 20, 60, 0.35);
+		box-shadow: none;
 	}
 
 	.choice-item:hover:not(.selected) .choice-text {
@@ -895,19 +1070,13 @@
 		background: var(--theme-gold-shimmer);
 		border-color: var(--theme-gold);
 		color: #022659;
-		box-shadow:
-			0 6px 20px rgba(255, 188, 13, 0.4),
-			inset 0 1px 1px rgba(255, 255, 255, 0.6),
-			inset 0 -1px 2px rgba(180, 110, 0, 0.35);
+		box-shadow: none;
 		transform: translateY(-2px);
 	}
 
 	.choice-item.selected:hover {
 		filter: brightness(1.05);
-		box-shadow:
-			0 8px 24px rgba(255, 188, 13, 0.5),
-			inset 0 1px 1px rgba(255, 255, 255, 0.7),
-			inset 0 -1px 2px rgba(180, 110, 0, 0.4);
+		box-shadow: none;
 	}
 
 	.choice-item:active {
@@ -972,6 +1141,13 @@
 
 	.typing-input {
 		font-size: 1.15rem;
+		box-shadow: none !important;
+	}
+
+	.typing-input:hover,
+	.typing-input:focus,
+	.typing-input:active {
+		box-shadow: none !important;
 	}
 
 	/* Word Ordering Interactive Inline Builder */
@@ -1013,7 +1189,7 @@
 		background: rgba(255, 188, 13, 0.25);
 		border-bottom-color: #ffffff;
 		transform: scale(1.05);
-		box-shadow: 0 0 12px rgba(255, 188, 13, 0.35);
+		box-shadow: none;
 	}
 
 	.inline-placeholder {
@@ -1042,7 +1218,7 @@
 		user-select: none;
 		touch-action: manipulation;
 		transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-		box-shadow: 0 4px 12px rgba(0, 15, 45, 0.3);
+		box-shadow: none;
 	}
 
 	.inline-placed-chip:active {
@@ -1054,7 +1230,7 @@
 		border-color: #ef4444;
 		color: #ef4444;
 		transform: translateY(-1px);
-		box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+		box-shadow: none;
 	}
 
 	.remove-x {
@@ -1163,7 +1339,7 @@
 		user-select: none;
 		touch-action: manipulation;
 		transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-		box-shadow: 0 4px 12px rgba(0, 15, 45, 0.2);
+		box-shadow: none;
 	}
 
 	.word-chip:active {
@@ -1177,9 +1353,7 @@
 		background: color-mix(in srgb, var(--theme-paper) 75%, #1952a8 25%);
 		color: #ffffff;
 		transform: translateY(-2px);
-		box-shadow:
-			0 6px 16px rgba(0, 20, 60, 0.3),
-			0 0 10px rgba(255, 188, 13, 0.2);
+		box-shadow: none;
 	}
 
 	.bank-empty-text {
@@ -1190,37 +1364,116 @@
 		opacity: 0.7;
 	}
 
-	/* Bottom Actions (No Line) */
+	/* Bottom Actions */
 	.bottom-actions {
-		display: flex;
-		justify-content: space-between;
+		display: grid;
+		grid-template-columns: 1fr auto 1fr;
 		align-items: center;
+		gap: 1rem;
 		padding-top: 0.5rem;
+		width: 100%;
 	}
 
-	.nav-left-group {
-		display: flex;
+	.prev-btn {
+		width: 100%;
+		justify-content: center;
+	}
+
+	.next-btn {
+		width: 100%;
+		justify-content: center;
+	}
+
+	.picker-trigger-btn {
+		display: inline-flex;
 		align-items: center;
-		gap: 0.6rem;
+		justify-content: center;
+		gap: 0.5rem;
+		height: 42px;
+		min-height: 42px;
+		max-height: 42px;
+		padding: 0 0.85rem;
+		border-radius: var(--radius-sm);
+		background: var(--theme-paper);
+		border: 1px solid var(--theme-border);
+		color: var(--theme-text-main);
+		cursor: pointer;
+		user-select: none;
+		transition: all 0.2s ease;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+		white-space: nowrap;
+	}
+
+	.picker-trigger-btn:hover {
+		background: color-mix(in srgb, var(--theme-paper) 75%, #1952a8 25%);
+		border-color: var(--theme-gold);
+		color: #ffffff;
+	}
+
+	.picker-trigger-icon {
+		font-size: 0.82rem;
+		color: var(--theme-gold);
+	}
+
+	.picker-trigger-text {
+		display: inline-flex;
+		align-items: baseline;
+		gap: 0.2rem;
+	}
+
+	.q-current {
+		font-weight: 800;
+		font-size: 0.95rem;
+		color: #ffffff;
+	}
+
+	.q-slash {
+		color: var(--theme-text-muted);
+		font-size: 0.78rem;
+		opacity: 0.65;
+	}
+
+	.q-total {
+		color: var(--theme-gold);
+		font-size: 0.88rem;
+		font-weight: 700;
+	}
+
+	.q-caret {
+		font-size: 0.65rem;
+		color: var(--theme-gold);
+		margin-left: 0.1rem;
+		opacity: 0.85;
+		transition: transform 0.2s ease;
+	}
+
+	.picker-trigger-btn:hover .q-caret {
+		transform: translateY(-2px);
 	}
 
 	.nav-btn {
 		display: inline-flex;
 		align-items: center;
+		justify-content: center;
 		gap: 0.45rem;
-		padding: 0.65rem 1.15rem;
-		border-radius: var(--radius-md);
+		height: 42px;
+		min-height: 42px;
+		max-height: 42px;
+		padding: 0 1rem;
+		border-radius: var(--radius-sm);
 		border: 1px solid var(--theme-border);
 		background: var(--theme-paper);
 		color: var(--theme-text-main);
-		font-size: 0.88rem;
+		font-size: 0.85rem;
 		font-weight: 700;
 		cursor: pointer;
 		position: relative;
 		overflow: hidden;
-		transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-		box-shadow: 0 4px 14px rgba(0, 15, 45, 0.25);
+		transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
 		user-select: none;
+		width: 100%;
+		box-sizing: border-box;
 	}
 
 	/* Metallic shine sweep */
@@ -1253,14 +1506,14 @@
 	.nav-btn:hover:not(:disabled) {
 		background: color-mix(in srgb, var(--theme-paper) 75%, #1952a8 25%);
 		color: #ffffff;
-		transform: translateY(-2px);
-		box-shadow: 0 6px 18px rgba(0, 20, 60, 0.35);
+		transform: translateY(-1px);
+		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 	}
 
 	.nav-btn:active:not(:disabled) {
 		transform: translateY(1px) scale(0.98);
 		filter: brightness(0.96);
-		box-shadow: 0 2px 6px rgba(0, 15, 45, 0.2);
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
 	}
 
 	.nav-btn:disabled {
@@ -1275,37 +1528,15 @@
 		border-color: var(--theme-gold, #ffbc0d);
 		color: #022659;
 		font-weight: 800;
-		box-shadow:
-			0 4px 14px rgba(255, 188, 13, 0.3),
-			inset 0 1px 1px rgba(255, 255, 255, 0.6),
-			inset 0 -1px 2px rgba(180, 110, 0, 0.35);
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
 	}
 
 	.next-btn:hover:not(:disabled) {
 		background: var(--theme-gold-shimmer, #ffbc0d);
 		color: #022659;
-		transform: translateY(-2px);
-		filter: brightness(1.06);
-		box-shadow:
-			0 6px 20px rgba(255, 188, 13, 0.5),
-			inset 0 1px 1px rgba(255, 255, 255, 0.7),
-			inset 0 -1px 2px rgba(180, 110, 0, 0.4);
-	}
-
-	.exit-btn {
-		background: #dc2626;
-		color: #ffffff;
-		border: none;
-		box-shadow: 0 4px 14px rgba(220, 38, 38, 0.3);
-	}
-
-	.exit-btn:hover:not(:disabled) {
-		background: #dc2626;
-		color: #ffffff;
-		border: none;
-		transform: translateY(-2px);
-		filter: brightness(1.08);
-		box-shadow: 0 6px 18px rgba(220, 38, 38, 0.45);
+		transform: translateY(-1px);
+		filter: brightness(1.05);
+		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 	}
 
 	/* Right Sidebar Tracker */
@@ -1403,93 +1634,319 @@
 		outline-offset: 1px;
 	}
 
-	/* Responsive */
+	/* Responsive Mobile-First Quiz Layout */
 	@media (max-width: 768px) {
-		.quiz-container {
-			grid-template-columns: 1fr;
-			gap: 1.5rem;
+		:global(.page-shell.quiz-page-shell) {
+			height: 100dvh !important;
+			max-height: 100dvh !important;
+			min-height: 100dvh !important;
+			overflow: hidden !important;
+			padding: 0 !important;
+			display: flex !important;
+			flex-direction: column !important;
+			align-items: stretch !important;
+			justify-content: flex-start !important;
 		}
 
+		.quiz-container {
+			display: flex;
+			flex-direction: column;
+			width: 100%;
+			max-width: 100%;
+			height: 100%;
+			margin: 0 !important;
+			gap: 0;
+			overflow: hidden;
+		}
+
+		.quiz-content {
+			display: flex;
+			flex-direction: column;
+			height: 100%;
+			min-height: 0;
+			width: 100%;
+			gap: 0;
+		}
+
+		/* Hide desktop-only sidebar tracker on mobile */
 		.sidebar-tracker {
-			position: static;
-			order: -1;
+			display: none;
 		}
 
-		.dots-grid {
-			grid-template-columns: repeat(10, 1fr);
+		/* Pinned High-Contrast Header */
+		.quiz-header {
+			flex-shrink: 0;
+			background: var(--theme-paper);
+			border-bottom: 1px solid var(--theme-border);
+			padding: 0.6rem 0.85rem;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			z-index: 20;
+			box-shadow: none; /* Clean flat border, no fuzzy drop shadow */
 		}
 
-		.dot-btn {
-			height: 2.1rem;
-			font-size: 0.8rem;
+		.header-exit-btn {
+			padding: 0.35rem 0.65rem;
+			font-size: 0.78rem;
+			font-weight: 700;
+			background: #dc2626;
+			border: 1px solid #dc2626;
+			color: #ffffff;
+			border-radius: var(--radius-sm);
+			box-shadow: 0 1px 3px rgba(220, 38, 38, 0.25);
+			flex-shrink: 0;
 		}
-	}
 
-	@media (max-width: 640px) {
-		.quiz-container {
-			margin: 4.25rem auto 1.25rem;
-			gap: 0.85rem;
+		.header-center {
+			display: flex;
+			align-items: center;
+			gap: 0.65rem;
+			flex-shrink: 0;
 		}
 
-		.level-indicator,
-		.question-number,
-		.format-text,
-		.tracker-title,
-		.tracker-count {
-			font-size: 0.62rem;
+		.header-dot {
+			font-size: 0.7rem;
+			color: var(--theme-border);
+			opacity: 0.5;
+		}
+
+		.level-indicator {
+			font-size: 0.75rem;
+			font-weight: 800;
+			color: var(--theme-gold);
+			letter-spacing: 0.08em;
+		}
+
+		.header-right-spacer {
+			width: 42px; /* Leaves room for ThemeToggle in top right corner */
+			flex-shrink: 0;
+		}
+
+		/* Top Progress Line - Clean 2px line with transparent track (no lighter color) */
+		.quiz-progress-line {
+			display: block;
+			flex-shrink: 0;
+			width: 100%;
+			height: 2px;
+			background: transparent;
+			overflow: hidden;
+			z-index: 20;
+		}
+
+		.quiz-progress-fill {
+			height: 100%;
+			background: var(--theme-gold);
+			transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+		}
+
+		/* Question form / body - Scrollable Middle Area */
+		.question-body {
+			flex: 1;
+			min-height: 0;
+			overflow-y: auto;
+			-webkit-overflow-scrolling: touch;
+			padding: 1rem 1rem 5.5rem 1rem;
+			display: flex;
+			flex-direction: column;
+			gap: 1.15rem;
+		}
+
+		.prompt-zone {
+			display: flex;
+			flex-direction: column;
+			gap: 0.45rem;
+			width: 100%;
+			padding-bottom: 1rem;
+			border-bottom: 1px solid var(--theme-border);
+			flex-shrink: 0;
+		}
+
+		.format-text {
+			font-size: 0.75rem;
+			font-weight: 800;
+			letter-spacing: 0.08em;
+			color: var(--theme-gold);
 		}
 
 		.prompt-japanese {
-			font-size: 1rem;
+			font-size: clamp(1.25rem, 5vw, 1.6rem);
+			line-height: 1.45;
+		}
+
+		.answer-zone {
+			display: flex;
+			flex-direction: column;
+			gap: 0.85rem;
+			flex: 1;
+			min-height: 0;
+		}
+
+		/* Choices list */
+		.choices-list {
+			gap: 0.6rem;
+		}
+
+		.choice-item {
+			padding: 0.8rem 1rem;
+			min-height: 3.35rem;
+			gap: 0.75rem;
+		}
+
+		.choice-letter {
+			width: 1.85rem;
+			height: 1.85rem;
+			font-size: 0.82rem;
+		}
+
+		.choice-text {
+			font-size: 1.05rem;
 			line-height: 1.35;
 		}
 
-		.sidebar-tracker {
-			padding: 0.7rem;
+		/* Word ordering: REMOVE outer container box */
+		.word-ordering-group {
+			background: transparent;
+			border: none;
+			padding: 0;
+			box-shadow: none;
+			gap: 0.75rem;
 		}
 
-		.dots-grid {
+		.standalone-sentence-line {
+			min-height: 3.4rem;
+			padding: 0.6rem 0.75rem;
+			gap: 0.45rem;
+		}
+
+		.word-chip {
+			padding: 0.55rem 0.95rem;
+			font-size: 1.02rem;
+			min-height: 42px;
+		}
+
+		.typing-hint {
+			font-size: 0.75rem;
+		}
+
+		/* Typing */
+		.typing-input {
+			padding: 0.85rem 1rem;
+			font-size: 1.1rem;
+			min-height: 48px;
+		}
+
+		/* Bottom Navigation: FIXED AT BOTTOM, ALWAYS IN SAME PLACE */
+		.bottom-actions {
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			z-index: 30;
+			background: var(--theme-paper);
+			border-top: 1px solid var(--theme-border);
+			padding: 0.6rem 0.75rem calc(0.6rem + env(safe-area-inset-bottom, 0px)) 0.75rem;
+			margin: 0;
+			box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.12);
+			display: grid;
+			grid-template-columns: 1fr 1.15fr 1fr;
+			align-items: center;
+			gap: 0.55rem;
+		}
+
+		:global([data-theme='dark']) .bottom-actions {
+			background: var(--theme-paper);
+		}
+
+		.prev-btn,
+		.next-btn,
+		.picker-trigger-btn {
+			width: 100%;
+			height: 42px;
+			min-height: 42px;
+			max-height: 42px;
+			justify-content: center;
+			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+		}
+
+		.prev-btn,
+		.next-btn {
+			font-size: 0.85rem;
+		}
+
+		.picker-trigger-btn {
+			padding: 0 0.35rem;
 			gap: 0.35rem;
 		}
 
-		.dot-btn {
-			height: 1.55rem;
-			font-size: 0.62rem;
+		/* Question selector on mobile: Clean Full-Screen Overview */
+		.selector-backdrop {
+			padding: 0;
 		}
 
-		.nav-btn {
-			min-height: 2.2rem;
-			padding: 0.42rem 0.65rem;
-			font-size: 0.68rem;
+		.selector-modal {
+			width: 100vw;
+			height: 100dvh;
+			max-height: 100dvh;
+			border-radius: 0;
+			border: none;
+			background: var(--theme-background);
 		}
 
+		.selector-header {
+			padding: 0.85rem 1rem;
+			border-bottom: 1px solid var(--theme-border);
+			background: var(--theme-paper);
+		}
+
+		.selector-title {
+			font-size: 1.05rem;
+		}
+
+		.picker-scroll-container {
+			padding: 0.75rem 0.85rem calc(1.5rem + env(safe-area-inset-bottom, 0px)) 0.85rem;
+		}
+
+		.picker-rows-list {
+			gap: 0.45rem;
+		}
+
+		.picker-row {
+			min-height: 48px;
+			padding: 0.65rem 0.75rem;
+			gap: 0.65rem;
+		}
+
+		.row-num {
+			font-size: 0.82rem;
+		}
+
+		.row-prompt {
+			font-size: 0.88rem;
+		}
+
+		/* Exit Modal */
 		.modal-backdrop {
-			padding: 0.85rem;
+			padding: 1rem;
 		}
 
 		.exit-modal {
-			width: min(100%, 270px);
-			gap: 0.55rem;
-			padding: 1.1rem 0.9rem;
+			width: min(100%, 320px);
+			padding: 1.5rem 1.15rem;
+			gap: 0.75rem;
 		}
 
 		.modal-title {
-			font-size: 0.9rem;
+			font-size: 1.1rem;
 		}
 
-		.modal-desc,
+		.modal-desc {
+			font-size: 0.82rem;
+		}
+
 		.modal-btn {
-			font-size: 0.66rem;
-		}
-
-		.modal-btn {
-			padding: 0.45rem 0.55rem;
-		}
-	}
-
-	@media (max-width: 480px) {
-		.dots-grid {
-			grid-template-columns: repeat(5, 1fr);
+			min-height: 44px;
+			font-size: 0.82rem;
 		}
 	}
 
@@ -1621,6 +2078,290 @@
 	.confirm-btn:active {
 		transform: translateY(0.5px);
 		filter: brightness(0.96);
+	}
+
+	/* Question Selector Modal */
+	.selector-backdrop {
+		position: fixed;
+		inset: 0;
+		z-index: 100;
+		background: rgba(0, 5, 20, 0.82);
+		backdrop-filter: blur(6px);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 1.5rem;
+		animation: fadeIn 0.15s ease;
+	}
+
+	.selector-modal {
+		width: min(100%, 560px);
+		height: 80vh;
+		max-height: 80vh;
+		background: var(--theme-card);
+		border: 1px solid var(--theme-border);
+		border-radius: var(--radius-md);
+		box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+		animation: popIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+	}
+
+	.selector-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 0.95rem 1.25rem;
+		border-bottom: 1px solid var(--theme-border);
+		background: var(--theme-paper);
+		flex-shrink: 0;
+	}
+
+	.selector-header-info {
+		display: flex;
+		align-items: baseline;
+		gap: 0.85rem;
+		flex-wrap: wrap;
+	}
+
+	.selector-title {
+		margin: 0;
+		font-size: 1.15rem;
+		font-weight: 800;
+		color: var(--theme-text-main);
+		display: flex;
+		align-items: baseline;
+		gap: 0.55rem;
+	}
+
+	.selector-title-en {
+		font-size: 0.72rem;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		color: var(--theme-gold);
+	}
+
+	.selector-count-badge {
+		font-size: 0.76rem;
+		font-weight: 700;
+		color: var(--theme-text-muted);
+		background: rgba(0, 0, 0, 0.25);
+		padding: 0.2rem 0.55rem;
+		border-radius: var(--radius-sm);
+		border: 1px solid var(--theme-border);
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+	}
+
+	.selector-count-badge i {
+		color: var(--theme-success);
+		font-size: 0.72rem;
+	}
+
+	.selector-close-btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2rem;
+		height: 2rem;
+		border-radius: var(--radius-sm);
+		background: #dc2626;
+		border: 1px solid #dc2626;
+		color: #ffffff;
+		font-size: 1rem;
+		cursor: pointer;
+		box-shadow: 0 1px 4px rgba(220, 38, 38, 0.3);
+		transition: all 0.15s ease;
+	}
+
+	.selector-close-btn:hover {
+		background: #b91c1c;
+		border-color: #b91c1c;
+		color: #ffffff;
+		transform: translateY(-1px);
+		box-shadow: 0 2px 6px rgba(220, 38, 38, 0.4);
+	}
+
+	.selector-close-btn:active {
+		transform: translateY(0);
+	}
+
+	/* Scrollable List Container with Permanent High-Contrast Scroll Indicator */
+	.picker-scroll-container {
+		flex: 1;
+		min-height: 0;
+		overflow-y: scroll; /* Forces scrollbar gutter to always remain visible */
+		scrollbar-width: thin;
+		scrollbar-color: var(--theme-gold) rgba(0, 15, 45, 0.6);
+		padding: 0.85rem 1.15rem 1.25rem 1.15rem;
+	}
+
+	.picker-scroll-container::-webkit-scrollbar {
+		width: 7px;
+	}
+
+	.picker-scroll-container::-webkit-scrollbar-track {
+		background: rgba(0, 15, 45, 0.6);
+		border-left: 1px solid var(--theme-border);
+	}
+
+	.picker-scroll-container::-webkit-scrollbar-thumb {
+		background: var(--theme-gold);
+		border-radius: var(--radius-pill);
+		border: 1px solid rgba(0, 15, 45, 0.4);
+	}
+
+	.picker-scroll-container::-webkit-scrollbar-thumb:hover {
+		background: var(--theme-gold-shimmer, #ffd043);
+	}
+
+	.picker-rows-list {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	/* Question Row Item */
+	.picker-row {
+		display: grid;
+		grid-template-columns: 2.2rem 1fr auto;
+		align-items: center;
+		gap: 0.75rem;
+		min-height: 48px;
+		padding: 0.65rem 0.85rem;
+		border-radius: var(--radius-sm);
+		border: 1px solid var(--theme-border);
+		background: var(--theme-paper);
+		cursor: pointer;
+		text-align: left;
+		transition:
+			background 0.15s ease,
+			border-color 0.15s ease;
+		width: 100%;
+		box-sizing: border-box;
+		position: relative;
+	}
+
+	.picker-row:hover {
+		background: color-mix(in srgb, var(--theme-paper) 75%, #1952a8 25%);
+		border-color: var(--theme-gold);
+	}
+
+	.picker-row.is-current {
+		background: var(--theme-gold-shimmer, #ffbc0d);
+		border-color: var(--theme-gold, #ffbc0d);
+		color: #022659;
+		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+	}
+
+	.picker-row.is-current:hover {
+		background: var(--theme-gold-shimmer, #ffbc0d);
+		filter: brightness(1.04);
+	}
+
+	.picker-row.is-done {
+		border-color: rgba(34, 197, 94, 0.35);
+	}
+
+	.row-num {
+		font-size: 0.88rem;
+		font-weight: 800;
+		color: var(--theme-text-muted);
+		letter-spacing: 0.04em;
+	}
+
+	.picker-row.is-current .row-num {
+		color: #022659;
+		font-weight: 900;
+	}
+
+	.row-content {
+		display: flex;
+		flex-direction: column;
+		gap: 0.2rem;
+		min-width: 0;
+	}
+
+	.row-prompt {
+		font-size: 0.92rem;
+		font-weight: 600;
+		line-height: 1.35;
+		color: var(--theme-text-main);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.picker-row.is-current .row-prompt {
+		color: #022659;
+		font-weight: 700;
+	}
+
+	.row-format-tag {
+		font-size: 0.68rem;
+		font-weight: 700;
+		color: var(--theme-gold);
+		opacity: 0.85;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+	}
+
+	.picker-row.is-current .row-format-tag {
+		color: #022659;
+		opacity: 0.8;
+		font-weight: 800;
+	}
+
+	.row-status {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 0.4rem;
+		flex-shrink: 0;
+	}
+
+	.current-badge {
+		display: inline-flex;
+		align-items: center;
+		padding: 0.2rem 0.45rem;
+		border-radius: var(--radius-sm);
+		background: #022659;
+		color: var(--theme-gold, #ffbc0d);
+		font-size: 0.68rem;
+		font-weight: 900;
+		letter-spacing: 0.06em;
+	}
+
+	.done-badge {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 1.45rem;
+		height: 1.45rem;
+		border-radius: 50%;
+		background: #22c55e;
+		border: 1px solid #16a34a;
+		color: #ffffff;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+	}
+
+	.done-check-icon {
+		color: #ffffff;
+		font-size: 0.75rem;
+		line-height: 1;
+	}
+
+	.pending-badge {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 1.5rem;
+		height: 1.5rem;
+		color: var(--theme-text-muted);
+		opacity: 0.4;
+		font-size: 0.72rem;
 	}
 
 	@keyframes fadeIn {

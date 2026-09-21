@@ -48,31 +48,34 @@
 
 <style>
 	.timer {
-		display: flex;
+		display: inline-flex;
 		align-items: center;
-		gap: 0.5rem;
-		background: #f1f5f9;
-		padding: 0.5rem 0.85rem;
+		gap: 0.45rem;
+		background: rgba(0, 15, 45, 0.55);
+		border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
+		padding: 0.35rem 0.75rem;
 		border-radius: 9999px;
-		color: #334155;
+		color: var(--theme-text-main, #ffffff);
+		box-shadow: none;
 	}
 
 	.timer-icon {
-		color: #64748b;
+		color: var(--theme-gold, #ffbc0d);
 	}
 
 	.timer-text {
 		font-variant-numeric: tabular-nums;
 		font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-		font-weight: 700;
-		font-size: 1.05rem;
-		letter-spacing: -0.02em;
+		font-weight: 800;
+		font-size: 0.95rem;
+		letter-spacing: -0.01em;
+		color: #ffffff;
 	}
 
 	@media (max-width: 640px) {
 		.timer {
-			gap: 0.3rem;
-			padding: 0.32rem 0.55rem;
+			gap: 0.35rem;
+			padding: 0.3rem 0.6rem;
 		}
 
 		.timer-icon {
@@ -81,7 +84,7 @@
 		}
 
 		.timer-text {
-			font-size: 0.76rem;
+			font-size: 0.82rem;
 		}
 	}
 </style>

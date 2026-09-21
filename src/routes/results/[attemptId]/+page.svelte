@@ -383,58 +383,77 @@
 
 	@media (max-width: 600px) {
 		.page-shell {
-			padding: 1.35rem 0.75rem 2rem;
+			padding: 1rem 0.85rem 2rem;
 		}
 
 		.results-layout {
-			gap: 1rem;
+			gap: 0.85rem;
+			width: 100%;
 		}
 
 		.header-stickman :global(.results-stickman) {
-			width: 100px;
-			height: 100px;
+			width: 90px;
+			height: 90px;
 		}
 
 		.title {
-			font-size: 1.7rem;
+			font-size: clamp(1.8rem, 6.5vw, 2.4rem);
 		}
 
 		.sarcastic-tag {
-			font-size: 0.72rem;
+			font-size: 0.88rem;
+			max-width: 320px;
+			line-height: 1.4;
 		}
 
 		.score-showcase {
-			gap: 0.65rem;
-		}
-
-		.score-number {
-			font-size: 3rem;
-		}
-
-		.score-label,
-		.score-pts,
-		.stat-label,
-		.stat-sub {
-			font-size: 0.62rem;
-		}
-
-		.stat-value {
-			font-size: 0.88rem;
+			gap: 0.45rem;
+			padding: 0.2rem 0;
 		}
 
 		.stats-grid {
-			grid-template-columns: repeat(2, 1fr);
-			gap: 0.75rem;
+			grid-template-columns: repeat(4, 1fr);
+			gap: 0.35rem;
 			padding: 0.75rem 0;
 		}
 
-		.results-actions {
-			grid-template-columns: 1fr;
+		.stat-item {
+			gap: 0.15rem;
+		}
+
+		.stat-label {
+			font-size: 0.72rem;
+		}
+
+		.stat-value {
+			font-size: 1.15rem;
+			font-weight: 800;
+		}
+
+		.stat-sub {
+			font-size: 0.75rem;
+		}
+
+		.player-status {
+			font-size: 0.8rem;
+			gap: 0.45rem;
+			flex-wrap: wrap;
 		}
 
 		.google-btn {
-			padding: 0.65rem 1rem;
-			font-size: 0.85rem;
+			padding: 0.7rem 1.2rem;
+			font-size: 0.88rem;
+			min-height: 44px;
+		}
+
+		.results-actions {
+			grid-template-columns: 1fr 1fr;
+			gap: 0.65rem;
+			margin-top: 0.25rem;
+		}
+
+		.results-actions > :global(:first-child) {
+			grid-column: span 2;
 		}
 	}
 </style>
