@@ -788,4 +788,128 @@
 			padding: 0.35rem 0.55rem;
 		}
 	}
+
+	/*
+         * Responsive text protection
+         * Prevent long Japanese answers, explanations, and status labels
+         * from escaping the review card on narrow screens.
+         */
+	.review-panels-container,
+	.review-main-card,
+	.inspection-header,
+	.inspection-tags,
+	.inspection-scroll-area,
+	.inspection-prompt,
+	.answers-content,
+	.answer-section,
+	.explanation-section,
+	.inspection-nav {
+		min-width: 0;
+	}
+
+	.format-label,
+	.inspection-status,
+	.japanese-prompt,
+	.english-subprompt,
+	.ans-heading,
+	.ans-value,
+	.explanation-heading,
+	.explanation-body,
+	.inspect-counter {
+		min-width: 0;
+		max-width: 100%;
+		overflow-wrap: anywhere;
+		word-break: break-word;
+	}
+
+	.format-label,
+	.inspection-status {
+		flex-shrink: 1;
+	}
+
+	.ans-value,
+	.explanation-body {
+		overflow-wrap: anywhere;
+		word-break: break-word;
+	}
+
+	@media (max-width: 640px) {
+		.inspection-header {
+			align-items: flex-start;
+			flex-wrap: wrap;
+			gap: 0.45rem;
+		}
+
+		.inspection-tags {
+			min-width: 0;
+			max-width: 100%;
+			flex: 1 1 auto;
+			flex-wrap: wrap;
+		}
+
+		.format-label {
+			min-width: 0;
+			max-width: 100%;
+		}
+
+		.inspection-status {
+			flex: 0 1 auto;
+			max-width: 100%;
+		}
+
+		.inspection-prompt,
+		.answers-content,
+		.explanation-section {
+			width: 100%;
+			max-width: 100%;
+		}
+
+		.japanese-prompt {
+			max-width: 100%;
+			overflow-wrap: anywhere;
+			word-break: break-word;
+		}
+
+		.english-subprompt,
+		.explanation-body {
+			overflow-wrap: anywhere;
+			word-break: break-word;
+		}
+
+		.answer-section {
+			min-width: 0;
+			max-width: 100%;
+		}
+
+		.ans-value {
+			max-width: 100%;
+			overflow-wrap: anywhere;
+			word-break: break-word;
+		}
+
+		.inspection-nav {
+			flex-wrap: wrap;
+			gap: 0.4rem;
+		}
+
+		.inspect-nav-btn {
+			min-width: 0;
+			max-width: 100%;
+		}
+
+		.inspect-counter {
+			flex: 0 1 auto;
+		}
+	}
+
+	@media (max-width: 360px) {
+		.inspection-status,
+		.format-label {
+			font-size: 0.58rem;
+		}
+
+		.inspection-nav {
+			gap: 0.3rem;
+		}
+	}
 </style>

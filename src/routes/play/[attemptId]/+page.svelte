@@ -18,6 +18,7 @@
 
 	// User answers state
 	let userAnswers = $state<Record<string, string>>({});
+	const serializedUserAnswers = $derived(JSON.stringify(userAnswers));
 	let userWordOrders = $state<Record<string, string[]>>({});
 	let isSubmitting = $state(false);
 	let showExitModal = $state(false);
@@ -610,6 +611,7 @@
 								</button>
 
 								{#if activeIndex === totalQuestions - 1}
+									<input type="hidden" name="allAnswers" value={serializedUserAnswers} />
 									<Button
 										type="submit"
 										variant="gold"
@@ -1641,6 +1643,200 @@
 		to {
 			opacity: 1;
 			transform: scale(1);
+		}
+	}
+
+	/*
+         * Responsive text protection
+         * Keep long Japanese/English content inside the viewport on small devices.
+         */
+	.quiz-header,
+	.header-left,
+	.prompt-group,
+	.typing-label,
+	.wo-header,
+	.bottom-actions,
+	.nav-left-group {
+		min-width: 0;
+	}
+
+	.level-indicator,
+	.question-number,
+	.format-text,
+	.typing-label > span,
+	.typing-hint,
+	.choice-text,
+	.prompt-japanese,
+	.sentence-text,
+	.inline-placeholder,
+	.chip-text,
+	.bank-empty-text {
+		min-width: 0;
+		overflow-wrap: anywhere;
+		word-break: break-word;
+	}
+
+	.choice-text {
+		flex: 1 1 auto;
+	}
+
+	.typing-input {
+		width: 100%;
+		min-width: 0;
+		max-width: 100%;
+		box-sizing: border-box;
+		overflow-wrap: anywhere;
+	}
+
+	.inline-placed-chip,
+	.word-chip {
+		max-width: 100%;
+		min-width: 0;
+	}
+
+	.inline-placed-chip > span:first-child,
+	.word-chip .chip-text {
+		min-width: 0;
+		overflow-wrap: anywhere;
+		word-break: break-word;
+	}
+
+	.bottom-actions {
+		flex-wrap: wrap;
+	}
+
+	.nav-left-group {
+		flex-wrap: wrap;
+		max-width: 100%;
+	}
+
+	@media (max-width: 640px) {
+		.quiz-header {
+			gap: 0.5rem;
+		}
+
+		.header-left {
+			flex: 1 1 auto;
+			flex-wrap: wrap;
+		}
+
+		.question-number {
+			flex: 0 1 auto;
+			text-align: right;
+		}
+
+		.prompt-group {
+			width: 100%;
+		}
+
+		.prompt-japanese {
+			max-width: 100%;
+		}
+
+		.choice-item {
+			min-width: 0;
+		}
+
+		.typing-label {
+			flex-wrap: wrap;
+			gap: 0.3rem;
+		}
+
+		.standalone-sentence-line {
+			min-width: 0;
+			max-width: 100%;
+		}
+
+		.inline-slot {
+			max-width: 100%;
+		}
+
+		.bank-chips {
+			min-width: 0;
+		}
+
+		.word-chip {
+			max-width: 100%;
+		}
+
+		.bottom-actions {
+			width: 100%;
+			gap: 0.45rem;
+		}
+
+		.nav-left-group {
+			width: 100%;
+			gap: 0.45rem;
+		}
+
+		.nav-btn,
+		:global(.finish-btn) {
+			min-width: 0;
+			max-width: 100%;
+		}
+
+		/*
+                 * These overrides intentionally appear after the base modal
+                 * styles because the original mobile rules appeared earlier
+                 * in the stylesheet and were therefore being overridden.
+                 */
+		.modal-backdrop {
+			padding: 0.85rem;
+		}
+
+		.exit-modal {
+			width: min(100%, 270px);
+			max-width: 100%;
+			box-sizing: border-box;
+			gap: 0.55rem;
+			padding: 1.1rem 0.9rem;
+		}
+
+		.modal-title {
+			max-width: 100%;
+			overflow-wrap: anywhere;
+			word-break: break-word;
+			font-size: 0.9rem;
+			line-height: 1.35;
+		}
+
+		.modal-desc {
+			max-width: 100%;
+			overflow-wrap: anywhere;
+			word-break: break-word;
+			font-size: 0.66rem;
+			line-height: 1.45;
+		}
+
+		.modal-actions {
+			width: 100%;
+			min-width: 0;
+		}
+
+		.modal-btn {
+			min-width: 0;
+			max-width: 100%;
+			padding: 0.45rem 0.55rem;
+			font-size: 0.66rem;
+		}
+	}
+
+	@media (max-width: 360px) {
+		.header-left {
+			gap: 0.45rem;
+		}
+
+		.nav-left-group {
+			gap: 0.35rem;
+		}
+
+		.nav-btn,
+		:global(.finish-btn) {
+			font-size: 0.62rem;
+		}
+
+		.modal-actions {
+			gap: 0.4rem;
 		}
 	}
 </style>

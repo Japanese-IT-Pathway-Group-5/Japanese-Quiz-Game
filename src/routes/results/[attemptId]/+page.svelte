@@ -407,12 +407,6 @@
 			gap: 0.65rem;
 		}
 
-		.score-number {
-			font-size: 3rem;
-		}
-
-		.score-label,
-		.score-pts,
 		.stat-label,
 		.stat-sub {
 			font-size: 0.62rem;
