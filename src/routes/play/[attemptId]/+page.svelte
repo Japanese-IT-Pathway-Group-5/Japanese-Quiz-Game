@@ -938,11 +938,12 @@
 		display: none;
 	}
 
-	/* Question Body */
+	/* Question Body - Stable Locked Height so Navigation Controls Remain Stationary */
 	.question-body {
 		display: flex;
 		flex-direction: column;
-		gap: 1.5rem;
+		min-height: 520px;
+		justify-content: space-between;
 	}
 
 	.prompt-zone {
@@ -953,13 +954,16 @@
 		width: 100%;
 		padding-bottom: 1.25rem;
 		border-bottom: 1px solid var(--theme-border);
+		flex-shrink: 0;
 	}
 
 	.answer-zone {
 		display: flex;
 		flex-direction: column;
 		gap: 1.25rem;
-		min-height: 14rem;
+		flex: 1;
+		min-height: 280px;
+		padding: 1.25rem 0;
 	}
 
 	.format-text {
@@ -1364,13 +1368,16 @@
 		opacity: 0.7;
 	}
 
-	/* Bottom Actions */
+	/* Bottom Actions - Pinned Stationary at Bottom of Question Card */
 	.bottom-actions {
 		display: grid;
 		grid-template-columns: 1fr auto 1fr;
 		align-items: center;
 		gap: 1rem;
-		padding-top: 0.5rem;
+		padding-top: 1.25rem;
+		margin-top: auto;
+		flex-shrink: 0;
+		border-top: 1px solid var(--theme-border);
 		width: 100%;
 	}
 
