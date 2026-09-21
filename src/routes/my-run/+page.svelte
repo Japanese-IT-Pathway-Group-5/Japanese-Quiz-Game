@@ -8,6 +8,12 @@
 	let selectedLevel = $state<'all' | 'N3' | 'N4'>('all');
 	let currentPage = $state(1);
 	let isChangingPage = $state(false);
+	let showAllStats = $state(false);
+	let expandedRunId = $state<string | null>(null);
+
+	function toggleExpandRun(id: string) {
+		expandedRunId = expandedRunId === id ? null : id;
+	}
 
 	const ITEMS_PER_PAGE = 10;
 	const filteredRuns = $derived(
@@ -76,6 +82,18 @@
 		{#if data.isAuthenticated && data.player}
 			<!-- KPI Analytics Cards (4 Key Metrics) -->
 			{#if data.stats}
+				<div class="stats-controls">
+					<button
+						type="button"
+						class="stats-toggle-btn font-mono"
+						onclick={() => (showAllStats = !showAllStats)}
+						aria-expanded={showAllStats}
+					>
+						<span>{showAllStats ? 'Show less' : 'See more'}</span>
+						<i class="fa-solid fa-chevron-down toggle-icon" class:rotated={showAllStats}></i>
+					</button>
+				</div>
+
 				<section class="kpi-grid" aria-label="Key Performance Indicators">
 					<div class="kpi-card">
 						<div class="kpi-header">
@@ -90,7 +108,7 @@
 							<span class="kpi-label font-mono">BEST SCORE</span>
 							<i class="fa-solid fa-trophy kpi-icon text-gold"></i>
 						</div>
-						<div class="kpi-value font-mono text-gold-gradient">{data.stats.bestScore}</div>
+						<div class="kpi-value font-mono text-white">{data.stats.bestScore}</div>
 						<div class="kpi-footer font-mono">
 							<span>N4: {data.stats.bestScoreN4 ?? '-'}</span>
 							<span class="dot">·</span>
@@ -98,7 +116,7 @@
 						</div>
 					</div>
 
-					<div class="kpi-card">
+					<div class="kpi-card kpi-secondary" class:kpi-collapsed={!showAllStats}>
 						<div class="kpi-header">
 							<span class="kpi-label font-mono">TOTAL RUNS</span>
 							<i class="fa-solid fa-gamepad kpi-icon"></i>
@@ -109,7 +127,7 @@
 						</div>
 					</div>
 
-					<div class="kpi-card">
+					<div class="kpi-card kpi-secondary" class:kpi-collapsed={!showAllStats}>
 						<div class="kpi-header">
 							<span class="kpi-label font-mono">PRACTICE TIME</span>
 							<i class="fa-solid fa-stopwatch kpi-icon"></i>
@@ -120,7 +138,11 @@
 				</section>
 
 				<!-- Level Mastery Breakdown (N4 vs N3) -->
-				<section class="mastery-grid" aria-label="Level Mastery Breakdown">
+				<section
+					class="mastery-grid"
+					class:mastery-collapsed={!showAllStats}
+					aria-label="Level Mastery Breakdown"
+				>
 					<div class="mastery-card">
 						<div class="mastery-top">
 							<span class="level-pill font-japanese">N4 初級</span>
@@ -215,13 +237,14 @@
 						<table>
 							<thead>
 								<tr>
-									<th>Run</th>
-									<th>Level</th>
-									<th>Score</th>
-									<th>Accuracy</th>
-									<th>Time</th>
-									<th>Date</th>
-									<th>Action</th>
+									<th class="col-run">Run</th>
+									<th class="col-level">Level</th>
+									<th class="col-score">Score</th>
+									<th class="col-accuracy">Accuracy</th>
+									<th class="col-time">Time</th>
+									<th class="col-date">Date</th>
+									<th class="col-action">Action</th>
+									<th class="col-expand" aria-label="Expand details"></th>
 								</tr>
 							</thead>
 
@@ -229,39 +252,39 @@
 								{#if isChangingPage}
 									{#each skeletonRows as rowIdx (rowIdx)}
 										<tr class="skeleton-row">
-											<td colspan="7">
+											<td colspan="8">
 												<div class="skeleton-bar"></div>
 											</td>
 										</tr>
 									{/each}
 								{:else}
 									{#each paginatedRuns as run (run.attemptId)}
-										<tr>
-											<td class="run-id font-mono">
+										<tr class="table-row-item" onclick={() => toggleExpandRun(run.attemptId)}>
+											<td class="run-id col-run font-mono">
 												{run.attemptId.slice(0, 6).toUpperCase()}
 											</td>
 
-											<td>
+											<td class="col-level">
 												<span class="level-badge font-japanese">{run.level}</span>
 											</td>
 
-											<td class="score font-mono">
+											<td class="score col-score font-mono">
 												{run.score}
 											</td>
 
-											<td class="stat-text font-mono">
+											<td class="stat-text col-accuracy font-mono">
 												{run.accuracy}%
 											</td>
 
-											<td class="time-text font-mono">
+											<td class="time-text col-time font-mono">
 												{formatTime(run.timeSeconds)}
 											</td>
 
-											<td class="date-text font-mono">
+											<td class="date-text col-date font-mono">
 												{formatDate(run.finishedAt)}
 											</td>
 
-											<td>
+											<td class="col-action" onclick={(e) => e.stopPropagation()}>
 												<Button
 													href="{resolve(`/review/${run.attemptId}`)}?from=my-run"
 													variant="gold"
@@ -271,7 +294,43 @@
 													<span>Review</span>
 												</Button>
 											</td>
+
+											<td class="col-expand">
+												<button
+													type="button"
+													class="expand-icon-btn"
+													aria-label="Toggle details for run {run.attemptId}"
+													aria-expanded={expandedRunId === run.attemptId}
+													onclick={(e) => {
+														e.stopPropagation();
+														toggleExpandRun(run.attemptId);
+													}}
+												>
+													<i
+														class="fa-solid fa-chevron-down expand-chevron"
+														class:rotated={expandedRunId === run.attemptId}
+													></i>
+												</button>
+											</td>
 										</tr>
+										{#if expandedRunId === run.attemptId}
+											<tr class="detail-row">
+												<td colspan="8">
+													<div class="detail-drawer font-mono">
+														<div class="detail-item">
+															<span class="detail-label">RUN:</span>
+															<span class="detail-value"
+																>{run.attemptId.slice(0, 8).toUpperCase()}</span
+															>
+														</div>
+														<div class="detail-item">
+															<span class="detail-label">DATE:</span>
+															<span class="detail-value">{formatDate(run.finishedAt)}</span>
+														</div>
+													</div>
+												</td>
+											</tr>
+										{/if}
 									{/each}
 								{/if}
 							</tbody>
@@ -403,6 +462,17 @@
 		font-size: clamp(2.4rem, 6vw, 3.2rem);
 		font-weight: 900;
 		letter-spacing: 0.05em;
+	}
+
+	/* Stats Controls Header */
+	.stats-controls {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+	}
+
+	.stats-toggle-btn {
+		display: none;
 	}
 
 	/* KPI Analytics Cards */
@@ -588,10 +658,15 @@
 	/* Table (Modern Analytics Table) */
 	.table-wrapper {
 		overflow: auto;
-		border-radius: var(--radius-lg, 1rem);
+		border-radius: 0 !important;
 		background: rgba(0, 15, 45, 0.5);
 		backdrop-filter: blur(12px);
 		border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.08));
+	}
+
+	.col-expand,
+	.detail-row {
+		display: none;
 	}
 
 	table {
@@ -729,7 +804,7 @@
 		justify-content: center;
 		padding: 3rem 1.5rem;
 		text-align: center;
-		border-radius: var(--radius-lg, 1rem);
+		border-radius: 0 !important;
 		background: rgba(0, 15, 45, 0.45);
 		border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.08));
 		gap: 0.5rem;
@@ -835,25 +910,399 @@
 		gap: 0.75rem;
 	}
 
-	@media (max-width: 700px) {
-		.kpi-grid {
-			grid-template-columns: repeat(2, 1fr);
+	.col-level {
+		text-align: center;
+		width: 70px;
+	}
+
+	.col-score {
+		text-align: center;
+		width: 70px;
+	}
+
+	.col-accuracy {
+		text-align: center;
+		width: 85px;
+	}
+
+	.col-time {
+		text-align: right;
+		width: 80px;
+	}
+
+	.col-run {
+		width: 85px;
+	}
+
+	.col-date {
+		width: 140px;
+	}
+
+	.col-action {
+		text-align: right;
+		width: 100px;
+	}
+
+	@media (max-width: 640px) {
+		.page-shell {
+			height: 100dvh;
+			padding: 0.75rem 0.65rem 0.75rem;
+			display: flex;
+			justify-content: center;
+			overflow: hidden;
 		}
 
+		.dashboard-layout {
+			width: 100%;
+			height: 100%;
+			min-height: 0;
+			display: flex;
+			flex-direction: column;
+			gap: 0.55rem;
+		}
+
+		.dashboard-header {
+			padding-inline: 2rem;
+			flex-shrink: 0;
+		}
+
+		.title {
+			font-size: 1.75rem;
+		}
+
+		.stats-controls {
+			flex-shrink: 0;
+			display: flex;
+			justify-content: flex-end;
+			padding-inline: 0.15rem;
+		}
+
+		.stats-toggle-btn {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			gap: 0.35rem;
+			padding: 0.22rem 0.6rem;
+			border-radius: var(--radius-pill, 9999px);
+			border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.12));
+			background: var(--theme-paper, rgba(255, 255, 255, 0.05));
+			color: var(--theme-text-muted, #94a3b8);
+			font-size: 0.72rem;
+			font-weight: 700;
+			cursor: pointer;
+			transition: all 0.2s ease;
+		}
+
+		.stats-toggle-btn:hover {
+			color: #ffffff;
+			border-color: var(--theme-gold, #ffbc0d);
+		}
+
+		/* Sleek, compact 2x2 KPI grid */
+		.kpi-grid {
+			flex-shrink: 0;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 0.5rem;
+		}
+
+		.kpi-card {
+			padding: 0.65rem 0.75rem;
+			gap: 0.2rem;
+			border-radius: var(--radius-md);
+		}
+
+		.kpi-label {
+			font-size: 0.6rem;
+		}
+
+		.kpi-icon {
+			font-size: 0.75rem;
+		}
+
+		.kpi-value {
+			font-size: 1.25rem;
+		}
+
+		.kpi-footer {
+			font-size: 0.65rem;
+		}
+
+		/* Compact side-by-side mastery cards */
 		.mastery-grid {
-			grid-template-columns: 1fr;
+			flex-shrink: 0;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 0.5rem;
+		}
+
+		.mastery-card {
+			padding: 0.65rem 0.75rem;
+			gap: 0.45rem;
+			border-radius: var(--radius-md);
+		}
+
+		.level-pill {
+			font-size: 0.74rem;
+			padding: 0.15rem 0.45rem;
+		}
+
+		.mastery-runs {
+			font-size: 0.68rem;
+		}
+
+		.mastery-stats {
+			gap: 0.85rem;
+		}
+
+		.m-label {
+			font-size: 0.6rem;
+		}
+
+		.m-val {
+			font-size: 0.95rem;
+		}
+
+		/* Compact table controls */
+		.table-section {
+			flex: 1;
+			min-height: 0;
+			display: flex;
+			flex-direction: column;
+			gap: 0.45rem;
 		}
 
 		.table-controls {
-			flex-direction: column;
-			align-items: flex-start;
-			gap: 0.6rem;
+			flex-shrink: 0;
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: center;
+			gap: 0.5rem;
+		}
+
+		.table-heading {
+			font-size: 0.74rem;
+		}
+
+		.level-filter {
+			gap: 0.3rem;
+		}
+
+		.filter-tab {
+			font-size: 0.75rem;
+			padding: 0.25rem 0.65rem;
+			min-height: 28px;
+		}
+
+		.table-wrapper {
+			flex: 1;
+			min-height: 0;
+			overflow: auto;
+			border-radius: 0 !important;
+		}
+
+		/* Hide non-essential columns on mobile */
+		.col-run,
+		.col-date {
+			display: none;
+		}
+
+		.col-level {
+			width: 44px;
+			padding-left: 0.5rem;
+			padding-right: 0.25rem;
+		}
+
+		.col-score {
+			width: 44px;
+			padding-left: 0.25rem;
+			padding-right: 0.25rem;
+		}
+
+		.col-accuracy {
+			width: 52px;
+			padding-left: 0.25rem;
+			padding-right: 0.25rem;
+		}
+
+		.col-time {
+			width: 52px;
+			padding-left: 0.25rem;
+			padding-right: 0.25rem;
+		}
+
+		.col-action {
+			width: 72px;
+			padding-left: 0.25rem;
+			padding-right: 0.5rem;
 		}
 
 		th,
 		td {
-			padding: 0.6rem 0.5rem;
-			font-size: 0.65rem;
+			padding: 0.6rem 0.35rem;
+			font-size: 0.8rem;
+		}
+
+		th {
+			font-size: 0.66rem;
+			letter-spacing: 0.05em;
+		}
+
+		.level-badge {
+			font-size: 0.72rem;
+			padding: 0.14rem 0.38rem;
+		}
+
+		.score {
+			font-size: 0.95rem;
+		}
+
+		.stat-text {
+			font-size: 0.78rem;
+		}
+
+		.time-text {
+			font-size: 0.75rem;
+		}
+
+		.col-action :global(.ui-btn) {
+			min-height: 28px;
+			padding: 0.2rem 0.5rem;
+			font-size: 0.72rem;
+			gap: 0.25rem;
+		}
+
+		/* Pagination */
+		.pagination-bar {
+			flex-shrink: 0;
+			gap: 0.35rem;
+			padding: 0.35rem 0 0;
+		}
+
+		.page-nav-btn {
+			min-height: 28px;
+			padding: 0.2rem 0.5rem;
+			font-size: 0.7rem;
+		}
+
+		.page-number {
+			width: 26px;
+			height: 26px;
+			font-size: 0.72rem;
+		}
+
+		/* Bottom actions */
+		.actions {
+			flex-shrink: 0;
+			margin-top: auto;
+		}
+
+		.actions :global(.ui-btn) {
+			min-height: 38px;
+			padding: 0.4rem 1.15rem;
+			font-size: 0.84rem;
+		}
+
+		/* Mobile collapsible stats (show 1 row by default) */
+		.kpi-secondary.kpi-collapsed {
+			display: none;
+		}
+
+		.mastery-grid.mastery-collapsed {
+			display: none;
+		}
+
+		/* Expand button and detail row in table */
+		.col-expand {
+			display: table-cell;
+			width: 24px;
+			text-align: center;
+			padding: 0.6rem 0.2rem;
+		}
+
+		.table-row-item {
+			cursor: pointer;
+			-webkit-tap-highlight-color: transparent;
+			transition: background 0.15s ease;
+		}
+
+		.table-row-item:active {
+			background: rgba(255, 255, 255, 0.06);
+		}
+
+		.expand-icon-btn {
+			background: transparent;
+			border: none;
+			color: var(--theme-text-muted, #94a3b8);
+			cursor: pointer;
+			padding: 0.2rem;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 0.68rem;
+		}
+
+		.expand-chevron {
+			transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+		}
+
+		.expand-chevron.rotated {
+			transform: rotate(180deg);
+			color: var(--theme-gold, #ffbc0d);
+		}
+
+		.detail-row {
+			display: table-row;
+			background: rgba(0, 10, 30, 0.5);
+		}
+
+		.detail-row td {
+			padding: 0.45rem 0.65rem 0.6rem;
+			border-bottom: 1px solid var(--theme-border, rgba(255, 255, 255, 0.08));
+		}
+
+		.detail-drawer {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.5rem 1rem;
+			font-size: 0.72rem;
+			padding: 0.35rem 0.6rem;
+			background: rgba(255, 255, 255, 0.04);
+			border-left: 3px solid var(--theme-gold, #ffbc0d);
+		}
+
+		.detail-item {
+			display: inline-flex;
+			align-items: center;
+			gap: 0.35rem;
+		}
+
+		.detail-label {
+			color: var(--theme-text-muted, #94a3b8);
+			font-weight: 700;
+			font-size: 0.68rem;
+		}
+
+		.detail-value {
+			color: var(--theme-text-main, #ffffff);
+			font-size: 0.74rem;
+		}
+
+		/* Guest card */
+		.guest-card {
+			padding: 1.5rem 1rem;
+			gap: 0.65rem;
+		}
+
+		.guest-icon {
+			font-size: 2rem;
+		}
+
+		.guest-title {
+			font-size: 1.25rem;
+		}
+
+		.guest-desc {
+			font-size: 0.82rem;
 		}
 	}
 </style>
