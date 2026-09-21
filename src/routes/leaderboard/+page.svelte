@@ -29,7 +29,6 @@
 	<div class="leaderboard-container">
 		<header class="leaderboard-header">
 			<h1 class="title font-brush text-gold-gradient">ランキング</h1>
-			<p class="subtitle">See the best quiz scores and find your ranking.</p>
 		</header>
 
 		<nav class="level-filter" aria-label="Filter leaderboard by level">
@@ -131,10 +130,25 @@
 									</td>
 
 									<td class="nickname">
-										{entry.nickname}
-										{#if entry.isCurrentPlayer}
-											<span class="you">You</span>
-										{/if}
+										<div class="player-cell">
+											{#if entry.avatarUrl}
+												<img
+													src={entry.avatarUrl}
+													alt=""
+													class="leaderboard-avatar"
+													referrerpolicy="no-referrer"
+												/>
+											{:else if entry.isSavedAccount}
+												<i
+													class="fa-brands fa-google leaderboard-google-icon"
+													title="Google Account"
+												></i>
+											{/if}
+											<span class="player-name">{entry.nickname}</span>
+											{#if entry.isCurrentPlayer}
+												<span class="you">You</span>
+											{/if}
+										</div>
 									</td>
 
 									<td class="run-id" title={`Run ID: ${entry.attemptId}`}>
@@ -200,12 +214,6 @@
 		font-size: clamp(2.2rem, 5vw, 3rem);
 		font-weight: 900;
 		letter-spacing: 0.05em;
-	}
-
-	.subtitle {
-		margin: 0.25rem 0 0;
-		color: var(--theme-text-muted, #94a3b8);
-		font-size: 0.9rem;
 	}
 
 	.level-filter {
@@ -350,6 +358,27 @@
 		color: var(--theme-text-main, #ffffff);
 	}
 
+	.player-cell {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.leaderboard-avatar {
+		width: 24px;
+		height: 24px;
+		border-radius: 50%;
+		object-fit: cover;
+		border: 1px solid var(--theme-gold, #ffbc0d);
+		flex-shrink: 0;
+	}
+
+	.leaderboard-google-icon {
+		font-size: 0.85rem;
+		color: var(--theme-gold, #ffbc0d);
+		flex-shrink: 0;
+	}
+
 	.you {
 		display: inline-block;
 		margin-left: 0.5rem;
@@ -441,10 +470,6 @@
 		.title {
 			font-size: clamp(2rem, 5vw, 2.5rem);
 		}
-
-		.subtitle {
-			display: none;
-		}
 	}
 
 	@media (max-width: 640px) {
@@ -460,7 +485,6 @@
 			font-size: 1.65rem;
 		}
 
-		.subtitle,
 		.level-filter a {
 			font-size: 0.65rem;
 		}

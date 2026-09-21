@@ -14,6 +14,21 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	event.locals.playerId = await getOrCreatePlayerId(event.cookies, authSecret);
 
+	if (event.platform?.env?.DB) {
+		try {
+			const { getDb } = await import('$lib/server/db');
+			const { players } = await import('$lib/server/db/schema');
+			const { eq } = await import('drizzle-orm');
+			const db = getDb(event.platform.env.DB);
+			const [player] = await db.select().from(players).where(eq(players.id, event.locals.playerId));
+			event.locals.player = player ?? null;
+		} catch {
+			event.locals.player = null;
+		}
+	} else {
+		event.locals.player = null;
+	}
+
 	const response = await resolve(event);
 
 	// Cloudflare Edge & Static Asset Caching Optimization

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import { page } from '$app/state';
 	import type { PageData } from './$types';
 	import { Button } from '$lib/components/ui';
 
@@ -7,6 +8,7 @@
 	const attempt = $derived(data.attempt);
 	const questionResults = $derived(data.questionResults ?? []);
 	const totalQuestions = $derived(questionResults.length || (attempt.chosenQuestions ?? []).length);
+	const fromMyRun = $derived(page.url.searchParams.get('from') === 'my-run');
 
 	let selectedIndex = $state(0);
 	let scrollContainer: HTMLElement | null = $state(null);
@@ -31,11 +33,38 @@
 		}
 	}
 
+	function handleReviewKeydown(event: KeyboardEvent) {
+		const target = event.target as HTMLElement | null;
+
+		if (
+			target instanceof HTMLInputElement ||
+			target instanceof HTMLTextAreaElement ||
+			target instanceof HTMLSelectElement ||
+			target?.isContentEditable
+		) {
+			return;
+		}
+
+		if (event.key === 'ArrowLeft') {
+			event.preventDefault();
+			goPrevReview();
+		} else if (event.key === 'ArrowRight') {
+			event.preventDefault();
+			goNextReview();
+		}
+	}
+
 	$effect(() => {
 		// Reset inner scroll position when switching questions
 		if (selectedIndex !== undefined && scrollContainer) {
 			scrollContainer.scrollTop = 0;
 		}
+
+		window.addEventListener('keydown', handleReviewKeydown);
+
+		return () => {
+			window.removeEventListener('keydown', handleReviewKeydown);
+		};
 	});
 </script>
 
@@ -205,10 +234,17 @@
 
 		<!-- Bottom Action Buttons in 1 Row with Icons -->
 		<div class="review-actions">
-			<Button href={resolve(`/results/${attempt.id}`)} variant="secondary" size="md" fullWidth>
-				<i class="fa-solid fa-arrow-left"></i>
-				<span>Results</span>
-			</Button>
+			{#if fromMyRun}
+				<Button href={resolve('/my-run')} variant="secondary" size="md" fullWidth>
+					<i class="fa-solid fa-arrow-left"></i>
+					<span>My Runs</span>
+				</Button>
+			{:else}
+				<Button href={resolve(`/results/${attempt.id}`)} variant="secondary" size="md" fullWidth>
+					<i class="fa-solid fa-arrow-left"></i>
+					<span>Results</span>
+				</Button>
+			{/if}
 
 			<Button href={resolve('/')} variant="primary" size="md" fullWidth>
 				<i class="fa-solid fa-rotate-right"></i>

@@ -6,6 +6,8 @@ declare global {
 			env: Env & {
 				AUTH_SECRET: string;
 				ADMIN_PASSWORD: string;
+				GOOGLE_CLIENT_ID?: string;
+				GOOGLE_CLIENT_SECRET?: string;
 				DB: D1Database;
 			};
 			ctx: ExecutionContext;
@@ -16,6 +18,8 @@ declare global {
 		interface Locals {
 			/** The current visitor's player id, set once per request in hooks.server.ts. */
 			playerId: string;
+			/** The current visitor's player record (if found in the database), set in hooks.server.ts. */
+			player?: import('$lib/server/db/schema').Player | null;
 		}
 		// interface PageData {}
 		// interface PageState {}

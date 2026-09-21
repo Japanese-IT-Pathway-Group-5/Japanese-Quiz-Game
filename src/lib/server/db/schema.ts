@@ -1,14 +1,22 @@
 import { index, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
-export const players = sqliteTable('players', {
-	id: text('id')
-		.primaryKey()
-		.$defaultFn(() => crypto.randomUUID()),
-	nickname: text('nickname').notNull(),
-	createdAt: integer('created_at', { mode: 'timestamp' })
-		.notNull()
-		.$defaultFn(() => new Date())
-});
+export const players = sqliteTable(
+	'players',
+	{
+		id: text('id')
+			.primaryKey()
+			.$defaultFn(() => crypto.randomUUID()),
+		nickname: text('nickname').notNull(),
+		email: text('email'),
+		googleId: text('google_id'),
+		avatarUrl: text('avatar_url'),
+		isAnonymous: integer('is_anonymous', { mode: 'boolean' }).notNull().default(true),
+		createdAt: integer('created_at', { mode: 'timestamp' })
+			.notNull()
+			.$defaultFn(() => new Date())
+	},
+	(table) => [index('players_google_id_idx').on(table.googleId)]
+);
 
 export const quizQuestion = sqliteTable('quiz_question', {
 	id: text('id')
