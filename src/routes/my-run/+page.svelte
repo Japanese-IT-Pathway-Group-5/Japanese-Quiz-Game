@@ -215,13 +215,13 @@
 						<table>
 							<thead>
 								<tr>
-									<th>Run</th>
-									<th>Level</th>
-									<th>Score</th>
-									<th>Accuracy</th>
-									<th>Time</th>
-									<th>Date</th>
-									<th>Action</th>
+									<th class="col-run">Run</th>
+									<th class="col-level">Level</th>
+									<th class="col-score">Score</th>
+									<th class="col-accuracy">Accuracy</th>
+									<th class="col-time">Time</th>
+									<th class="col-date">Date</th>
+									<th class="col-action">Action</th>
 								</tr>
 							</thead>
 
@@ -237,31 +237,31 @@
 								{:else}
 									{#each paginatedRuns as run (run.attemptId)}
 										<tr>
-											<td class="run-id font-mono">
+											<td class="run-id col-run font-mono">
 												{run.attemptId.slice(0, 6).toUpperCase()}
 											</td>
 
-											<td>
+											<td class="col-level">
 												<span class="level-badge font-japanese">{run.level}</span>
 											</td>
 
-											<td class="score font-mono">
+											<td class="score col-score font-mono">
 												{run.score}
 											</td>
 
-											<td class="stat-text font-mono">
+											<td class="stat-text col-accuracy font-mono">
 												{run.accuracy}%
 											</td>
 
-											<td class="time-text font-mono">
+											<td class="time-text col-time font-mono">
 												{formatTime(run.timeSeconds)}
 											</td>
 
-											<td class="date-text font-mono">
+											<td class="date-text col-date font-mono">
 												{formatDate(run.finishedAt)}
 											</td>
 
-											<td>
+											<td class="col-action">
 												<Button
 													href="{resolve(`/review/${run.attemptId}`)}?from=my-run"
 													variant="gold"
@@ -835,25 +835,256 @@
 		gap: 0.75rem;
 	}
 
-	@media (max-width: 700px) {
-		.kpi-grid {
-			grid-template-columns: repeat(2, 1fr);
+	.col-level {
+		text-align: center;
+		width: 70px;
+	}
+
+	.col-score {
+		text-align: center;
+		width: 70px;
+	}
+
+	.col-accuracy {
+		text-align: center;
+		width: 85px;
+	}
+
+	.col-time {
+		text-align: right;
+		width: 80px;
+	}
+
+	.col-run {
+		width: 85px;
+	}
+
+	.col-date {
+		width: 140px;
+	}
+
+	.col-action {
+		text-align: right;
+		width: 100px;
+	}
+
+	@media (max-width: 640px) {
+		.page-shell {
+			padding: 0.9rem 0.65rem 1.5rem;
 		}
 
+		.dashboard-layout {
+			gap: 0.85rem;
+		}
+
+		.dashboard-header {
+			padding-inline: 2rem;
+		}
+
+		.title {
+			font-size: 1.85rem;
+		}
+
+		/* Sleek, compact 2x2 KPI grid */
+		.kpi-grid {
+			grid-template-columns: repeat(2, 1fr);
+			gap: 0.5rem;
+		}
+
+		.kpi-card {
+			padding: 0.65rem 0.75rem;
+			gap: 0.2rem;
+			border-radius: var(--radius-md);
+		}
+
+		.kpi-label {
+			font-size: 0.6rem;
+		}
+
+		.kpi-icon {
+			font-size: 0.75rem;
+		}
+
+		.kpi-value {
+			font-size: 1.25rem;
+		}
+
+		.kpi-footer {
+			font-size: 0.65rem;
+		}
+
+		/* Compact side-by-side mastery cards */
 		.mastery-grid {
-			grid-template-columns: 1fr;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 0.5rem;
+		}
+
+		.mastery-card {
+			padding: 0.65rem 0.75rem;
+			gap: 0.45rem;
+			border-radius: var(--radius-md);
+		}
+
+		.level-pill {
+			font-size: 0.74rem;
+			padding: 0.15rem 0.45rem;
+		}
+
+		.mastery-runs {
+			font-size: 0.68rem;
+		}
+
+		.mastery-stats {
+			gap: 0.85rem;
+		}
+
+		.m-label {
+			font-size: 0.6rem;
+		}
+
+		.m-val {
+			font-size: 0.95rem;
+		}
+
+		/* Compact table controls */
+		.table-section {
+			gap: 0.6rem;
 		}
 
 		.table-controls {
-			flex-direction: column;
-			align-items: flex-start;
-			gap: 0.6rem;
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: center;
+			gap: 0.5rem;
+		}
+
+		.table-heading {
+			font-size: 0.74rem;
+		}
+
+		.level-filter {
+			gap: 0.3rem;
+		}
+
+		.filter-tab {
+			font-size: 0.75rem;
+			padding: 0.25rem 0.65rem;
+			min-height: 28px;
+		}
+
+		/* Hide non-essential columns on mobile */
+		.col-run,
+		.col-date {
+			display: none;
+		}
+
+		.col-level {
+			width: 44px;
+			padding-left: 0.5rem;
+			padding-right: 0.25rem;
+		}
+
+		.col-score {
+			width: 44px;
+			padding-left: 0.25rem;
+			padding-right: 0.25rem;
+		}
+
+		.col-accuracy {
+			width: 52px;
+			padding-left: 0.25rem;
+			padding-right: 0.25rem;
+		}
+
+		.col-time {
+			width: 52px;
+			padding-left: 0.25rem;
+			padding-right: 0.25rem;
+		}
+
+		.col-action {
+			width: 72px;
+			padding-left: 0.25rem;
+			padding-right: 0.5rem;
 		}
 
 		th,
 		td {
-			padding: 0.6rem 0.5rem;
-			font-size: 0.65rem;
+			padding: 0.6rem 0.35rem;
+			font-size: 0.8rem;
+		}
+
+		th {
+			font-size: 0.66rem;
+			letter-spacing: 0.05em;
+		}
+
+		.level-badge {
+			font-size: 0.72rem;
+			padding: 0.14rem 0.38rem;
+		}
+
+		.score {
+			font-size: 0.95rem;
+		}
+
+		.stat-text {
+			font-size: 0.78rem;
+		}
+
+		.time-text {
+			font-size: 0.75rem;
+		}
+
+		.col-action :global(.ui-btn) {
+			min-height: 28px;
+			padding: 0.2rem 0.5rem;
+			font-size: 0.72rem;
+			gap: 0.25rem;
+		}
+
+		/* Pagination */
+		.pagination-bar {
+			gap: 0.35rem;
+			padding: 0.5rem 0;
+		}
+
+		.page-nav-btn {
+			min-height: 30px;
+			padding: 0.25rem 0.55rem;
+			font-size: 0.72rem;
+		}
+
+		.page-number {
+			width: 28px;
+			height: 28px;
+			font-size: 0.75rem;
+		}
+
+		/* Bottom actions */
+		.actions :global(.ui-btn) {
+			min-height: 40px;
+			padding: 0.45rem 1.25rem;
+			font-size: 0.86rem;
+		}
+
+		/* Guest card */
+		.guest-card {
+			padding: 1.5rem 1rem;
+			gap: 0.65rem;
+		}
+
+		.guest-icon {
+			font-size: 2rem;
+		}
+
+		.guest-title {
+			font-size: 1.25rem;
+		}
+
+		.guest-desc {
+			font-size: 0.82rem;
 		}
 	}
 </style>

@@ -51,13 +51,13 @@
 				<table>
 					<thead>
 						<tr>
-							<th>Rank</th>
-							<th>Player</th>
-							<th>Run</th>
-							<th>Level</th>
-							<th>Score</th>
-							<th>Time</th>
-							<th>Completed</th>
+							<th class="col-rank">Rank</th>
+							<th class="col-player">Player</th>
+							<th class="col-run">Run</th>
+							<th class="col-level">Level</th>
+							<th class="col-score">Score</th>
+							<th class="col-time">Time</th>
+							<th class="col-completed">Completed</th>
 						</tr>
 					</thead>
 
@@ -65,40 +65,40 @@
 						{#if $navigating}
 							{#each [0, 1, 2, 3, 4] as idx (idx)}
 								<tr class="skeleton-row">
-									<td class="position">
+									<td class="position col-rank">
 										<div
 											class="skeleton"
 											style="width: 28px; height: 1.1rem; margin: 0 auto;"
 										></div>
 									</td>
-									<td class="nickname">
+									<td class="nickname col-player">
 										<div
 											class="skeleton"
 											style="width: {80 + (idx % 3) * 20}px; height: 1.1rem;"
 										></div>
 									</td>
-									<td>
+									<td class="col-run">
 										<div class="skeleton" style="width: 64px; height: 1.1rem;"></div>
 									</td>
-									<td>
+									<td class="col-level">
 										<div
 											class="skeleton"
 											style="width: 36px; height: 1.1rem; margin: 0 auto; border-radius: 999px;"
 										></div>
 									</td>
-									<td class="score">
+									<td class="score col-score">
 										<div
 											class="skeleton"
 											style="width: 32px; height: 1.1rem; margin: 0 auto;"
 										></div>
 									</td>
-									<td class="time">
+									<td class="time col-time">
 										<div
 											class="skeleton"
 											style="width: 44px; height: 1.1rem; margin: 0 auto;"
 										></div>
 									</td>
-									<td>
+									<td class="col-completed">
 										<div class="skeleton" style="width: 120px; height: 1.1rem;"></div>
 									</td>
 								</tr>
@@ -106,7 +106,7 @@
 						{:else}
 							{#each data.leaderboard as entry (entry.attemptId)}
 								<tr class:current-player={entry.isCurrentPlayer}>
-									<td class="position">
+									<td class="position col-rank">
 										{#if entry.position === 1}
 											<span class="rank-badge rank-1 font-mono">
 												<i class="fa-solid fa-crown"></i>
@@ -129,7 +129,7 @@
 										{/if}
 									</td>
 
-									<td class="nickname">
+									<td class="nickname col-player">
 										<div class="player-cell">
 											{#if entry.avatarUrl}
 												<img
@@ -151,25 +151,25 @@
 										</div>
 									</td>
 
-									<td class="run-id" title={`Run ID: ${entry.attemptId}`}>
+									<td class="run-id col-run" title={`Run ID: ${entry.attemptId}`}>
 										{entry.attemptId.slice(0, 6).toUpperCase()}
 									</td>
 
-									<td>
+									<td class="col-level">
 										<span class="level-badge">
 											{entry.level}
 										</span>
 									</td>
 
-									<td class="score">
+									<td class="score col-score">
 										{entry.score}
 									</td>
 
-									<td class="time">
+									<td class="time col-time">
 										{formatTime(entry.timeSeconds)}
 									</td>
 
-									<td class="completed-at">{formatCompletedAt(entry.finishedAt)}</td>
+									<td class="completed-at col-completed">{formatCompletedAt(entry.finishedAt)}</td>
 								</tr>
 							{/each}
 						{/if}
@@ -358,10 +358,50 @@
 		color: var(--theme-text-main, #ffffff);
 	}
 
+	.col-rank {
+		text-align: center;
+		width: 75px;
+	}
+
+	.col-player {
+		text-align: left;
+	}
+
+	.col-level {
+		text-align: center;
+		width: 75px;
+	}
+
+	.col-score {
+		text-align: center;
+		width: 75px;
+	}
+
+	.col-time {
+		text-align: right;
+		width: 85px;
+	}
+
+	.col-run {
+		width: 90px;
+	}
+
+	.col-completed {
+		width: 170px;
+	}
+
 	.player-cell {
 		display: inline-flex;
 		align-items: center;
 		gap: 0.5rem;
+		min-width: 0;
+		max-width: 100%;
+	}
+
+	.player-name {
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	.leaderboard-avatar {
@@ -474,51 +514,128 @@
 
 	@media (max-width: 640px) {
 		.leaderboard-page {
-			padding: 0.9rem 0.55rem;
+			padding: 0.9rem 0.65rem 1rem;
 		}
 
 		.leaderboard-container {
-			gap: 0.6rem;
+			gap: 0.75rem;
+		}
+
+		.leaderboard-header {
+			padding-inline: 2rem;
 		}
 
 		.title {
-			font-size: 1.65rem;
-		}
-
-		.level-filter a {
-			font-size: 0.65rem;
+			font-size: 1.85rem;
 		}
 
 		.level-filter {
-			gap: 0.3rem;
+			gap: 0.45rem;
 		}
 
 		.level-filter a {
-			padding: 0.32rem 0.65rem;
+			font-size: 0.82rem;
+			padding: 0.38rem 0.95rem;
+			min-height: 32px;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		/* Hide secondary desktop-only columns on mobile */
+		.col-run,
+		.col-completed {
+			display: none;
+		}
+
+		.col-rank {
+			width: 44px;
+			padding-left: 0.55rem;
+			padding-right: 0.35rem;
+		}
+
+		.col-player {
+			padding-left: 0.35rem;
+			padding-right: 0.35rem;
+		}
+
+		.col-level {
+			width: 44px;
+			padding-left: 0.25rem;
+			padding-right: 0.25rem;
+		}
+
+		.col-score {
+			width: 44px;
+			padding-left: 0.25rem;
+			padding-right: 0.25rem;
+		}
+
+		.col-time {
+			width: 54px;
+			padding-left: 0.25rem;
+			padding-right: 0.55rem;
 		}
 
 		th,
 		td {
-			padding: 0.55rem 0.4rem;
-			font-size: 0.62rem;
+			padding: 0.65rem 0.45rem;
+			font-size: 0.8rem;
 		}
 
 		th {
-			font-size: 0.52rem;
+			font-size: 0.68rem;
+			letter-spacing: 0.06em;
 		}
 
-		.run-id,
-		.completed-at,
-		.level-badge,
-		.rank-badge,
-		.you {
-			font-size: 0.55rem;
+		.player-name {
+			max-width: clamp(75px, 25vw, 120px);
+			font-size: 0.84rem;
 		}
 
-		.rank-badge,
-		.level-badge,
+		.leaderboard-avatar {
+			width: 22px;
+			height: 22px;
+		}
+
+		.rank-badge {
+			font-size: 0.72rem;
+			padding: 0.16rem 0.42rem;
+			gap: 0.2rem;
+		}
+
+		.rank-badge i {
+			font-size: 0.62rem;
+		}
+
+		.rank-number {
+			font-size: 0.78rem;
+			padding-left: 0;
+		}
+
+		.level-badge {
+			font-size: 0.72rem;
+			padding: 0.16rem 0.42rem;
+		}
+
+		.score {
+			font-size: 0.95rem;
+		}
+
+		.time {
+			font-size: 0.76rem;
+		}
+
 		.you {
-			padding: 0.12rem 0.3rem;
+			font-size: 0.62rem;
+			padding: 0.12rem 0.38rem;
+			margin-left: 0.35rem;
+		}
+
+		.actions :global(.ui-btn) {
+			min-height: 40px;
+			padding: 0.45rem 1.25rem;
+			font-size: 0.86rem;
 		}
 	}
 </style>
