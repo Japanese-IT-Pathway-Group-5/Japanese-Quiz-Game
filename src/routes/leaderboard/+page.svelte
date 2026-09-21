@@ -6,6 +6,11 @@
 
 	let { data }: { data: PageData } = $props();
 
+	let expandedAttemptId = $state<string | null>(null);
+	const toggleExpand = (id: string) => {
+		expandedAttemptId = expandedAttemptId === id ? null : id;
+	};
+
 	const formatTime = (seconds: number) => {
 		const minutes = Math.floor(seconds / 60);
 		const remainingSeconds = seconds % 60;
@@ -58,6 +63,7 @@
 							<th class="col-score">Score</th>
 							<th class="col-time">Time</th>
 							<th class="col-completed">Completed</th>
+							<th class="col-expand" aria-label="Expand details"></th>
 						</tr>
 					</thead>
 
@@ -101,11 +107,17 @@
 									<td class="col-completed">
 										<div class="skeleton" style="width: 120px; height: 1.1rem;"></div>
 									</td>
+									<td class="col-expand"></td>
 								</tr>
 							{/each}
 						{:else}
 							{#each data.leaderboard as entry (entry.attemptId)}
-								<tr class:current-player={entry.isCurrentPlayer}>
+								<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_noninteractive_element_interactions -->
+								<tr
+									class="table-row-item"
+									class:current-player={entry.isCurrentPlayer}
+									onclick={() => toggleExpand(entry.attemptId)}
+								>
 									<td class="position col-rank">
 										{#if entry.position === 1}
 											<span class="rank-badge rank-1 font-mono">
@@ -170,7 +182,41 @@
 									</td>
 
 									<td class="completed-at col-completed">{formatCompletedAt(entry.finishedAt)}</td>
+
+									<td class="col-expand">
+										<button
+											type="button"
+											class="expand-icon-btn"
+											aria-label="Toggle details for run {entry.attemptId}"
+											aria-expanded={expandedAttemptId === entry.attemptId}
+											onclick={(e) => {
+												e.stopPropagation();
+												toggleExpand(entry.attemptId);
+											}}
+										>
+											<i
+												class="fa-solid fa-chevron-down expand-chevron"
+												class:rotated={expandedAttemptId === entry.attemptId}
+											></i>
+										</button>
+									</td>
 								</tr>
+								{#if expandedAttemptId === entry.attemptId}
+									<tr class="detail-row">
+										<td colspan="8">
+											<div class="detail-drawer font-mono">
+												<div class="detail-item">
+													<span class="detail-label">RUN:</span>
+													<span class="detail-value">{entry.attemptId.slice(0, 8).toUpperCase()}</span>
+												</div>
+												<div class="detail-item">
+													<span class="detail-label">COMPLETED:</span>
+													<span class="detail-value">{formatCompletedAt(entry.finishedAt)}</span>
+												</div>
+											</div>
+										</td>
+									</tr>
+								{/if}
 							{/each}
 						{/if}
 					</tbody>
@@ -267,11 +313,16 @@
 		flex: 1;
 		min-height: 0;
 		overflow: auto;
-		border-radius: var(--radius-lg, 1rem);
+		border-radius: 0;
 		background: rgba(0, 15, 45, 0.6);
 		backdrop-filter: blur(12px);
 		border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.1));
 		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+	}
+
+	.col-expand,
+	.detail-row {
+		display: none;
 	}
 
 	table {
@@ -636,6 +687,81 @@
 			min-height: 40px;
 			padding: 0.45rem 1.25rem;
 			font-size: 0.86rem;
+		}
+
+		.col-expand {
+			display: table-cell;
+			width: 28px;
+			text-align: center;
+			padding: 0.65rem 0.25rem;
+		}
+
+		.table-row-item {
+			cursor: pointer;
+			-webkit-tap-highlight-color: transparent;
+			transition: background 0.15s ease;
+		}
+
+		.table-row-item:active {
+			background: rgba(255, 255, 255, 0.06);
+		}
+
+		.expand-icon-btn {
+			background: transparent;
+			border: none;
+			color: var(--theme-text-muted, #94a3b8);
+			cursor: pointer;
+			padding: 0.2rem;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 0.7rem;
+		}
+
+		.expand-chevron {
+			transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+		}
+
+		.expand-chevron.rotated {
+			transform: rotate(180deg);
+			color: var(--theme-gold, #ffbc0d);
+		}
+
+		.detail-row {
+			display: table-row;
+			background: rgba(0, 10, 30, 0.5);
+		}
+
+		.detail-row td {
+			padding: 0.45rem 0.65rem 0.6rem;
+			border-bottom: 1px solid var(--theme-border, rgba(255, 255, 255, 0.08));
+		}
+
+		.detail-drawer {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.5rem 1rem;
+			font-size: 0.72rem;
+			padding: 0.35rem 0.6rem;
+			background: rgba(255, 255, 255, 0.04);
+			border-left: 3px solid var(--theme-gold, #ffbc0d);
+		}
+
+		.detail-item {
+			display: inline-flex;
+			align-items: center;
+			gap: 0.35rem;
+		}
+
+		.detail-label {
+			color: var(--theme-text-muted, #94a3b8);
+			font-weight: 700;
+			font-size: 0.68rem;
+		}
+
+		.detail-value {
+			color: var(--theme-text-main, #ffffff);
+			font-size: 0.74rem;
 		}
 	}
 </style>

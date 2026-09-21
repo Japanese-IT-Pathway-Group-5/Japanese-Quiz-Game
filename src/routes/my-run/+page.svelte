@@ -8,6 +8,12 @@
 	let selectedLevel = $state<'all' | 'N3' | 'N4'>('all');
 	let currentPage = $state(1);
 	let isChangingPage = $state(false);
+	let showAllStats = $state(false);
+	let expandedRunId = $state<string | null>(null);
+
+	function toggleExpandRun(id: string) {
+		expandedRunId = expandedRunId === id ? null : id;
+	}
 
 	const ITEMS_PER_PAGE = 10;
 	const filteredRuns = $derived(
@@ -98,7 +104,7 @@
 						</div>
 					</div>
 
-					<div class="kpi-card">
+					<div class="kpi-card kpi-secondary" class:kpi-collapsed={!showAllStats}>
 						<div class="kpi-header">
 							<span class="kpi-label font-mono">TOTAL RUNS</span>
 							<i class="fa-solid fa-gamepad kpi-icon"></i>
@@ -109,7 +115,7 @@
 						</div>
 					</div>
 
-					<div class="kpi-card">
+					<div class="kpi-card kpi-secondary" class:kpi-collapsed={!showAllStats}>
 						<div class="kpi-header">
 							<span class="kpi-label font-mono">PRACTICE TIME</span>
 							<i class="fa-solid fa-stopwatch kpi-icon"></i>
@@ -120,7 +126,11 @@
 				</section>
 
 				<!-- Level Mastery Breakdown (N4 vs N3) -->
-				<section class="mastery-grid" aria-label="Level Mastery Breakdown">
+				<section
+					class="mastery-grid"
+					class:mastery-collapsed={!showAllStats}
+					aria-label="Level Mastery Breakdown"
+				>
 					<div class="mastery-card">
 						<div class="mastery-top">
 							<span class="level-pill font-japanese">N4 初級</span>
@@ -159,6 +169,16 @@
 						</div>
 					</div>
 				</section>
+
+				<button
+					type="button"
+					class="mobile-stats-toggle font-mono"
+					onclick={() => (showAllStats = !showAllStats)}
+					aria-expanded={showAllStats}
+				>
+					<span>{showAllStats ? 'Show less stats' : 'Show more stats'}</span>
+					<i class="fa-solid fa-chevron-down toggle-icon" class:rotated={showAllStats}></i>
+				</button>
 			{/if}
 
 			<!-- Run History Table Section -->
@@ -222,6 +242,7 @@
 									<th class="col-time">Time</th>
 									<th class="col-date">Date</th>
 									<th class="col-action">Action</th>
+									<th class="col-expand" aria-label="Expand details"></th>
 								</tr>
 							</thead>
 
@@ -229,14 +250,18 @@
 								{#if isChangingPage}
 									{#each skeletonRows as rowIdx (rowIdx)}
 										<tr class="skeleton-row">
-											<td colspan="7">
+											<td colspan="8">
 												<div class="skeleton-bar"></div>
 											</td>
 										</tr>
 									{/each}
 								{:else}
 									{#each paginatedRuns as run (run.attemptId)}
-										<tr>
+										<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_noninteractive_element_interactions -->
+										<tr
+											class="table-row-item"
+											onclick={() => toggleExpandRun(run.attemptId)}
+										>
 											<td class="run-id col-run font-mono">
 												{run.attemptId.slice(0, 6).toUpperCase()}
 											</td>
@@ -261,7 +286,7 @@
 												{formatDate(run.finishedAt)}
 											</td>
 
-											<td class="col-action">
+											<td class="col-action" onclick={(e) => e.stopPropagation()}>
 												<Button
 													href="{resolve(`/review/${run.attemptId}`)}?from=my-run"
 													variant="gold"
@@ -271,7 +296,41 @@
 													<span>Review</span>
 												</Button>
 											</td>
+
+											<td class="col-expand">
+												<button
+													type="button"
+													class="expand-icon-btn"
+													aria-label="Toggle details for run {run.attemptId}"
+													aria-expanded={expandedRunId === run.attemptId}
+													onclick={(e) => {
+														e.stopPropagation();
+														toggleExpandRun(run.attemptId);
+													}}
+												>
+													<i
+														class="fa-solid fa-chevron-down expand-chevron"
+														class:rotated={expandedRunId === run.attemptId}
+													></i>
+												</button>
+											</td>
 										</tr>
+										{#if expandedRunId === run.attemptId}
+											<tr class="detail-row">
+												<td colspan="8">
+													<div class="detail-drawer font-mono">
+														<div class="detail-item">
+															<span class="detail-label">RUN:</span>
+															<span class="detail-value">{run.attemptId.slice(0, 8).toUpperCase()}</span>
+														</div>
+														<div class="detail-item">
+															<span class="detail-label">DATE:</span>
+															<span class="detail-value">{formatDate(run.finishedAt)}</span>
+														</div>
+													</div>
+												</td>
+											</tr>
+										{/if}
 									{/each}
 								{/if}
 							</tbody>
@@ -588,10 +647,16 @@
 	/* Table (Modern Analytics Table) */
 	.table-wrapper {
 		overflow: auto;
-		border-radius: var(--radius-lg, 1rem);
+		border-radius: 0;
 		background: rgba(0, 15, 45, 0.5);
 		backdrop-filter: blur(12px);
 		border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.08));
+	}
+
+	.mobile-stats-toggle,
+	.col-expand,
+	.detail-row {
+		display: none;
 	}
 
 	table {
@@ -1067,6 +1132,123 @@
 			min-height: 40px;
 			padding: 0.45rem 1.25rem;
 			font-size: 0.86rem;
+		}
+
+		/* Mobile collapsible stats (show 1 row by default) */
+		.kpi-secondary.kpi-collapsed {
+			display: none;
+		}
+
+		.mastery-grid.mastery-collapsed {
+			display: none;
+		}
+
+		.mobile-stats-toggle {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			gap: 0.4rem;
+			align-self: center;
+			padding: 0.35rem 0.85rem;
+			border-radius: var(--radius-pill, 9999px);
+			border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.12));
+			background: rgba(0, 15, 45, 0.45);
+			color: var(--theme-text-muted, #94a3b8);
+			font-size: 0.72rem;
+			font-weight: 700;
+			cursor: pointer;
+			transition: all 0.2s ease;
+		}
+
+		.mobile-stats-toggle:hover {
+			color: #ffffff;
+			border-color: var(--theme-gold, #ffbc0d);
+		}
+
+		.toggle-icon {
+			transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+			font-size: 0.65rem;
+		}
+
+		.toggle-icon.rotated {
+			transform: rotate(180deg);
+			color: var(--theme-gold, #ffbc0d);
+		}
+
+		/* Expand button and detail row in table */
+		.col-expand {
+			display: table-cell;
+			width: 24px;
+			text-align: center;
+			padding: 0.6rem 0.2rem;
+		}
+
+		.table-row-item {
+			cursor: pointer;
+			-webkit-tap-highlight-color: transparent;
+			transition: background 0.15s ease;
+		}
+
+		.table-row-item:active {
+			background: rgba(255, 255, 255, 0.06);
+		}
+
+		.expand-icon-btn {
+			background: transparent;
+			border: none;
+			color: var(--theme-text-muted, #94a3b8);
+			cursor: pointer;
+			padding: 0.2rem;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 0.68rem;
+		}
+
+		.expand-chevron {
+			transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+		}
+
+		.expand-chevron.rotated {
+			transform: rotate(180deg);
+			color: var(--theme-gold, #ffbc0d);
+		}
+
+		.detail-row {
+			display: table-row;
+			background: rgba(0, 10, 30, 0.5);
+		}
+
+		.detail-row td {
+			padding: 0.45rem 0.65rem 0.6rem;
+			border-bottom: 1px solid var(--theme-border, rgba(255, 255, 255, 0.08));
+		}
+
+		.detail-drawer {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.5rem 1rem;
+			font-size: 0.72rem;
+			padding: 0.35rem 0.6rem;
+			background: rgba(255, 255, 255, 0.04);
+			border-left: 3px solid var(--theme-gold, #ffbc0d);
+		}
+
+		.detail-item {
+			display: inline-flex;
+			align-items: center;
+			gap: 0.35rem;
+		}
+
+		.detail-label {
+			color: var(--theme-text-muted, #94a3b8);
+			font-weight: 700;
+			font-size: 0.68rem;
+		}
+
+		.detail-value {
+			color: var(--theme-text-main, #ffffff);
+			font-size: 0.74rem;
 		}
 
 		/* Guest card */
