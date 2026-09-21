@@ -23,7 +23,6 @@
 		fullWidth = false,
 		class: className = '',
 		children,
-		onclick,
 		...rest
 	}: ButtonProps = $props();
 </script>
@@ -42,7 +41,6 @@
 	<button
 		{type}
 		{disabled}
-		{onclick}
 		class="ui-btn ui-btn-{variant} ui-btn-{size} {fullWidth ? 'w-full' : ''} {className}"
 		{...rest as HTMLButtonAttributes}
 	>
