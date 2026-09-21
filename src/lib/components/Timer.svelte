@@ -51,8 +51,8 @@
 		display: inline-flex;
 		align-items: center;
 		gap: 0.45rem;
-		background: rgba(0, 15, 45, 0.55);
-		border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
+		background: var(--theme-paper);
+		border: 1px solid var(--theme-border);
 		padding: 0.35rem 0.75rem;
 		border-radius: 9999px;
 		color: var(--theme-text-main, #ffffff);

@@ -47,60 +47,60 @@ html[data-theme='light'],
 
 @media (prefers-color-scheme: dark) {
 	:root:not([data-theme='light']) {
-		/* Palette - Dark ("Midnight Obsidian Edition") */
-		--theme-background: #040711;
-		--theme-paper: #0b1020;
-		--theme-card: #10172d;
-		--theme-ink: #f0f4ff;
-		--theme-primary: #e5222b;
-		--theme-primary-hover: #ff3b44;
-		--theme-secondary: #ffbc0d;
-		--theme-secondary-hover: #ffd866;
-		--theme-accent: #ff6b35;
-		--theme-accent-hover: #ff8555;
-		--theme-gold: #ffdf79;
-		--theme-gold-shimmer: linear-gradient(135deg, #fff4b8 0%, #ffd043 45%, #d49818 100%);
-		--theme-success: #22c55e;
-		--theme-success-bg: rgba(34, 197, 94, 0.18);
-		--theme-error: #ef4444;
-		--theme-error-bg: rgba(239, 68, 68, 0.18);
-		--theme-text-main: #f0f4ff;
-		--theme-text-muted: #8892b0;
-		--theme-border: rgba(255, 255, 255, 0.12);
-		--theme-border-strong: rgba(255, 215, 0, 0.45);
-		--theme-shadow: 0 16px 50px rgba(0, 0, 0, 0.75);
-		--theme-shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.5);
-		--theme-focus-ring: rgba(255, 188, 13, 0.45);
+		/* Palette - Dark (GitHub Dark Edition) */
+		--theme-background: #0d1117;
+		--theme-paper: #161b22;
+		--theme-card: #21262d;
+		--theme-ink: #f0f6fc;
+		--theme-primary: #da3633;
+		--theme-primary-hover: #f85149;
+		--theme-secondary: #e3b341;
+		--theme-secondary-hover: #f0b72f;
+		--theme-accent: #58a6ff;
+		--theme-accent-hover: #79c0ff;
+		--theme-gold: #e3b341;
+		--theme-gold-shimmer: linear-gradient(135deg, #f2cc60 0%, #e3b341 50%, #bb8009 100%);
+		--theme-success: #3fb950;
+		--theme-success-bg: rgba(46, 160, 67, 0.15);
+		--theme-error: #f85149;
+		--theme-error-bg: rgba(248, 81, 73, 0.15);
+		--theme-text-main: #f0f6fc;
+		--theme-text-muted: #8b949e;
+		--theme-border: #30363d;
+		--theme-border-strong: #8b949e;
+		--theme-shadow: 0 16px 48px rgba(1, 4, 9, 0.85);
+		--theme-shadow-sm: 0 4px 14px rgba(1, 4, 9, 0.5);
+		--theme-focus-ring: rgba(88, 166, 255, 0.4);
 	}
 }
 
 html.dark,
 html[data-theme='dark'],
 [data-theme='dark'] {
-	/* Palette - Dark ("Midnight Obsidian Edition") */
-	--theme-background: #040711;
-	--theme-paper: #0b1020;
-	--theme-card: #10172d;
-	--theme-ink: #f0f4ff;
-	--theme-primary: #e5222b;
-	--theme-primary-hover: #ff3b44;
-	--theme-secondary: #ffbc0d;
-	--theme-secondary-hover: #ffd866;
-	--theme-accent: #ff6b35;
-	--theme-accent-hover: #ff8555;
-	--theme-gold: #ffdf79;
-	--theme-gold-shimmer: linear-gradient(135deg, #fff4b8 0%, #ffd043 45%, #d49818 100%);
-	--theme-success: #22c55e;
-	--theme-success-bg: rgba(34, 197, 94, 0.18);
-	--theme-error: #ef4444;
-	--theme-error-bg: rgba(239, 68, 68, 0.18);
-	--theme-text-main: #f0f4ff;
-	--theme-text-muted: #8892b0;
-	--theme-border: rgba(255, 255, 255, 0.12);
-	--theme-border-strong: rgba(255, 215, 0, 0.45);
-	--theme-shadow: 0 16px 50px rgba(0, 0, 0, 0.75);
-	--theme-shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.5);
-	--theme-focus-ring: rgba(255, 188, 13, 0.45);
+	/* Palette - Dark (GitHub Dark Edition) */
+	--theme-background: #0d1117;
+	--theme-paper: #161b22;
+	--theme-card: #21262d;
+	--theme-ink: #f0f6fc;
+	--theme-primary: #da3633;
+	--theme-primary-hover: #f85149;
+	--theme-secondary: #e3b341;
+	--theme-secondary-hover: #f0b72f;
+	--theme-accent: #58a6ff;
+	--theme-accent-hover: #79c0ff;
+	--theme-gold: #e3b341;
+	--theme-gold-shimmer: linear-gradient(135deg, #f2cc60 0%, #e3b341 50%, #bb8009 100%);
+	--theme-success: #3fb950;
+	--theme-success-bg: rgba(46, 160, 67, 0.15);
+	--theme-error: #f85149;
+	--theme-error-bg: rgba(248, 81, 73, 0.15);
+	--theme-text-main: #f0f6fc;
+	--theme-text-muted: #8b949e;
+	--theme-border: #30363d;
+	--theme-border-strong: #8b949e;
+	--theme-shadow: 0 16px 48px rgba(1, 4, 9, 0.85);
+	--theme-shadow-sm: 0 4px 14px rgba(1, 4, 9, 0.5);
+	--theme-focus-ring: rgba(88, 166, 255, 0.4);
 }
 
 /* Base resets */
@@ -208,21 +208,21 @@ html.dark body::before,
 	background-attachment: fixed;
 }
 
-/* Midnight Obsidian Starry Night (Dark Mode) */
+/* GitHub Dark Starry Night (Dark Mode) */
 html.dark .paper-grain,
 [data-theme='dark'] .paper-grain {
-	background-color: #040711;
+	background-color: #0d1117;
 	background-image:
 		/* Lunar corona glow */
-		radial-gradient(circle at 50% 120px, rgba(255, 223, 121, 0.15) 0%, transparent 550px),
+		radial-gradient(circle at 50% 120px, rgba(227, 179, 65, 0.12) 0%, transparent 550px),
 		/* Starlight particles */
-		radial-gradient(1.5px 1.5px at 15% 18%, rgba(255, 255, 255, 0.85), transparent),
-		radial-gradient(1px 1px at 82% 14%, rgba(255, 255, 255, 0.9), transparent),
-		radial-gradient(2px 2px at 88% 38%, rgba(255, 225, 120, 0.75), transparent),
-		radial-gradient(1px 1px at 30% 55%, rgba(255, 255, 255, 0.6), transparent),
-		radial-gradient(2px 2px at 68% 68%, rgba(255, 255, 255, 0.8), transparent),
-		/* Deep midnight obsidian vignette */
-		radial-gradient(ellipse at 50% 15%, #0d162e 0%, #060b18 50%, #02040a 100%);
+		radial-gradient(1.5px 1.5px at 15% 18%, rgba(240, 246, 252, 0.85), transparent),
+		radial-gradient(1px 1px at 82% 14%, rgba(240, 246, 252, 0.9), transparent),
+		radial-gradient(2px 2px at 88% 38%, rgba(227, 179, 65, 0.75), transparent),
+		radial-gradient(1px 1px at 30% 55%, rgba(240, 246, 252, 0.6), transparent),
+		radial-gradient(2px 2px at 68% 68%, rgba(240, 246, 252, 0.8), transparent),
+		/* GitHub canvas depth vignette */
+		radial-gradient(ellipse at 50% 15%, #161b22 0%, #0d1117 60%, #010409 100%);
 	background-attachment: fixed;
 }
 
@@ -501,6 +501,45 @@ html.dark .paper-grain,
 .input-text:focus::placeholder,
 .input-text:active::placeholder {
 	color: rgba(2, 38, 89, 0.65);
+}
+
+/* Dark mode inputs (GitHub Dark Form Controls) */
+[data-theme='dark'] .input-text,
+html.dark .input-text {
+	background: #161b22;
+	border-color: #30363d;
+	color: #f0f6fc;
+	box-shadow: none;
+}
+
+[data-theme='dark'] .input-text:hover,
+html.dark .input-text:hover {
+	background: #21262d;
+	border-color: #8b949e;
+}
+
+[data-theme='dark'] .input-text:focus,
+[data-theme='dark'] .input-text:active,
+html.dark .input-text:focus,
+html.dark .input-text:active {
+	background: #0d1117;
+	border-color: #58a6ff;
+	color: #f0f6fc;
+	caret-color: #58a6ff;
+	box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.3);
+}
+
+[data-theme='dark'] .input-text::placeholder,
+html.dark .input-text::placeholder {
+	color: #8b949e;
+	opacity: 0.85;
+}
+
+[data-theme='dark'] .input-text:focus::placeholder,
+[data-theme='dark'] .input-text:active::placeholder,
+html.dark .input-text:focus::placeholder,
+html.dark .input-text:active::placeholder {
+	color: #6e7681;
 }
 
 /* Page Shell Layout */

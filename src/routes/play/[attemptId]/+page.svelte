@@ -2085,7 +2085,7 @@
 		position: fixed;
 		inset: 0;
 		z-index: 100;
-		background: rgba(0, 5, 20, 0.82);
+		background: rgba(1, 4, 9, 0.82);
 		backdrop-filter: blur(6px);
 		display: flex;
 		align-items: center;
@@ -2194,7 +2194,7 @@
 		min-height: 0;
 		overflow-y: scroll; /* Forces scrollbar gutter to always remain visible */
 		scrollbar-width: thin;
-		scrollbar-color: var(--theme-gold) rgba(0, 15, 45, 0.6);
+		scrollbar-color: var(--theme-gold) var(--theme-card);
 		padding: 0.85rem 1.15rem 1.25rem 1.15rem;
 	}
 
@@ -2203,14 +2203,14 @@
 	}
 
 	.picker-scroll-container::-webkit-scrollbar-track {
-		background: rgba(0, 15, 45, 0.6);
+		background: var(--theme-card);
 		border-left: 1px solid var(--theme-border);
 	}
 
 	.picker-scroll-container::-webkit-scrollbar-thumb {
 		background: var(--theme-gold);
 		border-radius: var(--radius-pill);
-		border: 1px solid rgba(0, 15, 45, 0.4);
+		border: 1px solid var(--theme-border);
 	}
 
 	.picker-scroll-container::-webkit-scrollbar-thumb:hover {
