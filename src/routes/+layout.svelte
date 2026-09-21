@@ -3,8 +3,32 @@
 	import '../app.css';
 	import CloudScenery from '$lib/components/CloudScenery.svelte';
 	import { ThemeToggle } from '$lib/components/ui';
+	import { onMount } from 'svelte';
+	import { initBackgroundMusic } from '$lib/audio/backgroundMusic';
+	import { playClickSound } from '$lib/audio/clickSound';
 
 	let { children } = $props();
+
+	function handleGlobalClick(event: MouseEvent) {
+		const target = event.target as HTMLElement | null;
+		if (!target) return;
+
+		const clickable = target.closest(
+			'button, a, [role="button"], .ui-btn, input[type="submit"], input[type="button"]'
+		);
+		if (clickable) {
+			playClickSound();
+		}
+	}
+
+	onMount(() => {
+		document.addEventListener('click', handleGlobalClick);
+		initBackgroundMusic();
+
+		return () => {
+			document.removeEventListener('click', handleGlobalClick);
+		};
+	});
 </script>
 
 <svelte:head>
