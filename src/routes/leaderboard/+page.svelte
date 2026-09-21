@@ -112,7 +112,6 @@
 							{/each}
 						{:else}
 							{#each data.leaderboard as entry (entry.attemptId)}
-								<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_noninteractive_element_interactions -->
 								<tr
 									class="table-row-item"
 									class:current-player={entry.isCurrentPlayer}
@@ -207,7 +206,9 @@
 											<div class="detail-drawer font-mono">
 												<div class="detail-item">
 													<span class="detail-label">RUN:</span>
-													<span class="detail-value">{entry.attemptId.slice(0, 8).toUpperCase()}</span>
+													<span class="detail-value"
+														>{entry.attemptId.slice(0, 8).toUpperCase()}</span
+													>
 												</div>
 												<div class="detail-item">
 													<span class="detail-label">COMPLETED:</span>

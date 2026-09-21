@@ -259,11 +259,7 @@
 									{/each}
 								{:else}
 									{#each paginatedRuns as run (run.attemptId)}
-										<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_noninteractive_element_interactions -->
-										<tr
-											class="table-row-item"
-											onclick={() => toggleExpandRun(run.attemptId)}
-										>
+										<tr class="table-row-item" onclick={() => toggleExpandRun(run.attemptId)}>
 											<td class="run-id col-run font-mono">
 												{run.attemptId.slice(0, 6).toUpperCase()}
 											</td>
@@ -323,7 +319,9 @@
 													<div class="detail-drawer font-mono">
 														<div class="detail-item">
 															<span class="detail-label">RUN:</span>
-															<span class="detail-value">{run.attemptId.slice(0, 8).toUpperCase()}</span>
+															<span class="detail-value"
+																>{run.attemptId.slice(0, 8).toUpperCase()}</span
+															>
 														</div>
 														<div class="detail-item">
 															<span class="detail-label">DATE:</span>
