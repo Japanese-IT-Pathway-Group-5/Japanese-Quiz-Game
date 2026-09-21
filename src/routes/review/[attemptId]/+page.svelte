@@ -687,105 +687,161 @@
 	}
 
 	@media (max-width: 768px) {
-		.review-panels-container {
-			grid-template-columns: 1fr;
-		}
-
-		.review-main-card {
-			height: 480px;
-			min-height: 480px;
-			max-height: 480px;
-		}
-
-		.review-actions {
-			grid-template-columns: 1fr;
-		}
-	}
-
-	@media (max-width: 640px) {
 		.page-shell {
-			padding: 1.35rem 0.7rem 1.8rem;
+			padding: 1rem 0.85rem 2rem;
 		}
 
-		.review-layout,
+		.review-layout {
+			gap: 0.85rem;
+			width: 100%;
+		}
+
 		.review-panels-container {
-			gap: 0.7rem;
+			display: flex;
+			flex-direction: column;
+			gap: 0.75rem;
 		}
 
 		.review-sidebar {
-			gap: 0.3rem;
+			width: 100%;
+			gap: 0.35rem;
 		}
 
-		.tracker-title,
+		.tracker-top {
+			padding-bottom: 0.15rem;
+		}
+
+		.tracker-title {
+			font-size: 0.72rem;
+		}
+
 		.tracker-count {
-			font-size: 0.65rem;
-		}
-
-		.review-grid {
-			gap: 0.3rem;
-		}
-
-		.grid-tile {
-			height: 1.65rem;
-		}
-
-		.tile-number {
-			font-size: 0.65rem;
-		}
-
-		.tile-icon {
-			font-size: 0.42rem;
-			margin-top: 0.08rem;
-		}
-
-		.review-main-card {
-			height: 325px;
-			min-height: 325px;
-			max-height: 325px;
-			padding: 0.8rem;
-		}
-
-		.inspection-header {
-			padding-bottom: 0.4rem;
-		}
-
-		.q-index-tag,
-		.ans-value {
 			font-size: 0.82rem;
 		}
 
-		.format-label,
-		.inspection-status,
-		.ans-heading,
-		.explanation-heading,
-		.inspect-nav-btn,
-		.inspect-counter {
-			font-size: 0.62rem;
+		.review-grid {
+			display: flex;
+			gap: 0.3rem;
+			justify-content: space-between;
+			overflow-x: auto;
+			scrollbar-width: none;
+			-webkit-overflow-scrolling: touch;
+			padding-bottom: 0.25rem;
+		}
+
+		.review-grid::-webkit-scrollbar {
+			display: none;
+		}
+
+		.grid-tile {
+			flex: 1;
+			min-width: 1.85rem;
+			max-width: 2.35rem;
+			height: 2.1rem;
+			touch-action: manipulation;
+		}
+
+		.tile-number {
+			font-size: 0.76rem;
+		}
+
+		.tile-icon {
+			font-size: 0.52rem;
+			margin-top: 0.05rem;
+		}
+
+		.review-main-card {
+			height: auto;
+			min-height: auto;
+			max-height: none;
+			padding: 0.95rem 1rem;
+			gap: 0.75rem;
+			border-radius: var(--radius-md);
+		}
+
+		.inspection-header {
+			padding-bottom: 0.45rem;
+		}
+
+		.q-index-tag {
+			font-size: 1.05rem;
+		}
+
+		.format-label {
+			font-size: 0.75rem;
+		}
+
+		.inspection-status {
+			font-size: 0.8rem;
 		}
 
 		.inspection-scroll-area {
-			gap: 0.6rem;
-			padding: 0.5rem 0.2rem 0.5rem 0;
+			overflow-y: visible;
+			gap: 0.75rem;
+			padding: 0;
 		}
 
 		.japanese-prompt {
-			font-size: 1rem;
-			line-height: 1.35;
+			font-size: clamp(1.15rem, 4.5vw, 1.45rem);
+			line-height: 1.4;
 		}
 
-		.english-subprompt,
-		.explanation-body {
-			font-size: 0.7rem;
-			line-height: 1.45;
+		.english-subprompt {
+			font-size: 0.82rem;
 		}
 
 		.answers-content {
+			grid-template-columns: 1fr;
 			gap: 0.65rem;
 		}
 
-		.inspect-nav-btn {
+		.ans-heading {
+			font-size: 0.72rem;
+		}
+
+		.ans-value {
+			font-size: 1.05rem;
+		}
+
+		.explanation-section {
+			padding: 0.25rem 0;
 			gap: 0.25rem;
-			padding: 0.35rem 0.55rem;
+		}
+
+		.explanation-heading {
+			font-size: 0.75rem;
+		}
+
+		.explanation-body {
+			font-size: 0.86rem;
+			line-height: 1.5;
+		}
+
+		.inspection-nav {
+			padding-top: 0.55rem;
+			margin-top: 0.25rem;
+		}
+
+		.inspect-nav-btn {
+			min-height: 40px;
+			padding: 0.45rem 0.8rem;
+			font-size: 0.8rem;
+			font-weight: 700;
+		}
+
+		.inspect-counter {
+			font-size: 0.8rem;
+		}
+
+		.review-actions {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 0.65rem;
+			margin-top: 0.25rem;
+		}
+
+		.review-actions > :global(:first-child) {
+			grid-column: span 2;
 		}
 	}
 </style>

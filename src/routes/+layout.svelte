@@ -74,4 +74,12 @@
 			right: 1rem;
 		}
 	}
+
+	@media (max-width: 768px) {
+		:global(body:has(.quiz-page-shell)) .theme-toggle-floating {
+			top: 0.65rem;
+			right: 0.85rem;
+			z-index: 50;
+		}
+	}
 </style>

@@ -1,8 +1,15 @@
 <script lang="ts">
 	// Complete Japanese sky scenery with clouds, upper wind breeze, and lower leaf breeze
+	import { page } from '$app/state';
+
+	const isQuizPage = $derived(
+		page.url.pathname.startsWith('/play') ||
+			page.url.pathname.startsWith('/review') ||
+			page.url.pathname.startsWith('/results')
+	);
 </script>
 
-<div class="clouds-backdrop" aria-hidden="true">
+<div class="clouds-backdrop {isQuizPage ? 'is-quiz-page' : ''}" aria-hidden="true">
 	<!-- Top-Center: Soft Radiating Sunbeams / Lunar Rays (Behind Celestial Disk) -->
 	<div class="art-layer sunbeam-layer light-beams"></div>
 	<div class="art-layer sunbeam-layer dark-beams"></div>
@@ -512,6 +519,37 @@
 		.sfx-right {
 			top: 7.35rem;
 			right: -1.4rem;
+		}
+	}
+
+	/* Subtle scenery adjustment during active quiz play */
+	:global(body:has(.quiz-page-shell)) .sun-layer {
+		opacity: 0.15;
+		filter: blur(2px) drop-shadow(0 0 25px rgba(255, 188, 13, 0.15));
+	}
+
+	:global(body:has(.quiz-page-shell)) .sfx-layer {
+		display: none;
+	}
+
+	:global(body:has(.quiz-page-shell)) .sunbeam-layer {
+		opacity: 0.15;
+	}
+
+	/* Keep leaf breeze tucked deep in corner on quiz so it never touches bottom buttons */
+	:global(body:has(.quiz-page-shell)) .leaf-breeze-bottom,
+	.clouds-backdrop.is-quiz-page .leaf-breeze-bottom {
+		bottom: -15px;
+		left: -20px;
+		width: clamp(130px, 12vw, 195px);
+		opacity: 0.65;
+	}
+
+	/* On mobile viewports, keep quiz backdrop clean to avoid visual clutter */
+	@media (max-width: 768px) {
+		:global(body:has(.quiz-page-shell)) .clouds-backdrop,
+		.clouds-backdrop.is-quiz-page {
+			display: none !important;
 		}
 	}
 
