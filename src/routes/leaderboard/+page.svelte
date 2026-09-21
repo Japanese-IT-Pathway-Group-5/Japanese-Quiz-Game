@@ -521,4 +521,229 @@
 			padding: 0.12rem 0.3rem;
 		}
 	}
+
+	/*
+         * Mobile leaderboard layout
+         *
+         * Keep the existing desktop leaderboard unchanged.
+         * These rules only improve readability on narrow screens.
+         */
+	@media (max-width: 640px) {
+		.table-wrapper {
+			width: 100%;
+			max-width: 100%;
+			min-width: 0;
+			overflow-x: hidden;
+		}
+
+		table {
+			width: 100%;
+			min-width: 0;
+			table-layout: fixed;
+		}
+
+		th,
+		td {
+			min-width: 0;
+			max-width: 100%;
+			padding: 0.55rem 0.3rem;
+			vertical-align: middle;
+			overflow: hidden;
+		}
+
+		/*
+                 * Mobile column proportions:
+                 * RANK       9%
+                 * PLAYER    28%
+                 * RUN       11%
+                 * LEVEL      9%
+                 * SCORE     10%
+                 * TIME      10%
+                 * COMPLETED 23%
+                 */
+		th:nth-child(1),
+		td:nth-child(1) {
+			width: 9%;
+			text-align: center;
+		}
+
+		th:nth-child(2),
+		td:nth-child(2) {
+			width: 28%;
+			text-align: left;
+		}
+
+		th:nth-child(3),
+		td:nth-child(3) {
+			width: 11%;
+			text-align: center;
+		}
+
+		th:nth-child(4),
+		td:nth-child(4) {
+			width: 9%;
+			text-align: center;
+		}
+
+		th:nth-child(5),
+		td:nth-child(5) {
+			width: 10%;
+			text-align: center;
+		}
+
+		th:nth-child(6),
+		td:nth-child(6) {
+			width: 10%;
+			text-align: center;
+		}
+
+		th:nth-child(7),
+		td:nth-child(7) {
+			width: 23%;
+			text-align: center;
+		}
+
+		th {
+			font-size: 0.55rem;
+			line-height: 1.2;
+			letter-spacing: 0.04em;
+			white-space: normal;
+		}
+
+		td {
+			font-size: 0.65rem;
+			line-height: 1.3;
+		}
+
+		/* Keep player information together and readable. */
+		.player-cell {
+			display: flex;
+			align-items: center;
+			gap: 0.3rem;
+			min-width: 0;
+			width: 100%;
+			max-width: 100%;
+			flex-wrap: nowrap;
+			overflow: hidden;
+		}
+
+		.leaderboard-avatar {
+			width: 21px;
+			height: 21px;
+			flex: 0 0 21px;
+		}
+
+		.leaderboard-google-icon {
+			flex: 0 0 auto;
+			font-size: 0.7rem;
+		}
+
+		.player-name {
+			min-width: 0;
+			max-width: 100%;
+			flex: 1 1 auto;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: normal;
+			overflow-wrap: normal;
+			word-break: normal;
+			line-height: 1.25;
+		}
+
+		.you {
+			flex: 0 0 auto;
+			margin-left: 0;
+			padding: 0.12rem 0.25rem;
+			font-size: 0.48rem;
+			line-height: 1.2;
+		}
+
+		.rank-badge {
+			gap: 0.2rem;
+			padding: 0.2rem 0.28rem;
+			font-size: 0.62rem;
+			white-space: nowrap;
+		}
+
+		.rank-number {
+			padding-left: 0;
+			font-size: 0.65rem;
+			white-space: nowrap;
+		}
+
+		.level-badge {
+			padding: 0.15rem 0.25rem;
+			font-size: 0.6rem;
+			white-space: nowrap;
+		}
+
+		.run-id {
+			min-width: 0;
+			max-width: 100%;
+			font-size: 0.57rem;
+			line-height: 1.25;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		.score {
+			font-size: 0.82rem;
+			line-height: 1.2;
+			white-space: nowrap;
+			text-align: center;
+		}
+
+		.time {
+			font-size: 0.6rem;
+			line-height: 1.25;
+			white-space: nowrap;
+			text-align: center;
+		}
+
+		.completed-at {
+			min-width: 0;
+			max-width: 100%;
+			font-size: 0.56rem;
+			line-height: 1.3;
+			white-space: normal;
+			overflow-wrap: normal;
+			word-break: normal;
+			text-align: center;
+		}
+	}
+
+	@media (max-width: 360px) {
+		th,
+		td {
+			padding-left: 0.22rem;
+			padding-right: 0.22rem;
+		}
+
+		th {
+			font-size: 0.5rem;
+		}
+
+		td {
+			font-size: 0.6rem;
+		}
+
+		.player-cell {
+			gap: 0.22rem;
+		}
+
+		.leaderboard-avatar {
+			width: 19px;
+			height: 19px;
+			flex-basis: 19px;
+		}
+
+		.player-name {
+			line-height: 1.2;
+		}
+
+		.completed-at {
+			font-size: 0.52rem;
+		}
+	}
 </style>
