@@ -688,45 +688,60 @@
 
 	@media (max-width: 768px) {
 		.page-shell {
-			padding: 1rem 0.85rem 2rem;
+			height: 100dvh;
+			max-height: 100dvh;
+			min-height: 100dvh;
+			padding: 0.65rem 0.75rem 0.65rem;
+			display: flex;
+			flex-direction: column;
+			box-sizing: border-box;
+			overflow: hidden;
 		}
 
 		.review-layout {
-			gap: 0.85rem;
+			flex: 1;
+			min-height: 0;
+			height: 100%;
+			display: flex;
+			flex-direction: column;
+			gap: 0.5rem;
 			width: 100%;
 		}
 
 		.review-panels-container {
+			flex: 1;
+			min-height: 0;
 			display: flex;
 			flex-direction: column;
-			gap: 0.75rem;
+			gap: 0.45rem;
 		}
 
 		.review-sidebar {
+			flex-shrink: 0;
 			width: 100%;
-			gap: 0.35rem;
+			gap: 0.25rem;
 		}
 
 		.tracker-top {
-			padding-bottom: 0.15rem;
+			padding-bottom: 0.05rem;
 		}
 
 		.tracker-title {
-			font-size: 0.72rem;
+			font-size: 0.65rem;
 		}
 
 		.tracker-count {
-			font-size: 0.82rem;
+			font-size: 0.72rem;
 		}
 
 		.review-grid {
 			display: flex;
-			gap: 0.3rem;
+			gap: 0.25rem;
 			justify-content: space-between;
 			overflow-x: auto;
 			scrollbar-width: none;
 			-webkit-overflow-scrolling: touch;
-			padding-bottom: 0.25rem;
+			padding-bottom: 0.15rem;
 		}
 
 		.review-grid::-webkit-scrollbar {
@@ -735,113 +750,145 @@
 
 		.grid-tile {
 			flex: 1;
-			min-width: 1.85rem;
-			max-width: 2.35rem;
-			height: 2.1rem;
+			min-width: 1.6rem;
+			max-width: 2.1rem;
+			height: 1.75rem;
 			touch-action: manipulation;
+			border-radius: 4px;
+		}
+
+		.grid-tile.active {
+			transform: none;
 		}
 
 		.tile-number {
-			font-size: 0.76rem;
+			font-size: 0.68rem;
 		}
 
 		.tile-icon {
-			font-size: 0.52rem;
+			font-size: 0.44rem;
 			margin-top: 0.05rem;
 		}
 
+		/* Fills all available screen height cleanly without shifting between questions */
 		.review-main-card {
-			height: auto;
-			min-height: auto;
+			flex: 1;
+			min-height: 0;
+			height: 100%;
 			max-height: none;
-			padding: 0.95rem 1rem;
-			gap: 0.75rem;
+			padding: 0.75rem 0.85rem;
+			gap: 0.5rem;
 			border-radius: var(--radius-md);
+			overflow: hidden;
+			display: flex;
+			flex-direction: column;
 		}
 
 		.inspection-header {
-			padding-bottom: 0.45rem;
+			padding-bottom: 0.35rem;
+			flex-shrink: 0;
 		}
 
 		.q-index-tag {
-			font-size: 1.05rem;
+			font-size: 0.95rem;
 		}
 
 		.format-label {
-			font-size: 0.75rem;
+			font-size: 0.7rem;
+			gap: 0.35rem;
+		}
+
+		.format-label i {
+			font-size: 0.72rem;
 		}
 
 		.inspection-status {
-			font-size: 0.8rem;
+			font-size: 0.72rem;
+			padding: 0.2rem 0.45rem;
+			gap: 0.3rem;
 		}
 
 		.inspection-scroll-area {
-			overflow-y: visible;
-			gap: 0.75rem;
-			padding: 0;
+			flex: 1;
+			min-height: 0;
+			overflow-y: auto;
+			-webkit-overflow-scrolling: touch;
+			gap: 0.65rem;
+			padding: 0.35rem 0.25rem 0.35rem 0;
 		}
 
 		.japanese-prompt {
-			font-size: clamp(1.15rem, 4.5vw, 1.45rem);
-			line-height: 1.4;
+			font-size: clamp(1.05rem, 4vw, 1.3rem);
+			line-height: 1.35;
 		}
 
 		.english-subprompt {
-			font-size: 0.82rem;
+			font-size: 0.76rem;
 		}
 
 		.answers-content {
 			grid-template-columns: 1fr;
-			gap: 0.65rem;
+			gap: 0.55rem;
 		}
 
 		.ans-heading {
-			font-size: 0.72rem;
+			font-size: 0.66rem;
+			gap: 0.3rem;
 		}
 
 		.ans-value {
-			font-size: 1.05rem;
+			font-size: 0.98rem;
 		}
 
 		.explanation-section {
-			padding: 0.25rem 0;
+			padding: 0.15rem 0;
 			gap: 0.25rem;
 		}
 
 		.explanation-heading {
-			font-size: 0.75rem;
+			font-size: 0.68rem;
+			gap: 0.3rem;
 		}
 
 		.explanation-body {
-			font-size: 0.86rem;
-			line-height: 1.5;
+			font-size: 0.82rem;
+			line-height: 1.45;
 		}
 
 		.inspection-nav {
-			padding-top: 0.55rem;
-			margin-top: 0.25rem;
+			padding-top: 0.45rem;
+			margin-top: auto;
+			flex-shrink: 0;
 		}
 
 		.inspect-nav-btn {
-			min-height: 40px;
-			padding: 0.45rem 0.8rem;
-			font-size: 0.8rem;
+			min-height: 34px;
+			padding: 0.35rem 0.75rem;
+			font-size: 0.76rem;
 			font-weight: 700;
+			border-radius: var(--radius-sm);
 		}
 
 		.inspect-counter {
-			font-size: 0.8rem;
+			font-size: 0.76rem;
 		}
 
 		.review-actions {
+			flex-shrink: 0;
 			display: grid;
 			grid-template-columns: 1fr 1fr;
-			gap: 0.65rem;
-			margin-top: 0.25rem;
+			gap: 0.45rem;
+			margin-top: 0;
 		}
 
 		.review-actions > :global(:first-child) {
 			grid-column: span 2;
+		}
+
+		.review-actions :global(.ui-btn) {
+			min-height: 36px;
+			padding: 0.4rem 0.7rem;
+			font-size: 0.8rem;
 		}
 	}
 </style>
