@@ -76,9 +76,10 @@
 	}
 
 	@media (max-width: 768px) {
-		:global(body:has(.quiz-page-shell)) .theme-toggle-floating {
+		:global(body:has(.quiz-page-shell)) .theme-toggle-floating,
+		:global(body:has(.review-page-shell)) .theme-toggle-floating {
 			top: 0.65rem;
-			right: 0.85rem;
+			right: 0.75rem;
 			z-index: 50;
 		}
 	}
