@@ -82,6 +82,18 @@
 		{#if data.isAuthenticated && data.player}
 			<!-- KPI Analytics Cards (4 Key Metrics) -->
 			{#if data.stats}
+				<div class="stats-controls">
+					<button
+						type="button"
+						class="stats-toggle-btn font-mono"
+						onclick={() => (showAllStats = !showAllStats)}
+						aria-expanded={showAllStats}
+					>
+						<span>{showAllStats ? 'Show less' : 'See more'}</span>
+						<i class="fa-solid fa-chevron-down toggle-icon" class:rotated={showAllStats}></i>
+					</button>
+				</div>
+
 				<section class="kpi-grid" aria-label="Key Performance Indicators">
 					<div class="kpi-card">
 						<div class="kpi-header">
@@ -96,7 +108,7 @@
 							<span class="kpi-label font-mono">BEST SCORE</span>
 							<i class="fa-solid fa-trophy kpi-icon text-gold"></i>
 						</div>
-						<div class="kpi-value font-mono text-gold-gradient">{data.stats.bestScore}</div>
+						<div class="kpi-value font-mono text-white">{data.stats.bestScore}</div>
 						<div class="kpi-footer font-mono">
 							<span>N4: {data.stats.bestScoreN4 ?? '-'}</span>
 							<span class="dot">·</span>
@@ -169,16 +181,6 @@
 						</div>
 					</div>
 				</section>
-
-				<button
-					type="button"
-					class="mobile-stats-toggle font-mono"
-					onclick={() => (showAllStats = !showAllStats)}
-					aria-expanded={showAllStats}
-				>
-					<span>{showAllStats ? 'Show less stats' : 'Show more stats'}</span>
-					<i class="fa-solid fa-chevron-down toggle-icon" class:rotated={showAllStats}></i>
-				</button>
 			{/if}
 
 			<!-- Run History Table Section -->
@@ -464,6 +466,17 @@
 		letter-spacing: 0.05em;
 	}
 
+	/* Stats Controls Header */
+	.stats-controls {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+	}
+
+	.stats-toggle-btn {
+		display: none;
+	}
+
 	/* KPI Analytics Cards */
 	.kpi-grid {
 		display: grid;
@@ -647,13 +660,12 @@
 	/* Table (Modern Analytics Table) */
 	.table-wrapper {
 		overflow: auto;
-		border-radius: 0;
+		border-radius: 0 !important;
 		background: rgba(0, 15, 45, 0.5);
 		backdrop-filter: blur(12px);
 		border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.08));
 	}
 
-	.mobile-stats-toggle,
 	.col-expand,
 	.detail-row {
 		display: none;
@@ -794,7 +806,7 @@
 		justify-content: center;
 		padding: 3rem 1.5rem;
 		text-align: center;
-		border-radius: var(--radius-lg, 1rem);
+		border-radius: 0 !important;
 		background: rgba(0, 15, 45, 0.45);
 		border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.08));
 		gap: 0.5rem;
@@ -935,23 +947,62 @@
 
 	@media (max-width: 640px) {
 		.page-shell {
-			padding: 0.9rem 0.65rem 1.5rem;
+			height: 100dvh;
+			padding: 0.75rem 0.65rem 0.75rem;
+			display: flex;
+			justify-content: center;
+			overflow: hidden;
 		}
 
 		.dashboard-layout {
-			gap: 0.85rem;
+			width: 100%;
+			height: 100%;
+			min-height: 0;
+			display: flex;
+			flex-direction: column;
+			gap: 0.55rem;
 		}
 
 		.dashboard-header {
 			padding-inline: 2rem;
+			flex-shrink: 0;
 		}
 
 		.title {
-			font-size: 1.85rem;
+			font-size: 1.75rem;
+		}
+
+		.stats-controls {
+			flex-shrink: 0;
+			display: flex;
+			justify-content: flex-end;
+			padding-inline: 0.15rem;
+		}
+
+		.stats-toggle-btn {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			gap: 0.35rem;
+			padding: 0.22rem 0.6rem;
+			border-radius: var(--radius-pill, 9999px);
+			border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.12));
+			background: var(--theme-paper, rgba(255, 255, 255, 0.05));
+			color: var(--theme-text-muted, #94a3b8);
+			font-size: 0.72rem;
+			font-weight: 700;
+			cursor: pointer;
+			transition: all 0.2s ease;
+		}
+
+		.stats-toggle-btn:hover {
+			color: #ffffff;
+			border-color: var(--theme-gold, #ffbc0d);
 		}
 
 		/* Sleek, compact 2x2 KPI grid */
 		.kpi-grid {
+			flex-shrink: 0;
 			grid-template-columns: repeat(2, 1fr);
 			gap: 0.5rem;
 		}
@@ -980,6 +1031,7 @@
 
 		/* Compact side-by-side mastery cards */
 		.mastery-grid {
+			flex-shrink: 0;
 			grid-template-columns: repeat(2, 1fr);
 			gap: 0.5rem;
 		}
@@ -1013,10 +1065,15 @@
 
 		/* Compact table controls */
 		.table-section {
-			gap: 0.6rem;
+			flex: 1;
+			min-height: 0;
+			display: flex;
+			flex-direction: column;
+			gap: 0.45rem;
 		}
 
 		.table-controls {
+			flex-shrink: 0;
 			display: flex;
 			flex-direction: row;
 			justify-content: space-between;
@@ -1036,6 +1093,13 @@
 			font-size: 0.75rem;
 			padding: 0.25rem 0.65rem;
 			min-height: 28px;
+		}
+
+		.table-wrapper {
+			flex: 1;
+			min-height: 0;
+			overflow: auto;
+			border-radius: 0 !important;
 		}
 
 		/* Hide non-essential columns on mobile */
@@ -1111,27 +1175,33 @@
 
 		/* Pagination */
 		.pagination-bar {
+			flex-shrink: 0;
 			gap: 0.35rem;
-			padding: 0.5rem 0;
+			padding: 0.35rem 0 0;
 		}
 
 		.page-nav-btn {
-			min-height: 30px;
-			padding: 0.25rem 0.55rem;
-			font-size: 0.72rem;
+			min-height: 28px;
+			padding: 0.2rem 0.5rem;
+			font-size: 0.7rem;
 		}
 
 		.page-number {
-			width: 28px;
-			height: 28px;
-			font-size: 0.75rem;
+			width: 26px;
+			height: 26px;
+			font-size: 0.72rem;
 		}
 
 		/* Bottom actions */
+		.actions {
+			flex-shrink: 0;
+			margin-top: auto;
+		}
+
 		.actions :global(.ui-btn) {
-			min-height: 40px;
-			padding: 0.45rem 1.25rem;
-			font-size: 0.86rem;
+			min-height: 38px;
+			padding: 0.4rem 1.15rem;
+			font-size: 0.84rem;
 		}
 
 		/* Mobile collapsible stats (show 1 row by default) */
@@ -1141,38 +1211,6 @@
 
 		.mastery-grid.mastery-collapsed {
 			display: none;
-		}
-
-		.mobile-stats-toggle {
-			display: inline-flex;
-			align-items: center;
-			justify-content: center;
-			gap: 0.4rem;
-			align-self: center;
-			padding: 0.35rem 0.85rem;
-			border-radius: var(--radius-pill, 9999px);
-			border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.12));
-			background: rgba(0, 15, 45, 0.45);
-			color: var(--theme-text-muted, #94a3b8);
-			font-size: 0.72rem;
-			font-weight: 700;
-			cursor: pointer;
-			transition: all 0.2s ease;
-		}
-
-		.mobile-stats-toggle:hover {
-			color: #ffffff;
-			border-color: var(--theme-gold, #ffbc0d);
-		}
-
-		.toggle-icon {
-			transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-			font-size: 0.65rem;
-		}
-
-		.toggle-icon.rotated {
-			transform: rotate(180deg);
-			color: var(--theme-gold, #ffbc0d);
 		}
 
 		/* Expand button and detail row in table */
