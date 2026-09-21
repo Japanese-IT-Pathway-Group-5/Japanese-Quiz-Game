@@ -2,6 +2,7 @@
 	import { resolve } from '$app/paths';
 	import type { PageData, ActionData } from './$types';
 	import { Button } from '$lib/components/ui';
+	import { scrollIntoViewOnKeyboard } from '$lib/actions/scrollIntoViewOnKeyboard.svelte';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
 
@@ -80,6 +81,7 @@
 					</label>
 					<input
 						id="nickname"
+						use:scrollIntoViewOnKeyboard
 						name="nickname"
 						type="text"
 						class="input-text nickname-input"

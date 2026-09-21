@@ -5,7 +5,7 @@
 	import { QuestionSkeleton } from '$lib/components/ui';
 	import Timer from '$lib/components/Timer.svelte';
 	import SarcasticStickman from '$lib/components/SarcasticStickman.svelte';
-
+	import { scrollIntoViewOnKeyboard } from '$lib/actions/scrollIntoViewOnKeyboard.svelte';
 	let { data }: { data: PageData } = $props();
 
 	const allQuestions = $derived(data.allQuestions ?? (data.question ? [data.question] : []));
@@ -479,7 +479,6 @@
 								</h2>
 							{/if}
 						</div>
-
 						<!-- Lower Zone: Interactive Answer Input -->
 						<div class="answer-zone">
 							{#if activeQuestion.format === 'multiple_choice' || activeQuestion.format === 'gap_fill'}
@@ -510,6 +509,7 @@
 										<span class="typing-hint">Type in Japanese (Romaji / Hiragana / Kanji)</span>
 									</label>
 									<input
+										use:scrollIntoViewOnKeyboard
 										id="typing-input"
 										name="answer"
 										type="text"

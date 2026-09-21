@@ -455,5 +455,10 @@
 		.results-actions > :global(:first-child) {
 			grid-column: span 2;
 		}
+
+		.google-btn {
+			padding: 0.65rem 1rem;
+			font-size: 0.85rem;
+		}
 	}
 </style>
